@@ -6,24 +6,35 @@ networks:
        #driver: overlay
        driver: bridge
 
+volumes:
+    mysql-db-storage:
+
 services:
+   mysql-db:
+       image: mysql:8.0.13
+       environment:
+         MYSQL_DATABASE: testDB
+         MYSQL_ROOT_PASSWORD: root@123
+       ports:
+         - 3306:3306
+       networks:
+         - web-app-net
+       volumes:
+         - mysql-db-storage:/var/lib/mysql
+
    webapp-admin:
-       image: itsoulltd/itracker-images:vaadin-app-1.0
+       image: vaadin-starter-app:1.0
        build:
           context: .
           dockerfile: Dockerfile-embedded
        environment:
-          com.itsoul.lab.api.public.dns: localhost
-          app.db.name: /api/shareable
-          app.db.host: localhost
-          app.db.port: 8083
-          app.tenant.username: demo@gmail.com
-          app.tenant.password: mypass@123
-          app.db.auth.name: /auth-service/auth
-          app.db.auth.host: localhost
-          app.db.auth.port: 8080
+          app.db.name: testDB
+          app.db.host: mysql-db
+          app.db.port: 3306
+          app.db.password: root@123
+          app.db.mysql.url.query: ?autoReconnect=true&failOverReadOnly=false&maxReconnects=10
        ports:
-          - 8080:8080
+          - 80:8080
        restart: on-failure
        networks:
           - web-app-net
