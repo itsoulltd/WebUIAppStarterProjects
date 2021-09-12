@@ -4,7 +4,7 @@
     ~>$ open -a Docker
 
 ####Then goto specific project folder and run following cmd:
-    ~>$ mvn clean package -DskipTests
+    ~>$ mvn clean package -DskipTests -Pproduction
 
     ~>$ docker-compose up -d --build
 

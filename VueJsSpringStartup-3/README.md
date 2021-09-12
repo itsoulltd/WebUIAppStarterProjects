@@ -13,7 +13,9 @@ To Enable Vue Dev Env:
         ----------------if npm plugin failed----------
         Delete the node_modules directory
         Delete the package-lock.json file
-        Then clean and install again,
+        Then clean and install again;
+        if still facing problem: goto src/frontend
+        ~>$ npm install
         ----------------------------------------------
 
 
