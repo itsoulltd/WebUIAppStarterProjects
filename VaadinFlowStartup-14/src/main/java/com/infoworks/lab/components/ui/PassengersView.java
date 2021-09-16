@@ -8,14 +8,11 @@ import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
 import com.infoworks.lab.components.db.source.JsqlDataSource;
 import com.infoworks.lab.components.db.source.SqlDataSource;
 import com.infoworks.lab.components.presenters.PassengerEditor;
-import com.infoworks.lab.components.rest.RestExecutor;
 import com.infoworks.lab.components.rest.source.RestDataSource;
-import com.infoworks.lab.config.DatabaseBootstrap;
 import com.infoworks.lab.domain.entities.Gender;
 import com.infoworks.lab.domain.entities.Passenger;
-import com.infoworks.lab.jsql.DataSourceKey;
+import com.infoworks.lab.domain.executor.PassengerExecutor;
 import com.infoworks.lab.jsql.ExecutorType;
-import com.infoworks.lab.jsql.JsqlConfig;
 import com.infoworks.lab.layouts.RootAppLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
@@ -63,10 +60,8 @@ public class PassengersView extends Composite<Div> {
             return source;
         }else if(executorType == ExecutorType.REST) {
             //Fetching Data From WebService:
-            GridDataSource source = JsqlDataSource.createDataSource(RestDataSource.class, executorType);
-            //Testing RestExecutor:
-            DataSourceKey sourceKey = DataSourceKey.createDataSourceKey("app.db");
-            ((RestDataSource) source).setExecutor(new RestExecutor(Passenger.class, sourceKey));
+            JsqlDataSource source = JsqlDataSource.createDataSource(RestDataSource.class, executorType);
+            source.setExecutor(new PassengerExecutor());
             return source;
         }else{
             //In-Memory DataSource:
