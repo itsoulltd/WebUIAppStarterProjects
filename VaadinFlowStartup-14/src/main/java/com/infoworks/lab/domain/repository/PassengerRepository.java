@@ -2,10 +2,17 @@ package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
 import com.infoworks.lab.domain.entities.Passenger;
+import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.jsql.DataSourceKey;
+import com.infoworks.lab.rest.models.ItemCount;
 import com.infoworks.lab.rest.models.Message;
+import com.infoworks.lab.rest.models.Response;
 
-public class PassengerRepository extends HttpTemplate<Passenger, Message> {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PassengerRepository extends HttpTemplate<Response, Message> {
 
     public PassengerRepository() {
         super(Passenger.class, Message.class);
@@ -46,5 +53,25 @@ public class PassengerRepository extends HttpTemplate<Passenger, Message> {
         container.set(DataSourceKey.Keys.NAME, name);
         //
         return container;
+    }
+
+    public ItemCount rowCount() throws IOException, HttpInvocationException {
+        return new ItemCount();
+    }
+
+    public List<Passenger> fetch(Integer page, Integer limit){
+        return new ArrayList<>();
+    }
+
+    public Passenger insert(Passenger passenger){
+        return passenger;
+    }
+
+    public Passenger update(Passenger passenger){
+        return passenger;
+    }
+
+    public boolean delete(Integer userId){
+        return false;
     }
 }
