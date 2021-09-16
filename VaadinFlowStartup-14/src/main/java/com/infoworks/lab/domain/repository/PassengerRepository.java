@@ -35,7 +35,7 @@ public class PassengerRepository extends HttpTemplate<Response, Message> {
 
     @Override
     protected String api() {
-        return System.getenv("app.passenger.host");
+        return System.getenv("app.passenger.api");
     }
 
     public static DataSourceKey getKeyContainer(){
