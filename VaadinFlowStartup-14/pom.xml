@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.github.itsoulltd.WebComponentKit</groupId>
             <artifactId>jsql-editor-components</artifactId>
-            <version>v1.10.4-RELEASE</version>
+            <version>v1.11.5-RELEASE</version>
         </dependency>
         <dependency>
             <groupId>com.github.itsoulltd.WebComponentKit</groupId>
