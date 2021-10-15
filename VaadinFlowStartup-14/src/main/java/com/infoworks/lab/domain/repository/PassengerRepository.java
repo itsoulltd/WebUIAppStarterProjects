@@ -1,7 +1,7 @@
 package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
-import com.infoworks.lab.components.rest.RestRepository;
+import com.infoworks.lab.rest.repository.RestRepository;
 import com.infoworks.lab.domain.entities.Passenger;
 import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.rest.models.*;
