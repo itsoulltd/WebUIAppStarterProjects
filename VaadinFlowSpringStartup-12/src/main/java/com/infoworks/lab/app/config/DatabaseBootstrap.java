@@ -23,6 +23,8 @@ public class DatabaseBootstrap {
             executor.executeDDLQuery(createPassenger);
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
