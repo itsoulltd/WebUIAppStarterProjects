@@ -1,13 +1,22 @@
 <template>
-  <h1>Message: {{ msg }}</h1>
+  <h1>{{ msg }}</h1>
 </template>
 
 <script>
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
-  }
+  data() {
+      return {
+        msg: ''
+      }
+    },
+    mounted() {
+      fetch("/api/messages/hello")
+        .then((response) => response.text())
+        .then((data) => {
+            this.msg = data;
+        });
+    }
 }
 </script>
 
