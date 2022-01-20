@@ -14,6 +14,7 @@
         <module>VaadinFlowSpringStartup-14</module>
         <module>VaadinFlowSpringStartup-12</module>
         <module>VueJsSpringStartup-3</module>
+        <module>VueJsSpringStartup-2</module>
     </modules>
 
     <properties>
