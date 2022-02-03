@@ -3,7 +3,7 @@
         <form v-on:submit.prevent="login">
             <input v-model="username" placeholder="username"> <br /> <br/>
             <input v-model="password" type="password" placeholder="password"> <br /> <br/>
-            <input type="submit" value="Login In"> <br />
+            <input type="submit" value="Login"> <br />
         </form>
         <p>{{msg}}</p>
     </div>
