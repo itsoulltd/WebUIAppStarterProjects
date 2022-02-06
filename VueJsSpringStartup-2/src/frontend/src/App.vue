@@ -1,10 +1,18 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <app-header></app-header>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
+  import HeaderView from "./components/HeaderView";
+
   export default {
-    name: 'App'
+    name: 'App',
+    components: {
+      'app-header': HeaderView
+    }
   }
 </script>
 
