@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/passenger")
+@RequestMapping("/api/passenger")
 public class PassengerController {
 
     private SimpleDataSource<String, Passenger> dataSource;
