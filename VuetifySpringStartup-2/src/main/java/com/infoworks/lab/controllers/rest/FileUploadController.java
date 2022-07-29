@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RestController
-@RequestMapping("/files")
+@RequestMapping("/api/files")
 public class FileUploadController {
 
     private LocalStorageService storageService;
