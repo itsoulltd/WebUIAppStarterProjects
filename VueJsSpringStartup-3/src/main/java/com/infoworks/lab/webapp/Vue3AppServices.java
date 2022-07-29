@@ -13,15 +13,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         , "com.infoworks.lab.services"
         , "com.infoworks.lab.webapp.config"
         , "com.infoworks.lab.domain"})
-public class VueAppServices extends SpringBootServletInitializer {
+public class Vue3AppServices extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(VueAppServices.class, args);
+        SpringApplication.run(Vue3AppServices.class, args);
     }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(VueAppServices.class);
+        return application.sources(Vue3AppServices.class);
     }
 
 }
