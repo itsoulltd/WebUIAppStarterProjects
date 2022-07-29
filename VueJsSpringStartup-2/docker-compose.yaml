@@ -23,7 +23,7 @@ services:
           - mysql-db-storage:/var/lib/mysql
 
    webapp:
-      image: spring-vue-starter:1.0
+      image: spring-vue2-starter:1.0
       build:
          context: .
          #dockerfile: Dockerfile

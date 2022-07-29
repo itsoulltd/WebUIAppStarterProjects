@@ -31,3 +31,16 @@ To Enable Vue Dev Env:
         ~>$
         ~>$ cd frontend
         ~>$ npm run serve
+        
+Build Docker Image And run a image cmd:
+    
+    ## Build a docker image from current context .
+    ~>$ docker image build -t <image-name>:1.0 .
+    ## After image creation lets run the image as container at port 8080
+    ~>$ docker run -it -d -p 8080:8080 --rm --name <container-name> <image-name>:1.0
+    ## Lets check container has been created:
+    ~>$ docker container ls
+    ## Lets check logs on container:
+    ~>$ docker container logs <container-id>
+    ## Lets stop the current container by id
+    ~>$ docker container stop <container-id>
