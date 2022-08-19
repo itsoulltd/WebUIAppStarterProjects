@@ -1,4 +1,4 @@
-package com.infoworks.lab;
+package com.infoworks.lab.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,10 +10,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * because vaadin don't recognize any route which is not in the child / same dir of the Application class
  */
 @SpringBootApplication
-public class Application extends SpringBootServletInitializer {
+public class VaadinSpringApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(VaadinSpringApplication.class, args);
     }
 
 }

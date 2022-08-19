@@ -16,6 +16,7 @@
         <module>VueJsSpringStartup-3</module>
         <module>VueJsSpringStartup-2</module>
         <module>VuetifySpringStartup-2</module>
+        <module>SecureSpringMVCStarter</module>
     </modules>
 
     <properties>
