@@ -1,6 +1,5 @@
 package com.infoworks.lab.controllers.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +13,11 @@ import java.util.Locale;
 @RequestMapping("/greetings")
 public class GreetingController {
 
-    @Autowired
     private MessageSource messageSource;
+
+    public GreetingController(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     @GetMapping
     public String greetings(
