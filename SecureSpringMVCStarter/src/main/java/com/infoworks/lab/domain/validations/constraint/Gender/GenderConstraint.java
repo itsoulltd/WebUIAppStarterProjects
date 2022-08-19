@@ -1,0 +1,20 @@
+package com.infoworks.lab.domain.validations.constraint.Gender;
+
+
+import com.infoworks.lab.domain.models.Gender;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
+public class GenderConstraint implements ConstraintValidator<IsValidGender, String> {
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null) return true;
+        if (!value.isEmpty()){
+            try {
+                return Gender.valueOf(value) != null;
+            } catch (IllegalArgumentException e) {}
+        }
+        return false;
+    }
+}
