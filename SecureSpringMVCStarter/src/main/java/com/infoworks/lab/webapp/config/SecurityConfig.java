@@ -73,15 +73,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requiresChannel().anyRequest().requiresSecure()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll();
-                /*.antMatchers("/v1/login"
+                //.antMatchers("/**").permitAll(); //enable to open all
+                .antMatchers("/v1/login"
                         , "/v1/forget"
                         , "/v1/reset"
-                        , "/v1/isAccountExist").permitAll()
+                        , "/v1/isAccountExist"
+                        , "/passengers/**").permitAll()
                 //.antMatchers("/v1/new/account").hasAnyRole("ROLE_ADMIN", "ADMIN") //Alternative to @EnableGlobalMethodSecurity(...)
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(new AuthorizationFilter(), BasicAuthenticationFilter.class);*/
+                .addFilterBefore(new AuthorizationFilter(), BasicAuthenticationFilter.class);
         //Disable for H2 DB:
         if (activeDriverClass.equalsIgnoreCase(DriverClass.H2_EMBEDDED.toString())){
             http.headers().frameOptions().disable();
