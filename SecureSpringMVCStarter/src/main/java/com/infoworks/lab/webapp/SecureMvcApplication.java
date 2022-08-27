@@ -14,15 +14,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         , "com.infoworks.lab.services"
         , "com.infoworks.lab.domain"
         , "com.infoworks.lab.webapp.config"})
-public class SecureWebApplication extends SpringBootServletInitializer {
+public class SecureMvcApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(SecureWebApplication.class, args);
+        SpringApplication.run(SecureMvcApplication.class, args);
     }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(SecureWebApplication.class);
+        return application.sources(SecureMvcApplication.class);
     }
 
 }
