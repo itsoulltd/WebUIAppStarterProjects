@@ -78,7 +78,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         , "/v1/forget"
                         , "/v1/reset"
                         , "/v1/isAccountExist"
-                        , "/passengers/**").permitAll()
+                        , "/passengers/**"
+                        , "/index").permitAll()
                 //.antMatchers("/v1/new/account").hasAnyRole("ROLE_ADMIN", "ADMIN") //Alternative to @EnableGlobalMethodSecurity(...)
                 .anyRequest().authenticated()
                 .and()
