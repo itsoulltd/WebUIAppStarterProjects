@@ -12,6 +12,8 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
+import java.util.Objects;
+
 /**
  * The Login view contains a button and a click listener.
  */
@@ -39,8 +41,9 @@ public class LoginView extends VerticalLayout {
         //On-Login-Click:
         this.login.addLoginListener(loginEvent -> {
             AuthRepository authRepo = new AuthRepository();
-            authRepo.doLogin(loginEvent.getUsername(), loginEvent.getPassword(), (isSuccess, error) -> {
-                if(isSuccess){
+            authRepo.doLogin(loginEvent.getUsername(), loginEvent.getPassword(), (isSuccess, authToken) -> {
+                if(isSuccess && Objects.nonNull(authToken)){
+                    UI.getCurrent().getSession().setAttribute("X-AUTH-TOKEN", authToken);
                     UI.getCurrent().navigate(RoutePath.PROFILE_VIEW);
                 }else {
                     loginEvent.getSource().setError(true);

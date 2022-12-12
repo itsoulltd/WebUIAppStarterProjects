@@ -10,10 +10,10 @@ public class AuthRepository {
         //TODO:
         if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin")) {
             if(consumer != null)
-                consumer.accept(true, "Successfully Login");
+                consumer.accept(true, "pass-auth-token");
         }else {
             if(consumer != null)
-                consumer.accept(false, "Failed Login");
+                consumer.accept(false, null);
         }
     }
 
