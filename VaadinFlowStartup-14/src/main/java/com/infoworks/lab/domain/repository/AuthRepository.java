@@ -6,7 +6,7 @@ public class AuthRepository {
 
     public static final String TOKEN = "TOKEN-KEY";
 
-    public void login(String username , String password, BiConsumer<Boolean, String> consumer) {
+    public void doLogin(String username , String password, BiConsumer<Boolean, String> consumer) {
         //TODO:
         if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin")) {
             if(consumer != null)
@@ -17,7 +17,7 @@ public class AuthRepository {
         }
     }
 
-    public void logout(String token, BiConsumer<Boolean, String> consumer){
+    public void doLogout(String token, BiConsumer<Boolean, String> consumer){
         if(consumer != null)
             consumer.accept(true, "Successfully Logout");
     }

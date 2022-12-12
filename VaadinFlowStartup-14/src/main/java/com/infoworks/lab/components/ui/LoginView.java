@@ -2,10 +2,10 @@ package com.infoworks.lab.components.ui;
 
 import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.layouts.RoutePath;
-import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.login.AbstractLogin;
 import com.vaadin.flow.component.login.LoginForm;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.Route;
@@ -32,21 +32,26 @@ public class LoginView extends VerticalLayout {
 
     private void loginWindowInit () {
         this.login = new LoginForm();
-        this.login.setForgotPasswordButtonVisible(false);
+        this.login.setForgotPasswordButtonVisible(true);
     }
 
     private void initListeners(){
-        this.login.addLoginListener(new ComponentEventListener<AbstractLogin.LoginEvent>() {
-            @Override
-            public void onComponentEvent(AbstractLogin.LoginEvent loginEvent) {
-                new AuthRepository().login(loginEvent.getUsername() , loginEvent.getPassword(), (isSuccess, error) -> {
-                    if(isSuccess){
-                        UI.getCurrent().navigate(RoutePath.PROFILE_VIEW);
-                    }else {
-                        loginEvent.getSource().setError(true);
-                    }
-                });
-            }
+        //On-Login-Click:
+        this.login.addLoginListener(loginEvent -> {
+            AuthRepository authRepo = new AuthRepository();
+            authRepo.doLogin(loginEvent.getUsername(), loginEvent.getPassword(), (isSuccess, error) -> {
+                if(isSuccess){
+                    UI.getCurrent().navigate(RoutePath.PROFILE_VIEW);
+                }else {
+                    loginEvent.getSource().setError(true);
+                }
+            });
+        });
+        //On-ForgetPassword-Click:
+        this.login.addForgotPasswordListener(event -> {
+            //TODO: Implement A ForgotPassView
+            Notification notification = Notification.show("Forgot Password Clicked!");
+            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         });
     }
 

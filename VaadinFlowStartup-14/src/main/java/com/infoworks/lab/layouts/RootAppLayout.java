@@ -4,6 +4,7 @@ import com.infoworks.lab.components.component.VImage;
 import com.infoworks.lab.components.ui.PassengersView;
 import com.infoworks.lab.components.ui.ProfileView;
 import com.infoworks.lab.components.ui.TrendsView;
+import com.infoworks.lab.domain.repository.AuthRepository;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -52,10 +53,14 @@ public class RootAppLayout extends AppLayout {
     private Tab logout() {
         final Button btn = new Button();
         btn.setText("Logout");
-        btn.addClickListener(e -> {
-            UI.getCurrent().navigate("");
-        });
         btn.setSizeFull();
+        btn.addClickListener(e -> {
+            AuthRepository authRepo = new AuthRepository();
+            //TODO: pass-auth-token
+            authRepo.doLogout("pass-auth-token", (isSuccess, msg) -> {
+                UI.getCurrent().navigate("");
+            });
+        });
         //
         final Tab tab = new Tab(btn);
         tab2Workspace.put(tab, new Label("Logout"));
