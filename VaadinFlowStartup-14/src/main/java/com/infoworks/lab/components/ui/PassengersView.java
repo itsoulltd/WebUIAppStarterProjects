@@ -39,7 +39,7 @@ public class PassengersView extends Composite<Div> {
             getContent().removeAll();
         }
         //Create DataSource:
-        GridDataSource source = createDataSource(ExecutorType.JPQL);
+        GridDataSource source = createDataSource(ExecutorType.IN_MEM);
 
         Configurator configurator = new Configurator(Passenger.class)
                 .setDisplayType(EditorDisplayType.EMBEDDED)
