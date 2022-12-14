@@ -18,6 +18,8 @@
 ##### Run Vaadin-14 (Vaadin-only)
      ~>$ mvn clean package -DskipTests
      ~>$ mvn jetty:run
+     #or with custom port
+     ~>$ mvn jetty:run -Djetty.http.port=8081
       
 ##### Run Vaadin-12 or VaadinFlowSpring-14 (Vaadin-Spring-Boot-2)
      ~>$ mvn clean package -DskipTests
