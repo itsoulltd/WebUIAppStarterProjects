@@ -16,7 +16,9 @@
         <vaadin.version>14.0.8</vaadin.version>
         <jersey2.version>2.27</jersey2.version>
         <jaxrs.version>2.1</jaxrs.version>
-        <WebComponentKit.version>v1.12.0-RELEASE</WebComponentKit.version>
+        <jsqleditor.version>1.1.4.8-RELEASE</jsqleditor.version>
+        <WebComponentKit.version>v1.13.2-RELEASE</WebComponentKit.version>
+        <spring.version>5.3.15</spring.version>
     </properties>
 
     <repositories>
@@ -125,11 +127,6 @@
         <!-- -->
         <!-- WebComponentKits -->
         <dependency>
-            <groupId>com.github.itsoulltd</groupId>
-            <artifactId>JSQLEditor</artifactId>
-            <version>1.1.3.2-RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-jdbc</artifactId>
             <version>8.5.35</version>
@@ -139,6 +136,11 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.18</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.itsoulltd</groupId>
+            <artifactId>JSQLEditor</artifactId>
+            <version>${jsqleditor.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.itsoulltd.WebComponentKit</groupId>
@@ -204,19 +206,18 @@
             <artifactId>hibernate-validator</artifactId>
             <version>6.1.0.Final</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-websocket -->
+        <!-- Spring WebSocket -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
-            <version>5.0.4.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-messaging -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
-            <version>5.0.4.RELEASE</version>
+            <version>${spring.version}</version>
         </dependency>
+        <!-- -->
         <dependency>
             <groupId>com.github.stefanbirkner</groupId>
             <artifactId>system-rules</artifactId>
