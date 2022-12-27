@@ -2,13 +2,10 @@ package com.infoworks.lab.components.ui;
 
 import com.infoworks.lab.components.crud.Configurator;
 import com.infoworks.lab.components.crud.Crud;
-import com.infoworks.lab.components.crud.components.datasource.DefaultDataSource;
 import com.infoworks.lab.components.crud.components.datasource.GridDataSource;
 import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
-import com.infoworks.lab.components.db.source.JsqlDataSource;
-import com.infoworks.lab.components.db.source.SqlDataSource;
 import com.infoworks.lab.components.presenters.PassengerEditor;
-import com.infoworks.lab.components.rest.source.RestDataSource;
+import com.infoworks.lab.config.GridDataSourceFactory;
 import com.infoworks.lab.domain.entities.Gender;
 import com.infoworks.lab.domain.entities.Passenger;
 import com.infoworks.lab.domain.executor.PassengerExecutor;
@@ -39,7 +36,9 @@ public class PassengersView extends Composite<Div> {
             getContent().removeAll();
         }
         //Create DataSource:
-        GridDataSource source = createDataSource(ExecutorType.IN_MEM);
+        GridDataSource source = GridDataSourceFactory.create(ExecutorType.IN_MEM
+                , new PassengerExecutor()
+                , getPassengers().toArray(new Passenger[0]));
 
         Configurator configurator = new Configurator(Passenger.class)
                 .setDisplayType(EditorDisplayType.EMBEDDED)
@@ -50,25 +49,6 @@ public class PassengersView extends Composite<Div> {
 
         Crud crud = new Crud(configurator);
         getContent().add(crud);
-    }
-
-    private GridDataSource createDataSource(ExecutorType executorType){
-        if (executorType == ExecutorType.SQL){
-            //Fetching Data From Database:
-            //DatabaseBootstrap.createTables();
-            GridDataSource source = JsqlDataSource.createDataSource(SqlDataSource.class, executorType);
-            return source;
-        }else if(executorType == ExecutorType.REST) {
-            //Fetching Data From WebService:
-            JsqlDataSource source = JsqlDataSource.createDataSource(RestDataSource.class, executorType);
-            source.setExecutor(new PassengerExecutor());
-            return source;
-        }else{
-            //In-Memory DataSource:
-            GridDataSource source = new DefaultDataSource();
-            getPassengers().stream().forEach(passenger -> source.save(passenger));
-            return source;
-        }
     }
 
     private List<Passenger> getPassengers() {
