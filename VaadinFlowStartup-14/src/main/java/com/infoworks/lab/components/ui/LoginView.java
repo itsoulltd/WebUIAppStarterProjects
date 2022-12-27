@@ -17,7 +17,7 @@ import java.util.Objects;
 /**
  * The Login view contains a button and a click listener.
  */
-@Route(value = "")
+@Route(value = RoutePath.LOGIN_VIEW)
 @Theme(Lumo.class)
 @Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
 public class LoginView extends VerticalLayout {
@@ -57,6 +57,5 @@ public class LoginView extends VerticalLayout {
             notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
         });
     }
-
 
 }

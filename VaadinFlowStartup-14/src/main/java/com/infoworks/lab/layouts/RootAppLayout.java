@@ -40,7 +40,7 @@ public class RootAppLayout extends AppLayout {
         logo.setHeight("44px");
         addToNavbar(new DrawerToggle(), logo);
 
-        final Tabs tabs = new Tabs(profile(), passengers(), trends(), logout());
+        final Tabs tabs = new Tabs(profile(), trends(), passengers(), logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addSelectedChangeListener(event -> {
             final Tab selectedTab = event.getSelectedTab();
@@ -60,13 +60,19 @@ public class RootAppLayout extends AppLayout {
             authRepo.doLogout(authToken, (isSuccess, msg) -> {
                 if (isSuccess) {
                     UI.getCurrent().getSession().setAttribute("X-AUTH-TOKEN", null);
-                    UI.getCurrent().navigate("");
+                    UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
                 }
             });
         });
         //
         final Tab tab = new Tab(btn);
         tab2Workspace.put(tab, new Label("Logout"));
+        return tab;
+    }
+
+    private Tab profile() {
+        final Tab  tab   = new Tab("Profile");
+        tab2Workspace.put(tab, new ProfileView());
         return tab;
     }
 
@@ -79,12 +85,6 @@ public class RootAppLayout extends AppLayout {
     private Tab passengers() {
         final Tab  tab   = new Tab("Passengers");
         tab2Workspace.put(tab, new PassengersView());
-        return tab;
-    }
-
-    private Tab profile() {
-        final Tab  tab   = new Tab("Profile");
-        tab2Workspace.put(tab, new ProfileView());
         return tab;
     }
 
