@@ -56,10 +56,10 @@ public class RootAppLayout extends AppLayout {
         btn.setSizeFull();
         btn.addClickListener(e -> {
             AuthRepository authRepo = new AuthRepository();
-            String authToken = UI.getCurrent().getSession().getAttribute("X-AUTH-TOKEN").toString();
+            String authToken = UI.getCurrent().getSession().getAttribute(AuthRepository.X_AUTH_TOKEN).toString();
             authRepo.doLogout(authToken, (isSuccess, msg) -> {
                 if (isSuccess) {
-                    UI.getCurrent().getSession().setAttribute("X-AUTH-TOKEN", null);
+                    UI.getCurrent().getSession().setAttribute(AuthRepository.X_AUTH_TOKEN, null);
                     UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
                 }
             });

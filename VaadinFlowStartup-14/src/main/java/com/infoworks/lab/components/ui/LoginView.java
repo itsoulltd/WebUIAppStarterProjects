@@ -43,7 +43,7 @@ public class LoginView extends VerticalLayout {
             AuthRepository authRepo = new AuthRepository();
             authRepo.doLogin(loginEvent.getUsername(), loginEvent.getPassword(), (isSuccess, authToken) -> {
                 if(isSuccess && Objects.nonNull(authToken)){
-                    UI.getCurrent().getSession().setAttribute("X-AUTH-TOKEN", authToken);
+                    UI.getCurrent().getSession().setAttribute(AuthRepository.X_AUTH_TOKEN, authToken);
                     UI.getCurrent().navigate(RoutePath.PROFILE_VIEW);
                 }else {
                     loginEvent.getSource().setError(true);

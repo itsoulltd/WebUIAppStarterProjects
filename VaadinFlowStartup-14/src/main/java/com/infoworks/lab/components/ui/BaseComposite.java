@@ -10,7 +10,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 public class BaseComposite<D extends Div> extends Composite<D> implements BeforeEnterObserver {
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
-        if(UI.getCurrent().getSession().getAttribute(AuthRepository.TOKEN) == null) {
+        if(UI.getCurrent().getSession().getAttribute(AuthRepository.X_AUTH_TOKEN) == null) {
             beforeEnterEvent.rerouteTo("");
         }
     }

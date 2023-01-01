@@ -4,7 +4,7 @@ import java.util.function.BiConsumer;
 
 public class AuthRepository {
 
-    public static final String TOKEN = "TOKEN-KEY";
+    public static final String X_AUTH_TOKEN = "X-AUTH-TOKEN";
 
     public void doLogin(String username , String password, BiConsumer<Boolean, String> consumer) {
         //TODO:
