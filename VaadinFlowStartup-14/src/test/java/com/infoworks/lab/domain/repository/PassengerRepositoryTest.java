@@ -1,6 +1,6 @@
 package com.infoworks.lab.domain.repository;
 
-import com.infoworks.lab.domain.entities.Gender;
+import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.domain.entities.Passenger;
 import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.rest.models.ItemCount;

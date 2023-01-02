@@ -1,5 +1,6 @@
 package com.infoworks.lab.domain.entities;
 
+import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.rest.models.Response;
 import com.it.soul.lab.sql.SQLExecutor;
 import com.it.soul.lab.sql.entity.Ignore;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 @Entity(name = "Passenger")
 @TableName(value = "Passenger")
-public class Passenger extends Response {
+public class Passenger extends Persistable<Integer, Long> {
 
 	@PrimaryKey(name="id", auto=true)
 	@Id @Column(length = 100)

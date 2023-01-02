@@ -1,7 +1,7 @@
 package com.infoworks.lab.components.presenters;
 
 import com.infoworks.lab.components.crud.components.editor.EmbeddedBeanEditor;
-import com.infoworks.lab.domain.entities.Gender;
+import com.infoworks.lab.domain.models.Gender;
 import com.it.soul.lab.sql.query.models.Property;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.combobox.ComboBox;

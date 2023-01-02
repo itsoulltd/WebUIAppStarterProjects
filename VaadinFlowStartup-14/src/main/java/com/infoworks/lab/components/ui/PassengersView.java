@@ -6,7 +6,7 @@ import com.infoworks.lab.components.crud.components.datasource.GridDataSource;
 import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
 import com.infoworks.lab.components.presenters.PassengerEditor;
 import com.infoworks.lab.config.GridDataSourceFactory;
-import com.infoworks.lab.domain.entities.Gender;
+import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.domain.entities.Passenger;
 import com.infoworks.lab.domain.executor.PassengerExecutor;
 import com.infoworks.lab.jsql.ExecutorType;

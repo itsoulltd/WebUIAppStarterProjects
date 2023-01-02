@@ -1,15 +1,19 @@
 package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
+import com.infoworks.lab.domain.models.Authorization;
 import com.infoworks.lab.rest.repository.RestRepository;
 import com.infoworks.lab.domain.entities.Passenger;
 import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.rest.models.*;
 import com.infoworks.lab.rest.template.Invocation;
+import com.vaadin.flow.component.UI;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.infoworks.lab.domain.repository.AuthRepository.X_AUTH_TOKEN;
 
 public class PassengerRepository extends HttpTemplate<Response, Message> implements RestRepository<Passenger, Integer> {
 
@@ -49,7 +53,9 @@ public class PassengerRepository extends HttpTemplate<Response, Message> impleme
 
     public ItemCount rowCount() {
         try {
-            javax.ws.rs.core.Response response = execute(null, Invocation.Method.GET, "rowCount");
+            String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+            Authorization authorization = new Authorization(token);
+            javax.ws.rs.core.Response response = execute(authorization, Invocation.Method.GET, "rowCount");
             ItemCount iCount = inflate(response, ItemCount.class);
             return iCount;
         } catch (HttpInvocationException e) {
@@ -64,7 +70,9 @@ public class PassengerRepository extends HttpTemplate<Response, Message> impleme
 
     public List<Passenger> fetch(Integer page, Integer limit){
         try {
-            Response items = get(null, new QueryParam("page", page.toString()), new QueryParam("limit", limit.toString()));
+            String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+            Authorization authorization = new Authorization(token);
+            Response items = get(authorization, new QueryParam("page", page.toString()), new QueryParam("limit", limit.toString()));
             if (items instanceof ResponseList){
                 List<Passenger> collection = ((ResponseList)items).getCollections();
                 return collection;
@@ -77,6 +85,8 @@ public class PassengerRepository extends HttpTemplate<Response, Message> impleme
 
     public Passenger insert(Passenger passenger){
         try {
+            String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+            passenger.setAuthorization(token);
             Passenger response = (Passenger) post(passenger);
             return response;
         } catch (HttpInvocationException e) {
@@ -87,6 +97,8 @@ public class PassengerRepository extends HttpTemplate<Response, Message> impleme
 
     public Passenger update(Passenger passenger, Integer userid){
         try {
+            String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+            passenger.setAuthorization(token);
             passenger.setId(userid);
             Passenger response = (Passenger) put(passenger);
             return response;
@@ -98,7 +110,9 @@ public class PassengerRepository extends HttpTemplate<Response, Message> impleme
 
     public boolean delete(Integer userId){
         try {
-            boolean isDeleted = delete(null, new QueryParam("userid", userId.toString()));
+            String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+            Authorization authorization = new Authorization(token);
+            boolean isDeleted = delete(authorization, new QueryParam("userid", userId.toString()));
             return isDeleted;
         } catch (HttpInvocationException e) {
             e.printStackTrace();
