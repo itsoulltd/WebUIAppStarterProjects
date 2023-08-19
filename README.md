@@ -16,14 +16,9 @@
     ~>$ killall Docker
 
 #### To Run Vaadin Projects:
-<<<<<<< HEAD
-Recommended Node.js version is v16.x.x
-[Link to download](https://nodejs.org/en/blog/release/v16.16.0)
-##### Run Vaadin-14 (Vaadin-only)
-=======
+###### Recommended Node.js version is v16.x.x [Link to download](https://nodejs.org/en/blog/release/v16.16.0)
 ###### Run Vaadin-14 (Vaadin-only)
 
->>>>>>> dev
      ~>$ mvn clean package -DskipTests
      ~>$ mvn jetty:run
      #Or to run with custom port:

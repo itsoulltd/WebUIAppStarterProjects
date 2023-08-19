@@ -8,9 +8,9 @@ Recommended Java version 8 or newer
 #### Recommended Node.js version is v16.x.x
 [Link to download](https://nodejs.org/en/blog/release/v16.16.0)
 
-### Build and fix:
+### Build and fix [Windows]:
 
-        #Build and fix:
+        #Build and fix for windows:
         ~>$ mvn clean package -DskipTests
         #Incase of failure, follwoing message can be shown:
         ======================================================================================================
@@ -26,7 +26,8 @@ Recommended Java version 8 or newer
 
 #### To run the project:  
 
-        ~>$ mvn jetty:run -Djetty.http.port=8081
+        ~>$ mvn clean package -DskipTests    
+        ~>$ mvn jetty:run -Djetty.http.port=8080
         
 ### And then open [http://localhost:8081](http://localhost:8081) in browser.
 
