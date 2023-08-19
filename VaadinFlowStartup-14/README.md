@@ -2,12 +2,37 @@
 
 This project can be used as a starting point to create your own Vaadin application.
 It has the necessary dependencies and files to help you get started.
-It requires Java 8 or newer and node.js 10.16 or newer.
 
-To run the project, run `mvn jetty:run` and open [http://localhost:8080](http://localhost:8080) in browser.
+Recommended Java version 8 or newer
 
-To update to the latest available Vaadin release, issue `mvn 
-versions:update-properties`
+#### Recommended Node.js version is v16.x.x
+[Link to download](https://nodejs.org/en/blog/release/v16.16.0)
+
+### Build and fix:
+
+        #Build and fix:
+        ~>$ mvn clean package -DskipTests
+        #Incase of failure, follwoing message can be shown:
+        ======================================================================================================
+        Failed to determine 'npm.cmd' tool.
+        Please install it either:
+        - by following the https://nodejs.org/en/download/ guide to install it globally
+        - or by running the frontend-maven-plugin goal to install it in this project:
+        $ mvn com.github.eirslett:frontend-maven-plugin:1.7.6:install-node-and-npm -DnodeVersion="v10.16.0"
+        ======================================================================================================
+        #Causion: -DnodeVersion should be which version of node you have installed, in this case recomendded is
+        # -DnodeVersion=v16.16.0
+        ~>$ mvn com.github.eirslett:frontend-maven-plugin:1.7.6:install-node-and-npm -DnodeVersion="v16.16.0"
+
+#### To run the project:  
+
+        ~>$ mvn jetty:run -Djetty.http.port=8081
+        
+### And then open [http://localhost:8081](http://localhost:8081) in browser.
+
+### To update to the latest available Vaadin release:
+        
+        ~>$ mvn versions:update-properties
 
 Some useful links:
 - [Feature overview](https://vaadin.com/flow)

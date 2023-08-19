@@ -36,3 +36,5 @@
 ###Project Specific
 **/node_modules/
 package-lock.json
+**/node.exe
+**/node
