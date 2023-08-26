@@ -3,7 +3,6 @@ package com.infoworks.lab.domain.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infoworks.lab.rest.models.Response;
 import com.infoworks.lab.rest.models.events.EventType;
-import com.it.soul.lab.sql.entity.Ignore;
 import com.it.soul.lab.sql.entity.PrimaryKey;
 
 import javax.persistence.*;
@@ -51,7 +50,7 @@ public class Persistable<ID,VERSION> extends Response {
     @JsonIgnore
     private EventType eventType;
 
-    @JsonIgnore @Transient @Ignore
+    @JsonIgnore @Transient
     private String authorization;
 
     public String getAuthorization() {
