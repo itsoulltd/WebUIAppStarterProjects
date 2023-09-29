@@ -2,6 +2,8 @@ package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.jjwt.JWTPayload;
 import com.infoworks.lab.jjwt.TokenValidator;
+import com.infoworks.lab.layouts.RoutePath;
+import com.infoworks.lab.rest.models.Response;
 import com.vaadin.flow.component.UI;
 
 import java.util.Optional;
@@ -9,6 +11,14 @@ import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class AuthRepository {
+
+    public static boolean isUnauthorizedAccess(Response response) {
+        if (response.getStatus() == 401) {
+            UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
+            return true;
+        }
+        return false;
+    }
 
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_RESET_TOKEN = "Reset-Pass-Token";
