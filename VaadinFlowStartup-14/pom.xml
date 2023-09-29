@@ -16,8 +16,8 @@
         <vaadin.version>14.0.8</vaadin.version>
         <jersey2.version>2.27</jersey2.version>
         <jaxrs.version>2.1</jaxrs.version>
-        <jsqleditor.version>1.1.4.8-RELEASE</jsqleditor.version>
-        <WebComponentKit.version>v1.13.2-RELEASE</WebComponentKit.version>
+        <jsqleditor.version>1.1.5.6-RELEASE</jsqleditor.version>
+        <WebComponentKit.version>v1.13.4-RELEASE</WebComponentKit.version>
         <spring.version>5.3.15</spring.version>
     </properties>
 

@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.infoworks.lab.domain.repository.AuthRepository.X_AUTH_TOKEN;
 
-public abstract class EntityRestRepository<E extends Persistable, ID> extends HttpTemplate<Response, Message> implements RestRepository<E, ID> {
+public abstract class EntityRestRepository<E extends Persistable, ID> extends HttpTemplate<E, Message> implements RestRepository<E, ID> {
 
     public EntityRestRepository(Object... config) {
         super(config);

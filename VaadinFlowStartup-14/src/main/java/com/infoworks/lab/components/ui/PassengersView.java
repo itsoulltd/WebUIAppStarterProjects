@@ -4,6 +4,9 @@ import com.infoworks.lab.components.crud.Configurator;
 import com.infoworks.lab.components.crud.Crud;
 import com.infoworks.lab.components.crud.components.datasource.GridDataSource;
 import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
+import com.infoworks.lab.components.crud.components.views.search.PropertySearchBar;
+import com.infoworks.lab.components.crud.components.views.search.SearchBar;
+import com.infoworks.lab.components.crud.components.views.search.SearchBarConfigurator;
 import com.infoworks.lab.components.presenters.PassengerEditor;
 import com.infoworks.lab.config.GridDataSourceFactory;
 import com.infoworks.lab.domain.models.Gender;
@@ -21,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = RoutePath.PASSENGERS_CRUD_VIEW, layout = RootAppLayout.class)
-public class PassengersView extends Composite<Div> {
+public class PassengersView extends Composite<Div> implements Crud.EventListener<Passenger> {
+
+    private SearchBar<Passenger> searchBar;
 
     public PassengersView() {
         super();
@@ -40,11 +45,17 @@ public class PassengersView extends Composite<Div> {
                 , new PassengerExecutor()
                 , getPassengers().toArray(new Passenger[0]));
 
+        SearchBarConfigurator searchConfig = new SearchBarConfigurator()
+                .setSkipProperties("id", "active")
+                .setHideAddNewButton(false);
+        searchBar = new PropertySearchBar<>(Passenger.class, searchConfig);
+
         Configurator configurator = new Configurator(Passenger.class)
                 .setDisplayType(EditorDisplayType.EMBEDDED)
                 .setDataSource(source)
                 .setEditor(PassengerEditor.class)
                 .setDialog(PassengerEditor.class)
+                .setSearchBar(searchBar)
                 .setGridPageSize(8);
 
         Crud crud = new Crud(configurator);
@@ -59,4 +70,15 @@ public class PassengersView extends Composite<Div> {
         personList.add(new Passenger("Samuel", Gender.MALE, 53));
         return personList;
     }
+
+    @Override
+    public void onSaveSuccess(Passenger passenger, Object o) {
+        searchBar.clearSearchBarView();
+    }
+
+    @Override
+    public void onDeleteSuccess(Passenger passenger) {
+        searchBar.clearSearchBarView();
+    }
+
 }
