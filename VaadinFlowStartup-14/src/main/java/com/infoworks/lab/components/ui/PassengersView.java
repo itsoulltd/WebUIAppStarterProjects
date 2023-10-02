@@ -4,6 +4,9 @@ import com.infoworks.lab.components.crud.Configurator;
 import com.infoworks.lab.components.crud.Crud;
 import com.infoworks.lab.components.crud.components.datasource.GridDataSource;
 import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
+import com.infoworks.lab.components.crud.components.views.search.PropertySearchBar;
+import com.infoworks.lab.components.crud.components.views.search.SearchBar;
+import com.infoworks.lab.components.crud.components.views.search.SearchBarConfigurator;
 import com.infoworks.lab.components.presenters.PassengerEditor;
 import com.infoworks.lab.config.GridDataSourceFactory;
 import com.infoworks.lab.domain.entities.Passenger;
@@ -21,8 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = RoutePath.PASSENGERS_CRUD_VIEW, layout = RootAppLayout.class)
-public class PassengersView extends Composite<Div> {
+public class PassengersView extends Composite<Div> implements Crud.EventListener<Passenger>{
 
+    private SearchBar<Passenger> iSearchBar;
     public PassengersView() {
         super();
     }
@@ -40,15 +44,22 @@ public class PassengersView extends Composite<Div> {
                 , new PassengerExecutor()
                 , getPassengers().toArray(new Passenger[0]));
 
+        SearchBarConfigurator searchConfig = new SearchBarConfigurator()
+                .setSkipProperties("id")
+                .setHideAddNewButton(false);
+        iSearchBar = new PropertySearchBar(Passenger.class, searchConfig);
+
         Configurator configurator = new Configurator(Passenger.class)
-                .setDisplayType(EditorDisplayType.EMBEDDED)
+                .setDisplayType(EditorDisplayType.COMBINED)
                 .setDataSource(source)
                 .setEditor(PassengerEditor.class)
                 .setDialog(PassengerEditor.class)
+                .setSearchBar(iSearchBar)
                 .setHideSearchBar(false)
                 .setGridPageSize(8);
 
-        Crud crud = new Crud(configurator);
+        Crud crud = new Crud(configurator)
+                .addEventListener(this);
         getContent().add(crud);
     }
 
@@ -61,4 +72,13 @@ public class PassengersView extends Composite<Div> {
         return personList;
     }
 
+    @Override
+    public void onSaveSuccess(Passenger passenger, Object o) {
+        if(iSearchBar != null) iSearchBar.clearSearchBarView();
+    }
+
+    @Override
+    public void onDeleteSuccess(Passenger passenger) {
+        if(iSearchBar != null) iSearchBar.clearSearchBarView();
+    }
 }
