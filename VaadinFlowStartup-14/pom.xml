@@ -157,10 +157,15 @@
             <artifactId>jjwt-web-token</artifactId>
             <version>${WebComponentKit.version}</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.itsoulltd.WebComponentKit</groupId>
             <artifactId>vaadin-component</artifactId>
             <version>${WebComponentKit.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.infoworks.lab</groupId>
+            <artifactId>vaadin-component</artifactId>
+            <version>1.10.7-RELEASE</version>
         </dependency>
         <!-- JAX-RS -->
         <dependency>
