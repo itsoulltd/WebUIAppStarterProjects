@@ -47,7 +47,8 @@ public class PassengersView extends Composite<Div> implements Crud.EventListener
         SearchBarConfigurator searchConfig = new SearchBarConfigurator()
                 .setSkipProperties("id")
                 .setHideAddNewButton(false);
-        iSearchBar = new PropertySearchBar(Passenger.class, searchConfig);
+        //iSearchBar = new PropertySearchBar(Passenger.class, searchConfig);
+        iSearchBar = new SearchBar(Passenger.class, searchConfig);
 
         Configurator configurator = new Configurator(Passenger.class)
                 .setDisplayType(EditorDisplayType.COMBINED)
