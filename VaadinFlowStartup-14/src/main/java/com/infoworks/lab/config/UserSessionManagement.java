@@ -19,6 +19,7 @@ public class UserSessionManagement {
         if (response.getStatus() == 200 || response.getStatus() == 201) return false;
         UI.getCurrent().getSession().setAttribute(AuthRepository.X_AUTH_TOKEN, null);
         EventQueue.unregister();
+        UI.getCurrent().getSession().close();
         UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
         return true;
     }
