@@ -1,6 +1,7 @@
 package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
+import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.entities.Persistable;
 import com.infoworks.lab.domain.models.Authorization;
 import com.infoworks.lab.domain.models.SecureSearchQuery;
@@ -58,6 +59,9 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
     public List<E> fetch(Integer page, Integer limit){
         try {
             Response items = get(null, new QueryParam("page", page.toString()), new QueryParam("limit", limit.toString()));
+            if ( UserSessionManagement.handleSessionExpireEvent(items)) {
+                throw new HttpInvocationException("Unauthorized Access!");
+            }
             if (items instanceof ResponseList){
                 List<E> collection = ((ResponseList)items).getCollections();
                 return collection;
@@ -75,6 +79,9 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
                 ent.setAuthorization(token);
             }
             E response = (E) post(ent);
+            if (UserSessionManagement.handleSessionExpireEvent(response)) {
+                throw new HttpInvocationException("Unauthorized Access!");
+            }
             return response;
         } catch (HttpInvocationException e) {
             e.printStackTrace();
@@ -90,6 +97,9 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
             }
             ent.setId(id);
             E response = (E) put(ent);
+            if (UserSessionManagement.handleSessionExpireEvent(response)) {
+                throw new HttpInvocationException("Unauthorized Access!");
+            }
             return response;
         } catch (HttpInvocationException e) {
             e.printStackTrace();
@@ -138,6 +148,10 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
         javax.ws.rs.core.Response response = execute(query
                 , Invocation.Method.POST
                 , "search");
+        if (UserSessionManagement.handleSessionExpireEvent(
+                new Response().setStatus(response.getStatus()))) {
+            throw new HttpInvocationException("Unauthorized Access!");
+        }
         String responseStr = response.readEntity(String.class);
         List<E> ent = unmarshal(responseStr);
         return ent;
