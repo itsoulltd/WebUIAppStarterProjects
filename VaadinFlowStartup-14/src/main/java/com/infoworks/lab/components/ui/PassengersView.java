@@ -4,14 +4,14 @@ import com.infoworks.lab.components.crud.Configurator;
 import com.infoworks.lab.components.crud.Crud;
 import com.infoworks.lab.components.crud.components.datasource.GridDataSource;
 import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
-import com.infoworks.lab.components.crud.components.views.search.PropertySearchBar;
 import com.infoworks.lab.components.crud.components.views.search.SearchBar;
 import com.infoworks.lab.components.crud.components.views.search.SearchBarConfigurator;
 import com.infoworks.lab.components.presenters.PassengerEditor;
 import com.infoworks.lab.config.GridDataSourceFactory;
 import com.infoworks.lab.domain.entities.Passenger;
-import com.infoworks.lab.domain.executor.PassengerExecutor;
+import com.infoworks.lab.domain.executor.RepositoryExecutor;
 import com.infoworks.lab.domain.models.Gender;
+import com.infoworks.lab.domain.repository.PassengerRepository;
 import com.infoworks.lab.jsql.ExecutorType;
 import com.infoworks.lab.layouts.RootAppLayout;
 import com.infoworks.lab.layouts.RoutePath;
@@ -41,7 +41,7 @@ public class PassengersView extends Composite<Div> implements Crud.EventListener
         }
         //Create DataSource:
         GridDataSource source = GridDataSourceFactory.create(ExecutorType.IN_MEM
-                , new PassengerExecutor()
+                , new RepositoryExecutor(new PassengerRepository())
                 , getPassengers().toArray(new Passenger[0]));
 
         SearchBarConfigurator searchConfig = new SearchBarConfigurator()
