@@ -8,14 +8,26 @@ const fs = require('fs');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const {BabelMultiTargetPlugin} = require('webpack-babel-multi-target-plugin');
+const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
+
+// Flow plugins
+const StatsPlugin = require('@vaadin/stats-plugin');
+const ThemeLiveReloadPlugin = require('@vaadin/theme-live-reload-plugin');
+const { ApplicationThemePlugin, processThemeResources, extractThemeName, findParentThemes } = require('@vaadin/application-theme-plugin');
 
 const path = require('path');
 const baseDir = path.resolve(__dirname);
 // the folder of app resources (main.js and flow templates)
+
+// this matches /themes/my-theme/ and is used to check css url handling and file path build.
+const themePartRegex = /(\\|\/)themes\1[\s\S]*?\1/;
+
 const frontendFolder = require('path').resolve(__dirname, 'frontend');
 
 const fileNameOfTheFlowGeneratedMainEntryPoint = require('path').resolve(__dirname, 'target/frontend/generated-flow-imports.js');
 const mavenOutputFolderForFlowBundledFiles = require('path').resolve(__dirname, 'target/classes/META-INF/VAADIN');
+
+const devmodeGizmoJS = '@vaadin/flow-frontend/VaadinDevmodeGizmo.js'
 
 // public path for resources, must match Flow VAADIN_BUILD
 const build = 'build';
@@ -27,45 +39,91 @@ const buildFolder = `${mavenOutputFolderForFlowBundledFiles}/${build}`;
 const confFolder = `${mavenOutputFolderForFlowBundledFiles}/${config}`;
 // file which is used by flow to read templates for server `@Id` binding
 const statsFile = `${confFolder}/stats.json`;
+
+// Folders in the project which can contain static assets.
+const projectStaticAssetsFolders = [
+  path.resolve(__dirname, 'src', 'main', 'resources', 'META-INF', 'resources'),
+  path.resolve(__dirname, 'src', 'main', 'resources', 'static'),
+  frontendFolder
+];
+
+const projectStaticAssetsOutputFolder = require('path').resolve(__dirname, 'target/classes/META-INF/VAADIN/static');
+
+// Folders in the project which can contain application themes
+const themeProjectFolders = projectStaticAssetsFolders.map((folder) =>
+  path.resolve(folder, 'themes')
+);
+
+
+// Target flow-fronted auto generated to be the actual target folder
+const flowFrontendFolder = require('path').resolve(__dirname, 'target/frontend');
+
 // make sure that build folder exists before outputting anything
 const mkdirp = require('mkdirp');
-mkdirp(buildFolder);
-mkdirp(confFolder);
 
 const devMode = process.argv.find(v => v.indexOf('webpack-dev-server') >= 0);
+
+!devMode && mkdirp(buildFolder);
+mkdirp(confFolder);
+
 let stats;
 
-const watchDogPrefix = '--watchDogPort=';
-let watchDogPort = process.argv.find(v => v.indexOf(watchDogPrefix) >= 0);
-if (watchDogPort){
-    watchDogPort = watchDogPort.substr(watchDogPrefix.length);
-}
+const transpile = !devMode || process.argv.find(v => v.indexOf('--transpile-es5') >= 0);
 
-const net = require('net');
-
-function setupWatchDog(){
-    var client = new net.Socket();
-    client.connect(watchDogPort, 'localhost', function() {
-        console.debug('Watchdog connected.');
+// Open a connection with the Java dev-mode handler in order to finish
+// webpack-dev-mode when it exits or crashes.
+const watchDogPort = devMode && process.env.watchDogPort;
+let client;
+if (watchDogPort) {
+  const runWatchDog = () => {
+    client = new require('net').Socket();
+    client.setEncoding('utf8');
+    client.on('error', function () {
+      console.log("Watchdog connection error. Terminating webpack process...");
+      client.destroy();
+      process.exit(0);
+    });
+    client.on('close', function () {
+      client.destroy();
+      runWatchDog();
     });
 
-    client.on('error', function(){
-        console.log("Watchdog connection error. Terminating webpack process...");
-        client.destroy();
-        process.exit(0);
-    });
+    client.connect(watchDogPort, 'localhost');
+  }
 
-    client.on('close', function() {
-        client.destroy();
-        console.debug('Watchdog connection closed. Trying to re-run watchdog.');
-        setupWatchDog();
-    });  
+  runWatchDog();
 }
 
-if (watchDogPort){
-    setupWatchDog();
+const flowFrontendThemesFolder = path.resolve(flowFrontendFolder, 'themes');
+const frontendGeneratedFolder = path.resolve(frontendFolder, "generated");
+const themeOptions = {
+  devMode: devMode,
+  // The following matches ./frontend/generated/theme.js
+  // and for theme in JAR that is copied to target/frontend/themes/
+  themeResourceFolder: flowFrontendThemesFolder,
+  themeProjectFolders: themeProjectFolders,
+  projectStaticAssetsOutputFolder: projectStaticAssetsOutputFolder,
+  frontendGeneratedFolder: frontendGeneratedFolder
+};
+let themeName = undefined;
+let themeWatchFolders = undefined;
+if (devMode) {
+  // Current theme name is being extracted from theme.js located in
+  // frontend/generated folder
+  themeName = extractThemeName(frontendGeneratedFolder);
+  const parentThemePaths = findParentThemes(themeName, themeOptions);
+  const currentThemeFolders = [...projectStaticAssetsFolders
+    .map((folder) => path.resolve(folder, "themes", themeName)),
+    path.resolve(flowFrontendThemesFolder, themeName)];
+  // Watch the components folders for component styles update in both
+  // current theme and parent themes. Other folders or CSS files except
+  // 'styles.css' should be referenced from `styles.css` anyway, so no need
+  // to watch them.
+  themeWatchFolders = [...currentThemeFolders, ...parentThemePaths]
+    .map((themeFolder) => path.resolve(themeFolder, "components"));
 }
 
+const processThemeResourcesCallback = (logger) => processThemeResources(themeOptions, logger);
 
 exports = {
   frontendFolder: `${frontendFolder}`,
@@ -77,15 +135,24 @@ module.exports = {
   mode: 'production',
   context: frontendFolder,
   entry: {
-    bundle: fileNameOfTheFlowGeneratedMainEntryPoint
+    bundle: fileNameOfTheFlowGeneratedMainEntryPoint,
+    ...(devMode && { gizmo: devmodeGizmoJS })
   },
 
   output: {
     filename: `${build}/vaadin-[name]-[contenthash].cache.js`,
-    path: mavenOutputFolderForFlowBundledFiles
+    path: mavenOutputFolderForFlowBundledFiles,
+    publicPath: 'VAADIN/',
   },
 
   resolve: {
+    // Search for import 'x/y' inside these folders, used at least for importing an application theme
+    modules: [
+      'node_modules',
+      flowFrontendFolder,
+      ...projectStaticAssetsFolders,
+    ],
+    extensions: ['.ts', '.js'],
     alias: {
       Frontend: frontendFolder
     }
@@ -96,10 +163,13 @@ module.exports = {
     contentBase: [mavenOutputFolderForFlowBundledFiles, 'src/main/webapp'],
     after: function(app, server) {
       app.get(`/stats.json`, function(req, res) {
-        res.json(stats.toJson());
+        res.json(stats);
       });
       app.get(`/stats.hash`, function(req, res) {
-        res.json(stats.toJson().hash.toString());
+        res.json(stats.hash.toString());
+      });
+      app.get(`/assetsByChunkName`, function(req, res) {
+        res.json(stats.assetsByChunkName);
       });
       app.get(`/stop`, function(req, res) {
         // eslint-disable-next-line no-console
@@ -111,14 +181,75 @@ module.exports = {
 
   module: {
     rules: [
-      { // Files that Babel has to transpile
+      ...(transpile ? [
+        {
+        test: /\.tsx?$/,
+        use: [ BabelMultiTargetPlugin.loader(), 'ts-loader' ],
+      }
+      ] : [{
+        test: /\.tsx?$/,
+        use: ['ts-loader']
+      }]),
+      ...(transpile ? [{ // Files that Babel has to transpile
         test: /\.js$/,
         use: [BabelMultiTargetPlugin.loader()]
-      },
+      }] : []),
       {
         test: /\.css$/i,
-        use: ['raw-loader']
-      }
+        use: [
+          {
+            loader: 'css-loader',
+            options: {
+              url: (url, resourcePath) => {
+                // css urls may contain query string or fragment identifiers
+                // that should removed before resolving real path
+                // e.g
+                //  ../webfonts/fa-solid-900.svg#fontawesome
+                //  ../webfonts/fa-brands-400.eot?#iefix
+                if(url.includes('?'))
+                    url = url.substring(0, url.indexOf('?'));
+                if(url.includes('#'))
+                    url = url.substring(0, url.indexOf('#'));
+
+                // Only translate files from node_modules
+                const resolve = resourcePath.match(/(\\|\/)node_modules\1/)
+                  && fs.existsSync(path.resolve(path.dirname(resourcePath), url));
+                const themeResource = resourcePath.match(themePartRegex) && url.match(/^themes\/[\s\S]*?\//);
+                return resolve || themeResource;
+              },
+              // use theme-loader to also handle any imports in css files
+              importLoaders: 1
+            },
+          },
+          {
+            // theme-loader will change any url starting with './' to start with 'VAADIN/static' instead
+            // NOTE! this loader should be here so it's run before css-loader as loaders are applied Right-To-Left
+            loader: '@vaadin/theme-loader',
+            options: {
+              devMode: devMode
+            }
+          }
+        ],
+      },
+      {
+        // File-loader only copies files used as imports in .js files or handled by css-loader
+        test: /\.(png|gif|jpg|jpeg|svg|eot|woff|woff2|otf|ttf)$/,
+        use: [{
+          loader: 'file-loader',
+          options: {
+            outputPath: 'static/',
+            name(resourcePath, resourceQuery) {
+              if (resourcePath.match(/(\\|\/)node_modules\1/)) {
+                return /(\\|\/)node_modules\1(?!.*node_modules)([\S]+)/.exec(resourcePath)[2].replace(/\\/g, "/");
+              }
+              if (resourcePath.match(/(\\|\/)frontend\1/)) {
+                return /(\\|\/)frontend\1(?!.*frontend)([\S]+)/.exec(resourcePath)[2].replace(/\\/g, "/");
+              }
+              return '[path][name].[ext]';
+            }
+          }
+        }],
+      },
     ]
   },
   performance: {
@@ -126,12 +257,17 @@ module.exports = {
     maxAssetSize: 2097152 // 2MB
   },
   plugins: [
-    // Generate compressed bundles
-    new CompressionPlugin(),
+    // Generate compressed bundles when not devMode
+    ...(devMode ? [] : [new CompressionPlugin()]),
 
     // Transpile with babel, and produce different bundles per browser
-    new BabelMultiTargetPlugin({
+    ...(transpile ? [new BabelMultiTargetPlugin({
       babel: {
+        plugins: [
+          // workaround for Safari 10 scope issue (https://bugs.webkit.org/show_bug.cgi?id=159270)
+          "@babel/plugin-transform-block-scoping",
+        ],
+
         presetOptions: {
           useBuiltIns: false // polyfills are provided from webcomponents-loader.js
         }
@@ -152,29 +288,40 @@ module.exports = {
           tagAssetsWithKey: true, // append a suffix to the file name
         }
       }
+    })] : []),
+
+    new ApplicationThemePlugin(themeOptions),
+
+    ...(devMode && themeName ? [new ExtraWatchWebpackPlugin({
+      files: [],
+      dirs: themeWatchFolders
+    }), new ThemeLiveReloadPlugin(processThemeResourcesCallback)] : []),
+
+    new StatsPlugin({
+      devMode: devMode,
+      statsFile: statsFile,
+      setResults: function (statsFile) {
+        stats = statsFile;
+      }
     }),
 
     // Generates the stats file for flow `@Id` binding.
     function (compiler) {
-      compiler.hooks.afterEmit.tapAsync("FlowIdPlugin", (compilation, done) => {
-        if (!devMode) {
-          // eslint-disable-next-line no-console
-          console.log("         Emitted " + statsFile)
-          fs.writeFile(statsFile, JSON.stringify(compilation.getStats().toJson(), null, 1), done);
-        } else {
-          // eslint-disable-next-line no-console
-          console.log("         Serving the 'stats.json' file dynamically.");
-          stats = compilation.getStats();
+        compiler.hooks.done.tapAsync('FlowIdPlugin', (compilation, done) => {
+          // trigger live reload via server
+          if (client) {
+            client.write('reload\n');
+          }
           done();
-        }
-      });
+        });
     },
 
     // Copy webcomponents polyfills. They are not bundled because they
     // have its own loader based on browser quirks.
     new CopyWebpackPlugin([{
       from: `${baseDir}/node_modules/@webcomponents/webcomponentsjs`,
-      to: `${build}/webcomponentsjs/`
+      to: `${build}/webcomponentsjs/`,
+      ignore: ['*.md', '*.json']
     }]),
   ]
 };
