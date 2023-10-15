@@ -38,3 +38,4 @@
 package-lock.json
 **/node.exe
 **/node
+**/webpack.generated.js
