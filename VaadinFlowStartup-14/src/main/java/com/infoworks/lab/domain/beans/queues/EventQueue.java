@@ -2,7 +2,6 @@ package com.infoworks.lab.domain.beans.queues;
 
 import com.infoworks.lab.beans.queue.AbstractTaskQueue;
 import com.infoworks.lab.beans.tasks.definition.Task;
-import com.infoworks.lab.beans.tasks.definition.TaskManager;
 import com.infoworks.lab.beans.tasks.definition.TaskQueue;
 import com.infoworks.lab.beans.tasks.definition.TaskStack;
 import com.infoworks.lab.rest.models.Message;
@@ -24,13 +23,6 @@ public class EventQueue extends AbstractTaskQueue {
 
     public static void unregister() {
         Object evnQueue = UI.getCurrent().getSession().getAttribute(X_EVENT_QUEUE);
-        if (evnQueue != null) {
-            try {
-                (((EventQueue) evnQueue).taskManager).close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         UI.getCurrent().getSession().setAttribute(X_EVENT_QUEUE, null);
     }
 
@@ -42,14 +34,12 @@ public class EventQueue extends AbstractTaskQueue {
     }
 
     private final TaskQueue exeQueue;
-    private final TaskManager taskManager;
 
     public EventQueue(int numberOfThreads) {
         numberOfThreads = numberOfThreads <= 0
                 ? (Runtime.getRuntime().availableProcessors() / 2)
                 : numberOfThreads;
         this.exeQueue = TaskQueue.createSync(false, Executors.newFixedThreadPool(numberOfThreads));
-        this.taskManager = new EventQueueManager(this);
     }
 
     public EventQueue() {
@@ -58,13 +48,13 @@ public class EventQueue extends AbstractTaskQueue {
 
     @Override
     public void onTaskComplete(BiConsumer<Message, TaskStack.State> biConsumer) {
-        /*super.onTaskComplete(biConsumer);*/
         exeQueue.onTaskComplete(biConsumer);
     }
 
     @Override
     public void abort(Task task, Message error) {
-        //TODO:
+        task.setMessage(error);
+        exeQueue.add(task);
     }
 
     @Override
