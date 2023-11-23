@@ -111,11 +111,8 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         query.setAuthorization(UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString());
         //Iterate Over Search-Properties:
         for (Property prop : searchProps) {
-            if (Arrays.stream(skipProperties)
-                    .noneMatch(val -> val.equalsIgnoreCase(prop.getKey()))) {
-                query.getPredicate()
-                        .or(prop.getKey()).isLike("%" + search.getValue().toString() + "%");
-            }
+            query.getPredicate()
+                    .or(prop.getKey()).isLike("%" + search.getValue().toString() + "%");
         }
         //
         UI ui = UI.getCurrent().getUI().orElse(null);
