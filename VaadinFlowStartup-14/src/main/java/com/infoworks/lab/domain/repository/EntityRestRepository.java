@@ -31,15 +31,21 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
 
     @Override
     protected String host() {
-        String host = System.getenv("app.host");
+        String host = System.getenv("app.api.host");
         return host == null ? "localhost" : host;
     }
 
     @Override
     protected Integer port() {
-        String portStr = System.getenv("app.port");
+        String portStr = System.getenv("app.api.port");
         return portStr == null ? 8080 : Integer.valueOf(portStr);
     }
+
+    protected abstract String api();
+
+    public abstract String getPrimaryKeyName();
+
+    public abstract Class<E> getEntityType();
 
     public ItemCount rowCount() {
         try {
