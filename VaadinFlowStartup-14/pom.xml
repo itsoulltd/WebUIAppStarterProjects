@@ -17,7 +17,7 @@
         <jersey2.version>2.27</jersey2.version>
         <jaxrs.version>2.1</jaxrs.version>
         <jsqleditor.version>1.1.5.6-RELEASE</jsqleditor.version>
-        <WebComponentKit.version>v1.13.7-RELEASE</WebComponentKit.version>
+        <WebComponentKit.version>v1.14.1-RELEASE</WebComponentKit.version>
         <spring.version>5.3.15</spring.version>
     </properties>
 
