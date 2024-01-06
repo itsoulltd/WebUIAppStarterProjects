@@ -37,3 +37,4 @@
 **/node_modules/
 **/node/
 VaadinFlowStartup-12/out/artifacts/vaadinui_poc_war_exploded/META-INF
+**/webpack.generated.js

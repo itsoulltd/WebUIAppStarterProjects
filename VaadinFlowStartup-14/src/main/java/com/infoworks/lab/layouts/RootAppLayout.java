@@ -4,7 +4,9 @@ import com.infoworks.lab.components.component.VImage;
 import com.infoworks.lab.components.ui.PassengersView;
 import com.infoworks.lab.components.ui.ProfileView;
 import com.infoworks.lab.components.ui.TrendsView;
+import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.repository.AuthRepository;
+import com.infoworks.lab.rest.models.Response;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -59,8 +61,7 @@ public class RootAppLayout extends AppLayout {
             String authToken = UI.getCurrent().getSession().getAttribute(AuthRepository.X_AUTH_TOKEN).toString();
             authRepo.doLogout(authToken, (isSuccess, msg) -> {
                 if (isSuccess) {
-                    UI.getCurrent().getSession().setAttribute(AuthRepository.X_AUTH_TOKEN, null);
-                    UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
+                    UserSessionManagement.handleSessionExpireEvent(new Response().setStatus(401));
                 }
             });
         });

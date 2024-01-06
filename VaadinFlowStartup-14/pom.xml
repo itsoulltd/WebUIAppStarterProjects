@@ -13,11 +13,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <failOnMissingWebXml>false</failOnMissingWebXml>
-        <vaadin.version>14.0.8</vaadin.version>
+        <vaadin.version>14.10.9</vaadin.version>
         <jersey2.version>2.27</jersey2.version>
         <jaxrs.version>2.1</jaxrs.version>
-        <jsqleditor.version>1.1.4.8-RELEASE</jsqleditor.version>
-        <WebComponentKit.version>v1.13.2-RELEASE</WebComponentKit.version>
+        <jsqleditor.version>1.1.5.6-RELEASE</jsqleditor.version>
+        <WebComponentKit.version>v1.14.1-RELEASE</WebComponentKit.version>
         <spring.version>5.3.15</spring.version>
     </properties>
 
@@ -162,6 +162,11 @@
             <artifactId>vaadin-component</artifactId>
             <version>${WebComponentKit.version}</version>
         </dependency>
+        <!--<dependency>
+            <groupId>com.infoworks.lab</groupId>
+            <artifactId>vaadin-component</artifactId>
+            <version>1.10.7-RELEASE</version>
+        </dependency>-->
         <!-- JAX-RS -->
         <dependency>
             <groupId>javax.ws.rs</groupId>

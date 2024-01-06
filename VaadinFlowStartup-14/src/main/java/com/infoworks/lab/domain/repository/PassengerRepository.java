@@ -8,6 +8,7 @@ import com.infoworks.lab.rest.models.Message;
 import com.infoworks.lab.rest.models.QueryParam;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class PassengerRepository extends EntityRestRepository<Passenger, Integer> {
@@ -54,6 +55,10 @@ public class PassengerRepository extends EntityRestRepository<Passenger, Integer
 
     @Override
     protected List<Passenger> unmarshal(String json) throws IOException {
-        return Message.unmarshal(new TypeReference<List<Passenger>>(){}, json);
+        if (json.startsWith("{")) {
+            return Arrays.asList(Message.unmarshal(Passenger.class, json));
+        } else {
+            return Message.unmarshal(new TypeReference<List<Passenger>>(){}, json);
+        }
     }
 }

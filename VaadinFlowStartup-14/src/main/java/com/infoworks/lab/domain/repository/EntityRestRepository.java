@@ -1,6 +1,7 @@
 package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
+import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.entities.Persistable;
 import com.infoworks.lab.domain.models.Authorization;
 import com.infoworks.lab.domain.models.SecureSearchQuery;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static com.infoworks.lab.domain.repository.AuthRepository.X_AUTH_TOKEN;
 
-public abstract class EntityRestRepository<E extends Persistable, ID> extends HttpTemplate<Response, Message> implements RestRepository<E, ID> {
+public abstract class EntityRestRepository<E extends Persistable, ID> extends HttpTemplate<E, Message> implements RestRepository<E, ID> {
 
     public EntityRestRepository(Object... config) {
         super(config);
@@ -30,15 +31,21 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
 
     @Override
     protected String host() {
-        String host = System.getenv("app.host");
+        String host = System.getenv("app.api.host");
         return host == null ? "localhost" : host;
     }
 
     @Override
     protected Integer port() {
-        String portStr = System.getenv("app.port");
+        String portStr = System.getenv("app.api.port");
         return portStr == null ? 8080 : Integer.valueOf(portStr);
     }
+
+    protected abstract String api();
+
+    public abstract String getPrimaryKeyName();
+
+    public abstract Class<E> getEntityType();
 
     public ItemCount rowCount() {
         try {
@@ -58,6 +65,9 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
     public List<E> fetch(Integer page, Integer limit){
         try {
             Response items = get(null, new QueryParam("page", page.toString()), new QueryParam("limit", limit.toString()));
+            if ( UserSessionManagement.handleSessionExpireEvent(items)) {
+                throw new HttpInvocationException("Unauthorized Access!");
+            }
             if (items instanceof ResponseList){
                 List<E> collection = ((ResponseList)items).getCollections();
                 return collection;
@@ -75,6 +85,9 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
                 ent.setAuthorization(token);
             }
             E response = (E) post(ent);
+            if (UserSessionManagement.handleSessionExpireEvent(response)) {
+                throw new HttpInvocationException("Unauthorized Access!");
+            }
             return response;
         } catch (HttpInvocationException e) {
             e.printStackTrace();
@@ -90,6 +103,9 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
             }
             ent.setId(id);
             E response = (E) put(ent);
+            if (UserSessionManagement.handleSessionExpireEvent(response)) {
+                throw new HttpInvocationException("Unauthorized Access!");
+            }
             return response;
         } catch (HttpInvocationException e) {
             e.printStackTrace();
@@ -138,6 +154,10 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
         javax.ws.rs.core.Response response = execute(query
                 , Invocation.Method.POST
                 , "search");
+        if (UserSessionManagement.handleSessionExpireEvent(
+                new Response().setStatus(response.getStatus()))) {
+            throw new HttpInvocationException("Unauthorized Access!");
+        }
         String responseStr = response.readEntity(String.class);
         List<E> ent = unmarshal(responseStr);
         return ent;
