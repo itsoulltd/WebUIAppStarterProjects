@@ -27,7 +27,7 @@ Recommended Java version 8 or newer
 #### To run the project:  
 
         ~>$ mvn clean package -DskipTests    
-        ~>$ mvn jetty:run -Djetty.http.port=8080
+        ~>$ mvn jetty:run -Djetty.http.port=8081
         
 ### And then open [http://localhost:8081](http://localhost:8081) in browser.
 
