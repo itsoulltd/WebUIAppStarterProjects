@@ -2,8 +2,7 @@
 <html
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        xmlns:sec="http://www.thymeleaf.org"
->
+        xmlns:sec="http://www.thymeleaf.org">
 <head th:fragment="header">
   <!-- Required meta tags -->
   <meta charset="utf-8">
@@ -13,11 +12,11 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
   <!-- Core theme CSS (includes Bootstrap)-->
   <link th:href="@{/css/styles.css}" rel="stylesheet" />
-  <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">RunGroop</title>
+  <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">LayoutTemplate</title>
 </head>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container px-5">
-    <a class="navbar-brand" th:href="@{/}">RunGroop</a>
+    <a class="navbar-brand" th:href="@{/}">App-Name</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -44,7 +43,7 @@
     <a class="btn btn-lg btn-primary" href="#!">Contact us</a>
   </div>
 </section>
-</main>
+<main></main>
 <!-- Footer-->
 <footer class="bg-dark py-4 mt-auto">
   <div class="container px-5">
