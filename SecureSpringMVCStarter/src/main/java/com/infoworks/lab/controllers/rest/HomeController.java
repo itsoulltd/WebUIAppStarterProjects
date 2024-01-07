@@ -10,18 +10,17 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import java.util.Locale;
 
 @Controller
-public class GreetingController {
+public class HomeController {
 
     private MessageSource messageSource;
 
-    public GreetingController(MessageSource messageSource) {
+    public HomeController(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
     @GetMapping("/index")
     public String greetings(Model model
             , @RequestHeader(value = HttpHeaders.ACCEPT_LANGUAGE, required = false) String lang) {
-        //
         Locale locale = Locale.forLanguageTag(lang);
         String greeting = messageSource.getMessage("app.greetings", null, locale);
         model.addAttribute("greeting", greeting);
