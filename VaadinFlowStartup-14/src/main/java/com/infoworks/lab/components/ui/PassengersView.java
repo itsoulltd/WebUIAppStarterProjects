@@ -17,6 +17,7 @@ import com.infoworks.lab.layouts.RootAppLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.Route;
 
@@ -61,6 +62,8 @@ public class PassengersView extends Composite<Div> implements Crud.EventListener
 
         Crud crud = new Crud(configurator)
                 .addEventListener(this);
+        crud.getGrid().setAllRowsVisible(true);//For Dynamic Table Height.
+        crud.getGrid().addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         getContent().add(crud);
     }
 
