@@ -29,7 +29,7 @@ public class BaseComposite<D extends Div> extends Composite<D> implements Before
             UserSessionManagement.handleSessionExpireEvent(new Response().setStatus(401));
         } else {
             //On every tab-refresh checking token validation would be more secure:
-            //But will causes too many network calls.
+            //Which shall be causes too many network calls.
             try {
                 AuthRepository repository = new AuthRepository();
                 Response response = repository.isValidToken((String) token);
