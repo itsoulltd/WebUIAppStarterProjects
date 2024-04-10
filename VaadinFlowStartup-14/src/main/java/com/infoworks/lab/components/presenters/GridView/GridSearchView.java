@@ -15,11 +15,14 @@ public class GridSearchView extends HorizontalLayout {
 
     public static final String CLEAR_BUTTON_TITLE = "Clear";
     public static final String SEARCH_BUTTON_TITLE = "Search";
+    public static final String ADD_NEW_ITEM_BUTTON_TITLE = "Add New!";
     private TextField searchField;
     private Button searchButton;
+    private Button addButton;
     private final Property searchProperty = new Property("AnyKey", null);
     private GridView parent;
     private SearchEvent eventDelegate;
+    private AddNewItemEventListener addNewItemEventListener;
 
     public GridSearchView(GridView parent) {
         this.parent = parent;
@@ -40,6 +43,10 @@ public class GridSearchView extends HorizontalLayout {
         searchButton.addClickShortcut(Key.ENTER);
         add(searchButton);
         //
+        addButton = new Button(ADD_NEW_ITEM_BUTTON_TITLE, new Icon("vaadin", "pencil"));
+        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addButton.addClickShortcut(Key.ADD);
+        //We add the addButton to view when delegate will be set.
         //Action on value-changed event on Search Field:
         searchField.addValueChangeListener(((event) -> {
             if (searchProperty != null) {
@@ -70,6 +77,11 @@ public class GridSearchView extends HorizontalLayout {
                 }
             }
         });
+        //Action on addNewItemButton:
+        addButton.addClickListener(event -> {
+            if (this.addNewItemEventListener != null)
+                this.addNewItemEventListener.onAddNewItemEvent(event);
+        });
     }
 
     private void alterButton(Button button, String title, Icon icon) {
@@ -86,6 +98,20 @@ public class GridSearchView extends HorizontalLayout {
     public interface SearchEvent {
         void onSearchEvent(ClickEvent<Button> event, Property search);
         void onClearEvent(ClickEvent<Button> event);
+    }
+
+    public void addNewEventListener(AddNewItemEventListener eventListener) {
+        if (this.addNewItemEventListener != null) return;
+        //Setup AddNewItemButton:
+        if (AddNewItemEventListener.class.isAssignableFrom(eventListener.getClass())) {
+            this.addNewItemEventListener = eventListener;
+        }
+        add(addButton);
+    }
+
+    @FunctionalInterface
+    public interface AddNewItemEventListener {
+        void onAddNewItemEvent(ClickEvent<Button> event);
     }
 
 }

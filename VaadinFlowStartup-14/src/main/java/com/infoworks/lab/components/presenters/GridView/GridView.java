@@ -21,7 +21,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -125,5 +124,11 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         //Reload:-
         footer.reset();
         dispatchAsyncLoad(UI.getCurrent().getUI().orElse(null));
+    }
+
+    public void addNewItemEventListener(GridSearchView.AddNewItemEventListener listener) {
+        if (this.searchView != null) {
+            this.searchView.addNewEventListener(listener);
+        }
     }
 }
