@@ -22,6 +22,8 @@ public class Trend extends Persistable<Integer, Long>{
     private String description;
     private boolean enabled = false;
     private String pictureUrl;
+    private String phone = "01712645517";
+    private String email = "info@trend.com";
 
     public Trend() {}
 
@@ -80,5 +82,21 @@ public class Trend extends Persistable<Integer, Long>{
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
