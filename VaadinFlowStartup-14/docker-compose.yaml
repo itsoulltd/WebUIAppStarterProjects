@@ -33,6 +33,7 @@ services:
           app.db.port: 3306
           app.db.password: root@123
           app.db.mysql.url.query: ?autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+          google.maps.api: <google-map-api-key>
           app.passenger.host: localhost
           app.passenger.port: 8080
           app.passenger.api: passenger

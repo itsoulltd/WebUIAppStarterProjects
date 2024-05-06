@@ -1,6 +1,7 @@
 package com.infoworks.lab.layouts;
 
 import com.infoworks.lab.components.component.VImage;
+import com.infoworks.lab.components.ui.GeoTrackerView;
 import com.infoworks.lab.components.ui.PassengersView;
 import com.infoworks.lab.components.ui.ProfileView;
 import com.infoworks.lab.components.ui.TrendsView;
@@ -86,6 +87,12 @@ public class RootAppLayout extends AppLayout {
     private Tab passengers() {
         final Tab  tab   = new Tab("Passengers");
         tab2Workspace.put(tab, new PassengersView());
+        return tab;
+    }
+
+    private Tab trackerView() {
+        final Tab  tab   = new Tab("Geo Tracker");
+        tab2Workspace.put(tab, new GeoTrackerView());
         return tab;
     }
 
