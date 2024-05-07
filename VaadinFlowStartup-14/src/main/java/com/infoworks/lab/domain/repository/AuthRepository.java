@@ -76,9 +76,20 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
             consumer.accept(true, "Successfully Logout");
     }
 
+    private boolean disableLogin(String username, String password) {
+        //if(app.auth.disable==true)
+        String disableStr = Optional.ofNullable((System.getProperty("app.auth.disable") == null)
+                ? System.getenv("app.auth.disable")
+                : System.getProperty("app.auth.disable")).orElse("false");
+        boolean disable = Boolean.parseBoolean(disableStr);
+        return disable
+                && username.equalsIgnoreCase("admin")
+                && password.equalsIgnoreCase("admin");
+    }
+
     public String login(String username , String password) throws HttpInvocationException, IOException {
-        //TODO: if(app.auth.disable=true)
-        if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin")) {
+        //If-Disable:
+        if (disableLogin(username, password)) {
             return "pass-auth-token";
         }
         return "";
