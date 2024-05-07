@@ -37,9 +37,9 @@ public abstract class GoogleMapsView extends VerticalLayout {
             add(new H2("Api key is needed to run the demo, " +
                     "pass it using the following system property: '-Dgoogle.maps.api=<your-api-key>'"));
         } else {
-            createGoogleMapsDemo(apiKey);
+            initGoogleMapsView(apiKey);
         }
     }
 
-    protected abstract void createGoogleMapsDemo(String apiKey);
+    protected abstract void initGoogleMapsView(String apiKey);
 }

@@ -39,7 +39,7 @@ public class GeoTrackerView extends GoogleMapsView {
     private Integer trackLocationId = null;
 
     @Override
-    protected void createGoogleMapsDemo(String apiKey) {
+    protected void initGoogleMapsView(String apiKey) {
         GoogleMap gmaps = new GoogleMap(apiKey, null, null);
         gmaps.setMapType(MapType.ROADMAP);
         gmaps.setSizeFull();
