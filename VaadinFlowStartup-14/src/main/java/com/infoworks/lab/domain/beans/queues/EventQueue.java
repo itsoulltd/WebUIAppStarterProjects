@@ -22,7 +22,6 @@ public class EventQueue extends AbstractTaskQueue {
     }
 
     public static void unregister() {
-        Object evnQueue = UI.getCurrent().getSession().getAttribute(X_EVENT_QUEUE);
         UI.getCurrent().getSession().setAttribute(X_EVENT_QUEUE, null);
     }
 
