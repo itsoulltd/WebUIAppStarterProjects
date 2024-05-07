@@ -77,7 +77,7 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
     }
 
     public String login(String username , String password) throws HttpInvocationException, IOException {
-        //TODO: Need to Implement:-
+        //TODO: if(app.auth.disable=true)
         if (username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin")) {
             return "pass-auth-token";
         }

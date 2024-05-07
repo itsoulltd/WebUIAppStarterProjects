@@ -27,9 +27,9 @@ Recommended Java version 8 or newer
 #### To run the project:  
 
         ~>$ mvn clean package -DskipTests    
-        ~>$ mvn jetty:run -Djetty.http.port=8081
+        ~>$ mvn jetty:run -Djetty.http.port=8081 -Dapp.auth.disable=true
         #Or to test google-map-addons:
-        ~>$ mvn jetty:run -Djetty.http.port=8081 -Dgoogle.maps.api=<your-api-key>
+        ~>$ mvn jetty:run -Djetty.http.port=8081 -Dapp.auth.disable=true -Dgoogle.maps.api=<your-api-key>
         
 ### And then open [http://localhost:8081](http://localhost:8081) in browser.
 
