@@ -23,20 +23,24 @@ package com.infoworks.lab.components.presenters.MapView;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
+import java.util.Optional;
+
 @SuppressWarnings("serial")
 public abstract class GoogleMapsView extends VerticalLayout {
 
     public GoogleMapsView() {
         this.setSizeFull();
         //Load from VM Options: -Dgoogle.maps.api=<api-key>
-        String apiKey = System.getProperty("google.maps.api");
-        //Load from docker-environment: - google.maps.api: <api-key>
-        if (apiKey == null) apiKey = System.getenv("google.maps.api");
-        System.out.println("GoogleMap-API-Key: " + apiKey);
+        //OR from docker-environment: - google.maps.api: <api-key>
+        //IF-None-Of-These-Are-There-Then pass = null;
+        String apiKey = Optional.ofNullable(System.getProperty("google.maps.api") != null
+                ? System.getProperty("google.maps.api")
+                : System.getenv("google.maps.api")).orElse(null);
         if (apiKey == null) {
             add(new H2("Api key is needed to run the demo, " +
                     "pass it using the following system property: '-Dgoogle.maps.api=<your-api-key>'"));
         } else {
+            System.out.println("GoogleMap-API-Key: " + apiKey);
             initGoogleMapsView(apiKey);
         }
     }
