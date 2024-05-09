@@ -43,7 +43,7 @@ public class RootAppLayout extends AppLayout {
         logo.setHeight("44px");
         addToNavbar(new DrawerToggle(), logo);
 
-        final Tabs tabs = new Tabs(profile(), trends(), passengers(), logout());
+        final Tabs tabs = new Tabs(profile(), trends(), passengers(), trackerView(), logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addSelectedChangeListener(event -> {
             final Tab selectedTab = event.getSelectedTab();

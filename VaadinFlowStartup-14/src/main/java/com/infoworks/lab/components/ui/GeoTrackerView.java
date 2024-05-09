@@ -20,16 +20,32 @@ package com.infoworks.lab.components.ui;
  * #L%
  */
 
+import ch.hsr.geohash.GeoHash;
+import ch.hsr.geohash.WGS84Point;
 import com.flowingcode.vaadin.addons.googlemaps.GoogleMap;
 import com.flowingcode.vaadin.addons.googlemaps.GoogleMap.MapType;
 import com.flowingcode.vaadin.addons.googlemaps.GoogleMapMarker;
+import com.flowingcode.vaadin.addons.googlemaps.LatLon;
+import com.flowingcode.vaadin.addons.googlemaps.Markers;
 import com.infoworks.lab.components.presenters.MapView.GoogleMapsView;
+import com.infoworks.lab.domain.beans.queues.EventQueue;
+import com.infoworks.lab.domain.beans.tasks.OStreetAddressSearch;
+import com.infoworks.lab.domain.models.OStreetGeocode;
+import com.infoworks.lab.domain.repository.OStreetRepository;
 import com.infoworks.lab.layouts.RootAppLayout;
 import com.infoworks.lab.layouts.RoutePath;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @PageTitle("GeoLocation Tracker")
 @Route(value = RoutePath.GEO_TRACKER_VIEW, layout = RootAppLayout.class)
@@ -44,36 +60,114 @@ public class GeoTrackerView extends GoogleMapsView {
         gmaps.setMapType(MapType.ROADMAP);
         gmaps.setSizeFull();
         gmaps.setZoom(15);
-        add(gmaps);
 
-        // create button to activate location tracking
+        //Location search  using OpenStreetMap-Api:
+        OStreetAddressSearch searchTask = new OStreetAddressSearch(UI.getCurrent(), new OStreetRepository()
+                , (gCodes) -> {
+            if (gCodes == null || gCodes.isEmpty()) return;
+            System.out.println("Search found: " + gCodes.size());
+            OStreetGeocode code = gCodes.get(0);
+            System.out.println(code.getDisplay_name());
+            updateMapCenter(gmaps, code.getGeoHash());
+        });
+
+        //Config Search:
+        HorizontalLayout searchbar = new HorizontalLayout();
+        searchbar.setWidthFull();
+        searchbar.setPadding(true);
+        TextField search = new TextField("", "Search...");
+        search.setWidth("500px");
+        Button searchBtn = new Button("Search", (e) -> {
+            String searchTx = search.getValue();
+            searchTask.setQuery(searchTx);
+            EventQueue.dispatchTask(searchTask);
+        });
+        searchbar.add(search, searchBtn);
+
+        //Add search-bar and google-map:
+        getContent().add(searchbar, gmaps);
+
+        //Create button to activate location tracking
         Button startLocationTrackingButton =
                 new Button("Start tracking my location", e -> gmaps.trackLocation());
-        // create button to stop location tracking
+        //Create button to stop location tracking
         Button stopLocationTrackingButton =
                 new Button("Stop tracking my location", e -> gmaps.stopTrackLocation(trackLocationId));
-        add(startLocationTrackingButton, stopLocationTrackingButton);
 
-        // create marker to track location
-        GoogleMapMarker locationMarker = new GoogleMapMarker();
-        locationMarker.setCaption("You're here");
-        locationMarker.setDraggable(false);
+        //Add Buttons:
+        HorizontalLayout buttonBox = new HorizontalLayout(startLocationTrackingButton, stopLocationTrackingButton);
+        buttonBox.setWidthFull();
+        buttonBox.setPadding(true);
+        getContent().add(buttonBox);
+
+        //Create marker to track location
+        GoogleMapMarker locationMarker = createMapMarker("You're here");
         gmaps.addMarker(locationMarker);
 
-        // add listener to obtain id when track location is activated
+        //Add listener to obtain id when track location is activated
         gmaps.addLocationTrackingActivatedEventListener(ev -> {
             trackLocationId = ev.getTrackLocationId();
         });
 
-        // add listener to know when location was updated and update location marker position
+        //Add listener to know when location was updated and update location marker position
         gmaps.addCurrentLocationEventListener(e -> {
             locationMarker.setPosition(e.getSource().getCenter());
         });
 
-        // add listener to capture geolocation error
+        //Add listener to capture geolocation error
         gmaps.addGeolocationErrorEventListener(e -> {
+            Notification notification = new Notification();
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             if (!e.isBrowserHasGeolocationSupport())
-                Notification.show("Your browser doesn't support geolocation.");
+                notification.show("Your browser doesn't support geolocation.");
+            else
+                notification.show("GeolocationErrorEventListener: " + e.toString());
         });
+    }
+
+    private GoogleMapMarker createMapMarker(String caption) {
+        GoogleMapMarker locationMarker = new GoogleMapMarker();
+        locationMarker.setCaption(caption);
+        locationMarker.setDraggable(false);
+        locationMarker.setIconUrl(pickMarkerIconUrl());
+        return locationMarker;
+    }
+
+    private String pickMarkerIconUrl() {
+        List<String> markerColorsList = Arrays.asList(Markers.RED
+                , Markers.PINK
+                , Markers.BLUE
+                , Markers.GREEN
+                , Markers.PURPLE
+                , Markers.YELLOW
+                , Markers.ORANGE
+                , Markers.LIGHTBLUE);
+        //Choose randomly:
+        Random random = new Random();
+        int inx = random.nextInt(markerColorsList.size());
+        String markerColor = markerColorsList.get(inx);
+        return markerColor;
+    }
+
+    private void updateMapCenterIfNotSetYet(GoogleMap gmaps, String gHash, LatLon center) {
+        if (gmaps.getCenter().getLat() == 0.0D) {
+            if (gHash != null && !gHash.isEmpty()) {
+                GeoHash geoHash = GeoHash.fromGeohashString(gHash);
+                WGS84Point point = geoHash.getPoint();
+                center = new LatLon(point.getLatitude(), point.getLongitude());
+            }
+            System.out.println("Lat:" + center.getLat() + "; Lon:" + center.getLon());
+            gmaps.setCenter(center);
+        }
+    }
+
+    private void updateMapCenter(GoogleMap gmaps, String gHash) {
+        if (gHash != null && !gHash.isEmpty()) {
+            GeoHash geoHash = GeoHash.fromGeohashString(gHash);
+            WGS84Point point = geoHash.getPoint();
+            LatLon center = new LatLon(point.getLatitude(), point.getLongitude());
+            System.out.println("Lat:" + center.getLat() + "; Lon:" + center.getLon());
+            gmaps.setCenter(center);
+        }
     }
 }
