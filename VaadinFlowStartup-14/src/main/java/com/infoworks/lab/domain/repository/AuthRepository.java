@@ -76,7 +76,7 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
             consumer.accept(true, "Successfully Logout");
     }
 
-    private boolean disableLogin(String username, String password) {
+    public boolean disableLogin(String username, String password) {
         //if(app.auth.disable==true)
         String disableStr = Optional.ofNullable((System.getProperty("app.auth.disable") == null)
                 ? System.getenv("app.auth.disable")
