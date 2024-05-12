@@ -1,8 +1,7 @@
 package com.infoworks.lab.domain.repository;
 
-import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.domain.entities.Passenger;
-import com.infoworks.lab.exceptions.HttpInvocationException;
+import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.rest.models.ItemCount;
 import com.infoworks.lab.rest.template.Interactor;
 import org.junit.Assert;
@@ -37,14 +36,14 @@ public class PassengerRepositoryTest {
     public void before() {
         env.set("app.passenger.host", "localhost");
         env.set("app.passenger.port", "8080");
-        env.set("app.passenger.api", "passenger");
+        env.set("app.passenger.api", "/passenger");
     }
 
     @Test
     public void envTest(){
         Assert.assertTrue(System.getenv("app.passenger.host").equalsIgnoreCase("localhost"));
         Assert.assertTrue(System.getenv("app.passenger.port").equalsIgnoreCase("8080"));
-        Assert.assertTrue(System.getenv("app.passenger.api").equalsIgnoreCase("passenger"));
+        Assert.assertTrue(System.getenv("app.passenger.api").equalsIgnoreCase("/passenger"));
     }
 
     @Test
@@ -68,19 +67,22 @@ public class PassengerRepositoryTest {
     }
 
     @Test
-    public void doa() throws HttpInvocationException {
+    public void doa() {
         //Create & Insert:
-        Passenger created = getRepository()
-                .insert(new Passenger("Tictoc", Gender.NONE, 18));
+        Passenger toBeCreated = new Passenger("Tictoc", Gender.NONE, 18);
+        toBeCreated.setAuthorization("xxx-TOKEN-xxx");
+
+        Passenger created = getRepository().insert(toBeCreated);
         if(created != null) {
             System.out.println("Created: " + created.getName());
             //Update:
             created.setName("Tictoc-up");
+            created.setAuthorization("xxx-TOKEN-xxx");
             Passenger update = getRepository().update(created, created.getId());
             if (update != null){
                 System.out.println("Updated: " + update.getName());
                 //Delete:
-                boolean isDeleted = getRepository().delete(update.getId());
+                boolean isDeleted = getRepository().delete(update.getId(), "xxx-TOKEN-xxx");
                 System.out.println("Is Deleted : " + isDeleted);
             }
         }
