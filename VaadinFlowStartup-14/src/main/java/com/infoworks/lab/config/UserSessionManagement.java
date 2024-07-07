@@ -1,7 +1,6 @@
 package com.infoworks.lab.config;
 
 import com.infoworks.lab.domain.beans.queues.EventQueue;
-import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.layouts.RoutePath;
 import com.infoworks.lab.rest.models.Response;
 import com.vaadin.flow.component.UI;
@@ -17,7 +16,7 @@ public class UserSessionManagement {
     public static boolean handleSessionExpireEvent(Response response) {
         if (response == null) return false;
         if (response.getStatus() == 200 || response.getStatus() == 201) return false;
-        UI.getCurrent().getSession().setAttribute(AuthRepository.X_AUTH_TOKEN, null);
+        UI.getCurrent().getSession().setAttribute(X_AUTH_TOKEN, null);
         EventQueue.unregister();
         UI.getCurrent().getSession().close();
         UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
