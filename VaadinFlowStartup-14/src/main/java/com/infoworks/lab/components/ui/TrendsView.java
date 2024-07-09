@@ -29,6 +29,8 @@ import com.vaadin.flow.router.Route;
 @Route(value = RoutePath.TRENDS_VIEW, layout = RootAppLayout.class)
 public class TrendsView extends Composite<Div> {
 
+    private GridView gridView;
+
     public TrendsView() {
         getContent().add(new Span("Trends"));
     }
@@ -39,12 +41,19 @@ public class TrendsView extends Composite<Div> {
             getContent().removeAll();
         }
         super.onAttach(attachEvent);
-        //
+        gridView = createGridView();
+        //Add GridView + Context-Menu-For-Grid to the View:
+        getContent().add(gridView, new TrendContextMenu(gridView.getGrid()));
+        //Trigger data-loading from rest-api-call: Async
+        gridView.dispatchAsyncLoad(UI.getCurrent().getUI().orElse(null));
+    }
+
+    private GridView createGridView() {
         GridView<Trend> gridView = new GridView<>(Trend.class
                 , 10
                 , new TrendRepository()
                 , "enabled");
-        gridView.getGrid().addColumn(createTrendTemplateRenderer()).setHeader("Trend")
+        gridView.getGrid().addColumn(createTemplateRenderer()).setHeader("Trend")
                 .setAutoWidth(true).setFlexGrow(26);
         gridView.getGrid().addColumn(createStatusComponentRenderer()).setHeader("Status")
                 .setAutoWidth(true).setFlexGrow(2);
@@ -84,13 +93,10 @@ public class TrendsView extends Composite<Div> {
         });
         //For Dynamic Table Height.
         gridView.getGrid().setAllRowsVisible(true);
-        //Add GridView + Context-Menu-For-Grid to the View:
-        getContent().add(gridView, new TrendContextMenu(gridView.getGrid()));
-        //Trigger data-loading from rest-api-call: Async
-        gridView.dispatchAsyncLoad(UI.getCurrent().getUI().orElse(null));
+        return gridView;
     }
 
-    private TemplateRenderer<Trend> createTrendTemplateRenderer() {
+    private TemplateRenderer<Trend> createTemplateRenderer() {
         return TemplateRenderer.<Trend>of(
                         "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
                                 + "<vaadin-avatar img=\"[[item.pictureUrl]]\" name=\"[[item.title]]\" alt=\"User avatar\"></vaadin-avatar>"
