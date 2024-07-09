@@ -19,6 +19,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
 
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ import java.util.List;
 public class PassengersView extends Composite<Div> implements Crud.EventListener<Passenger>{
 
     private SearchBar<Passenger> iSearchBar;
+
     public PassengersView() {
-        super();
+        getContent().add(new Span("Passengers"));
     }
 
     @Override

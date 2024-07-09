@@ -28,6 +28,7 @@ import com.vaadin.flow.router.Route;
 
 @Route(value = RoutePath.TRENDS_VIEW, layout = RootAppLayout.class)
 public class TrendsView extends Composite<Div> {
+
     public TrendsView() {
         getContent().add(new Span("Trends"));
     }

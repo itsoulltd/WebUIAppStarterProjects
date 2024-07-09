@@ -9,6 +9,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,7 +20,9 @@ public class ProfileView extends Composite<Div> {
 
     private String message = "Hello Vaadin EventQueue!";
 
-    public ProfileView() {}
+    public ProfileView() {
+        getContent().add(new Span("Profile"));
+    }
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
