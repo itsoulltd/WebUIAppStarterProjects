@@ -1,6 +1,6 @@
 package com.infoworks.lab.domain.repository;
 
-import com.infoworks.lab.domain.entities.Passenger;
+import com.infoworks.lab.domain.entities.User;
 import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.rest.models.ItemCount;
 import com.infoworks.lab.rest.template.Interactor;
@@ -12,14 +12,14 @@ import org.junit.contrib.java.lang.system.EnvironmentVariables;
 
 import java.util.List;
 
-public class PassengerRepositoryTest {
+public class UserRepositoryTest {
 
-    private PassengerRepository repository;
+    private UserRepository repository;
 
-    public PassengerRepository getRepository() {
+    public UserRepository getRepository() {
         if (repository == null){
             try {
-                repository = Interactor.create(PassengerRepository.class);
+                repository = Interactor.create(UserRepository.class);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InstantiationException e) {
@@ -34,16 +34,16 @@ public class PassengerRepositoryTest {
 
     @Before
     public void before() {
-        env.set("app.passenger.host", "localhost");
-        env.set("app.passenger.port", "8080");
-        env.set("app.passenger.api", "/passenger");
+        env.set("app.user.host", "localhost");
+        env.set("app.user.port", "8080");
+        env.set("app.user.api", "/user");
     }
 
     @Test
     public void envTest(){
-        Assert.assertTrue(System.getenv("app.passenger.host").equalsIgnoreCase("localhost"));
-        Assert.assertTrue(System.getenv("app.passenger.port").equalsIgnoreCase("8080"));
-        Assert.assertTrue(System.getenv("app.passenger.api").equalsIgnoreCase("/passenger"));
+        Assert.assertTrue(System.getenv("app.user.host").equalsIgnoreCase("localhost"));
+        Assert.assertTrue(System.getenv("app.user.port").equalsIgnoreCase("8080"));
+        Assert.assertTrue(System.getenv("app.user.api").equalsIgnoreCase("/user"));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class PassengerRepositoryTest {
         int page = 0;
         int numOfPage = (max / limit) + 1;
         while (page < numOfPage){
-            List<Passenger> riders = getRepository().fetch(page, limit);
+            List<User> riders = getRepository().fetch(page, limit);
             riders.forEach(rider -> System.out.println(rider.getName()));
             page++;
         }
@@ -69,16 +69,16 @@ public class PassengerRepositoryTest {
     @Test
     public void doa() {
         //Create & Insert:
-        Passenger toBeCreated = new Passenger("Tictoc", Gender.NONE, 18);
+        User toBeCreated = new User("Tictoc", Gender.NONE, 18);
         toBeCreated.setAuthorization("xxx-TOKEN-xxx");
 
-        Passenger created = getRepository().insert(toBeCreated);
+        User created = getRepository().insert(toBeCreated);
         if(created != null) {
             System.out.println("Created: " + created.getName());
             //Update:
             created.setName("Tictoc-up");
             created.setAuthorization("xxx-TOKEN-xxx");
-            Passenger update = getRepository().update(created, created.getId());
+            User update = getRepository().update(created, created.getId());
             if (update != null){
                 System.out.println("Updated: " + update.getName());
                 //Delete:

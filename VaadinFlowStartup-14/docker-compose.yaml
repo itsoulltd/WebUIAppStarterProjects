@@ -35,9 +35,9 @@ services:
           app.db.mysql.url.query: ?autoReconnect=true&failOverReadOnly=false&maxReconnects=10
           google.maps.api: <google-map-api-key>
           app.auth.disable: false
-          app.passenger.host: localhost
-          app.passenger.port: 8080
-          app.passenger.api: passenger
+          app.user.host: localhost
+          app.user.port: 8080
+          app.user.api: user
        ports:
           - 80:8080
        restart: on-failure

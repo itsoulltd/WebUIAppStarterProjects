@@ -2,7 +2,7 @@ package com.infoworks.lab.layouts;
 
 import com.infoworks.lab.components.component.VImage;
 import com.infoworks.lab.components.ui.GeoTrackerView;
-import com.infoworks.lab.components.ui.PassengersView;
+import com.infoworks.lab.components.ui.UsersView;
 import com.infoworks.lab.components.ui.ProfileView;
 import com.infoworks.lab.components.ui.TrendsView;
 import com.infoworks.lab.config.UserSessionManagement;
@@ -43,7 +43,7 @@ public class RootAppLayout extends AppLayout {
         logo.setHeight("44px");
         addToNavbar(new DrawerToggle(), logo);
 
-        final Tabs tabs = new Tabs(profile(), trends(), passengers(), trackerView(), logout());
+        final Tabs tabs = new Tabs(profile(), trends(), users(), trackerView(), logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addSelectedChangeListener(event -> {
             final Tab selectedTab = event.getSelectedTab();
@@ -84,9 +84,9 @@ public class RootAppLayout extends AppLayout {
         return tab;
     }
 
-    private Tab passengers() {
-        final Tab  tab   = new Tab("Passengers");
-        tab2Workspace.put(tab, new PassengersView());
+    private Tab users() {
+        final Tab  tab   = new Tab("Users");
+        tab2Workspace.put(tab, new UsersView());
         return tab;
     }
 

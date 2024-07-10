@@ -11,7 +11,7 @@ public class DatabaseBootstrap {
     public static void createTables() {
         JsqlConfig config = new JsqlConfig();
         try (SQLExecutor executor = (SQLExecutor) config.create(ExecutorType.SQL, System.getenv("app.db.name"))){
-            String createPassenger = "CREATE TABLE IF NOT EXISTS `Passenger` (\n" +
+            String createUser = "CREATE TABLE IF NOT EXISTS `User` (\n" +
                     "  `id` int(11) NOT NULL AUTO_INCREMENT,\n" +
                     "  `active` bit(1) NOT NULL,\n" +
                     "  `age` int(11) NOT NULL,\n" +
@@ -20,7 +20,7 @@ public class DatabaseBootstrap {
                     "  `sex` varchar(255) DEFAULT NULL,\n" +
                     "  PRIMARY KEY (`id`)\n" +
                     ") ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci";
-            executor.executeDDLQuery(createPassenger);
+            executor.executeDDLQuery(createUser);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e) {

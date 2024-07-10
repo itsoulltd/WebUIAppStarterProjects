@@ -6,12 +6,12 @@ import com.infoworks.lab.components.crud.components.datasource.GridDataSource;
 import com.infoworks.lab.components.crud.components.utils.EditorDisplayType;
 import com.infoworks.lab.components.crud.components.views.search.SearchBar;
 import com.infoworks.lab.components.crud.components.views.search.SearchBarConfigurator;
-import com.infoworks.lab.components.presenters.PassengerEditor;
+import com.infoworks.lab.components.presenters.UserEditor;
 import com.infoworks.lab.config.GridDataSourceFactory;
-import com.infoworks.lab.domain.entities.Passenger;
+import com.infoworks.lab.domain.entities.User;
 import com.infoworks.lab.domain.executor.RepositoryExecutor;
 import com.infoworks.lab.domain.models.Gender;
-import com.infoworks.lab.domain.repository.PassengerRepository;
+import com.infoworks.lab.domain.repository.UserRepository;
 import com.infoworks.lab.jsql.ExecutorType;
 import com.infoworks.lab.layouts.RootAppLayout;
 import com.infoworks.lab.layouts.RoutePath;
@@ -25,13 +25,13 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(value = RoutePath.PASSENGERS_CRUD_VIEW, layout = RootAppLayout.class)
-public class PassengersView extends Composite<Div> implements Crud.EventListener<Passenger>{
+@Route(value = RoutePath.USERS_CRUD_VIEW, layout = RootAppLayout.class)
+public class UsersView extends Composite<Div> implements Crud.EventListener<User>{
 
-    private SearchBar<Passenger> iSearchBar;
+    private SearchBar<User> iSearchBar;
 
-    public PassengersView() {
-        getContent().add(new Span("Passengers"));
+    public UsersView() {
+        getContent().add(new Span("Users"));
     }
 
     @Override
@@ -44,20 +44,20 @@ public class PassengersView extends Composite<Div> implements Crud.EventListener
         }
         //Create DataSource:
         GridDataSource source = GridDataSourceFactory.create(ExecutorType.IN_MEM
-                , new RepositoryExecutor(new PassengerRepository())
-                , getPassengers().toArray(new Passenger[0]));
+                , new RepositoryExecutor(new UserRepository())
+                , getUsers().toArray(new User[0]));
 
         SearchBarConfigurator searchConfig = new SearchBarConfigurator()
                 .setSkipProperties("id")
                 .setHideAddNewButton(false);
-        //iSearchBar = new PropertySearchBar(Passenger.class, searchConfig);
-        iSearchBar = new SearchBar(Passenger.class, searchConfig);
+        //iSearchBar = new PropertySearchBar(User.class, searchConfig);
+        iSearchBar = new SearchBar(User.class, searchConfig);
 
-        Configurator configurator = new Configurator(Passenger.class)
+        Configurator configurator = new Configurator(User.class)
                 .setDisplayType(EditorDisplayType.COMBINED)
                 .setDataSource(source)
-                .setEditor(PassengerEditor.class)
-                .setDialog(PassengerEditor.class)
+                .setEditor(UserEditor.class)
+                .setDialog(UserEditor.class)
                 .setSearchBar(iSearchBar)
                 .setHideSearchBar(false)
                 .setGridPageSize(8);
@@ -69,22 +69,22 @@ public class PassengersView extends Composite<Div> implements Crud.EventListener
         getContent().add(crud);
     }
 
-    private List<Passenger> getPassengers() {
-        List<Passenger> personList = new ArrayList<>();
-        personList.add(new Passenger("Lucas", Gender.MALE, 68));
-        personList.add(new Passenger("Peter", Gender.MALE, 38));
-        personList.add(new Passenger("Jack", Gender.MALE, 28));
-        personList.add(new Passenger("Samuel", Gender.MALE, 53));
+    private List<User> getUsers() {
+        List<User> personList = new ArrayList<>();
+        personList.add(new User("Lucas", Gender.MALE, 68));
+        personList.add(new User("Peter", Gender.MALE, 38));
+        personList.add(new User("Jack", Gender.MALE, 28));
+        personList.add(new User("Samuel", Gender.MALE, 53));
         return personList;
     }
 
     @Override
-    public void onSaveSuccess(Passenger passenger, Object o) {
+    public void onSaveSuccess(User user, Object o) {
         if(iSearchBar != null) iSearchBar.clearSearchBarView();
     }
 
     @Override
-    public void onDeleteSuccess(Passenger passenger) {
+    public void onDeleteSuccess(User user) {
         if(iSearchBar != null) iSearchBar.clearSearchBarView();
     }
 }
