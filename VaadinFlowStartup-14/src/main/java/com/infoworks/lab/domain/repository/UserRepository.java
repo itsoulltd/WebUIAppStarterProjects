@@ -10,6 +10,7 @@ import com.infoworks.lab.rest.models.QueryParam;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class UserRepository extends EntityRestRepository<User, Integer> {
 
@@ -19,17 +20,18 @@ public class UserRepository extends EntityRestRepository<User, Integer> {
 
     @Override
     protected String host() {
-        return System.getenv("app.user.host");
+        return Optional.ofNullable(System.getenv("app.user.host")).orElse("localhost");
     }
 
     @Override
     protected Integer port() {
-        return Integer.valueOf(System.getenv("app.user.port"));
+        String portStr = Optional.ofNullable(System.getenv("app.user.port")).orElse("8080");
+        return Integer.valueOf(portStr);
     }
 
     @Override
     protected String api() {
-        return System.getenv("app.user.api");
+        return Optional.ofNullable(System.getenv("app.user.api")).orElse("user");
     }
 
     @Override
