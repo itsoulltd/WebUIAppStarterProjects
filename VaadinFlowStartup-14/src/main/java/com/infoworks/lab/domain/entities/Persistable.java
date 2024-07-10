@@ -12,7 +12,6 @@ public class Persistable<ID,VERSION> extends Response {
 
     @PrimaryKey(name="id", auto=true) @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
     private ID id;
 
     @Version @JsonIgnore
