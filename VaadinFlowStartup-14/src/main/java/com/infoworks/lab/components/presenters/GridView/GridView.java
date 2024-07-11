@@ -59,6 +59,10 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         return grid;
     }
 
+    public GridFooter getFooter() {
+        return footer;
+    }
+
     public void dispatchAsyncLoad(UI ui) {
         if (ui == null) return;
         //Dispatch async event to fetch user-list:
