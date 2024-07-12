@@ -23,7 +23,13 @@ public class EventQueue extends AbstractTaskQueue {
     public static void register() {
         Object old = UI.getCurrent().getSession().getAttribute(X_EVENT_QUEUE);
         if (old == null) {
-            UI.getCurrent().getSession().setAttribute(X_EVENT_QUEUE, new EventQueue());
+            EventQueue queue = new EventQueue();
+            queue.onTaskComplete((message, state) -> {
+                if (message != null) {
+                    LOG.log(Level.WARNING, message.toString());
+                }
+            });
+            UI.getCurrent().getSession().setAttribute(X_EVENT_QUEUE, queue);
         }
 
         Object oldE = UI.getCurrent().getSession().getAttribute(X_EVENT_EXECUTOR);
@@ -34,6 +40,10 @@ public class EventQueue extends AbstractTaskQueue {
     }
 
     public static void unregister() {
+        Object evnQueue = UI.getCurrent().getSession().getAttribute(X_EVENT_QUEUE);
+        if (evnQueue != null && evnQueue instanceof EventQueue) {
+            ((EventQueue) evnQueue).onTaskComplete((message, state) -> {});
+        }
         UI.getCurrent().getSession().setAttribute(X_EVENT_QUEUE, null);
         //
         Object oldE = UI.getCurrent().getSession().getAttribute(X_EVENT_EXECUTOR);
