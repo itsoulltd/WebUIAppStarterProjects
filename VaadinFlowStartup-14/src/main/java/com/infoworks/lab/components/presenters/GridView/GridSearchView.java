@@ -1,6 +1,7 @@
 package com.infoworks.lab.components.presenters.GridView;
 
 import com.it.soul.lab.sql.query.models.Property;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyModifier;
@@ -23,6 +24,7 @@ public class GridSearchView extends HorizontalLayout {
     private GridView parent;
     private SearchEvent eventDelegate;
     private AddNewItemEventListener addNewItemEventListener;
+    private boolean hideSearchBar = false;
 
     public GridSearchView(GridView parent) {
         this.parent = parent;
@@ -36,7 +38,6 @@ public class GridSearchView extends HorizontalLayout {
         searchField.setPrefixComponent(new Icon("lumo", "search"));
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
         searchField.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
-        add(searchField);
         //Action on value-changed event on Search Field:
         searchField.addValueChangeListener(((event) -> {
             if (searchProperty != null) {
@@ -49,7 +50,6 @@ public class GridSearchView extends HorizontalLayout {
         searchButton = new Button(SEARCH_BUTTON_TITLE, new Icon("lumo", "search"));
         searchButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         searchButton.addClickShortcut(Key.ENTER);
-        add(searchButton);
         //Action on searchButton:
         searchButton.addClickListener((event) -> {
             if (event.getSource().getText().equalsIgnoreCase(CLEAR_BUTTON_TITLE)) {
@@ -81,6 +81,21 @@ public class GridSearchView extends HorizontalLayout {
             if (this.addNewItemEventListener != null)
                 this.addNewItemEventListener.onAddNewItemEvent(event);
         });
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        if(!isHideSearchBar()) add(searchField);
+        if(!isHideSearchBar()) add(searchButton);
+    }
+
+    public boolean isHideSearchBar() {
+        return hideSearchBar;
+    }
+
+    public void setHideSearchBar(boolean hideSearchBar) {
+        this.hideSearchBar = hideSearchBar;
     }
 
     private void alterButton(Button button, String title, Icon icon) {

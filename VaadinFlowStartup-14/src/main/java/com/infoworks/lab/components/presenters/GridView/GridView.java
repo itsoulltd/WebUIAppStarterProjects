@@ -12,6 +12,7 @@ import com.infoworks.lab.rest.models.pagination.SortOrder;
 import com.infoworks.lab.rest.repository.RestRepository;
 import com.it.soul.lab.sql.entity.EntityInterface;
 import com.it.soul.lab.sql.query.models.Property;
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -46,12 +47,17 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         this.repository = repository;
         this.skipProperties = skipProperties;
         this.searchView = new GridSearchView(this);
-        add(searchView);
         this.grid = new Grid<>(type, false);
         this.grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         this.grid.setPageSize(pageSize);
-        add(grid);
         this.footer = new GridFooter(this);
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        add(searchView);
+        add(grid);
         add(footer);
     }
 
@@ -61,6 +67,14 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
 
     public GridFooter getFooter() {
         return footer;
+    }
+
+    public boolean isHideSearch() {
+        return searchView.isHideSearchBar();
+    }
+
+    public void setHideSearch(boolean hideSearch) {
+        searchView.setHideSearchBar(hideSearch);
     }
 
     public void dispatchAsyncLoad(UI ui) {
