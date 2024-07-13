@@ -25,6 +25,7 @@ public class GridSearchView extends HorizontalLayout {
     private SearchEvent eventDelegate;
     private AddNewItemEventListener addNewItemEventListener;
     private boolean hideSearchBar = false;
+    private boolean hideAddNewButton = true;
 
     public GridSearchView(GridView parent) {
         this.parent = parent;
@@ -88,6 +89,7 @@ public class GridSearchView extends HorizontalLayout {
         super.onAttach(attachEvent);
         if(!isHideSearchBar()) add(searchField);
         if(!isHideSearchBar()) add(searchButton);
+        if(!isHideAddNewButton()) add(addButton);
     }
 
     public boolean isHideSearchBar() {
@@ -96,6 +98,14 @@ public class GridSearchView extends HorizontalLayout {
 
     public void setHideSearchBar(boolean hideSearchBar) {
         this.hideSearchBar = hideSearchBar;
+    }
+
+    public boolean isHideAddNewButton() {
+        return hideAddNewButton;
+    }
+
+    public void setHideAddNewButton(boolean hideAddNewButton) {
+        this.hideAddNewButton = hideAddNewButton;
     }
 
     private void alterButton(Button button, String title, Icon icon) {
@@ -120,7 +130,7 @@ public class GridSearchView extends HorizontalLayout {
         if (AddNewItemEventListener.class.isAssignableFrom(eventListener.getClass())) {
             this.addNewItemEventListener = eventListener;
         }
-        add(addButton);
+        this.hideAddNewButton = false;
     }
 
     @FunctionalInterface
