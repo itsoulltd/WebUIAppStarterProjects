@@ -29,7 +29,7 @@ public class GridSearchView extends HorizontalLayout {
         if (SearchEvent.class.isAssignableFrom(parent.getClass())) {
             this.eventDelegate = parent;
         }
-        //
+        //Config SearchBar:
         searchField = new TextField();
         searchField.setLabel("");
         searchField.setPlaceholder("Search By Any...");
@@ -37,16 +37,6 @@ public class GridSearchView extends HorizontalLayout {
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
         searchField.addFocusShortcut(Key.KEY_F, KeyModifier.CONTROL);
         add(searchField);
-        //
-        searchButton = new Button(SEARCH_BUTTON_TITLE, new Icon("lumo", "search"));
-        searchButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        searchButton.addClickShortcut(Key.ENTER);
-        add(searchButton);
-        //
-        addButton = new Button(ADD_NEW_ITEM_BUTTON_TITLE, new Icon("vaadin", "pencil"));
-        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        addButton.addClickShortcut(Key.ADD);
-        //We add the addButton to view when delegate will be set.
         //Action on value-changed event on Search Field:
         searchField.addValueChangeListener(((event) -> {
             if (searchProperty != null) {
@@ -55,6 +45,11 @@ public class GridSearchView extends HorizontalLayout {
             }
             alterButton(searchButton, SEARCH_BUTTON_TITLE, new Icon("lumo", "search"));
         }));
+        //
+        searchButton = new Button(SEARCH_BUTTON_TITLE, new Icon("lumo", "search"));
+        searchButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        searchButton.addClickShortcut(Key.ENTER);
+        add(searchButton);
         //Action on searchButton:
         searchButton.addClickListener((event) -> {
             if (event.getSource().getText().equalsIgnoreCase(CLEAR_BUTTON_TITLE)) {
@@ -77,6 +72,10 @@ public class GridSearchView extends HorizontalLayout {
                 }
             }
         });
+        //We add the addButton to view when delegate will be set.
+        addButton = new Button(ADD_NEW_ITEM_BUTTON_TITLE, new Icon("vaadin", "pencil"));
+        addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        addButton.addClickShortcut(Key.ADD);
         //Action on addNewItemButton:
         addButton.addClickListener(event -> {
             if (this.addNewItemEventListener != null)
