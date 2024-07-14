@@ -19,6 +19,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.ArrayList;
@@ -40,8 +41,9 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
 
     public GridView(Class<T> type, int pageSize, RestRepository repository, String...skipProperties) {
         addClassNames("content");
-        setPadding(false);
+        setPadding(true);
         setSpacing(true);
+        setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
         //
         this.type = type;
         this.repository = repository;
