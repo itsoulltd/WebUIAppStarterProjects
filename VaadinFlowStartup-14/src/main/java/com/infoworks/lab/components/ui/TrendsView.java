@@ -1,5 +1,6 @@
 package com.infoworks.lab.components.ui;
 
+import com.infoworks.lab.components.presenters.Forms.TrendsForm;
 import com.infoworks.lab.components.presenters.GridView.GridView;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
@@ -12,6 +13,7 @@ import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.grid.contextmenu.GridMenuItem;
@@ -63,8 +65,12 @@ public class TrendsView extends Composite<Div> {
             Button editButton = new Button("", VaadinIcon.EDIT.create());
             editButton.addClickListener(e -> {
                 //TODO: Popup Edit FormView:
-                UI ui = e.getSource().getUI().orElse(null);
-                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Edit: " + trend.getTitle()));
+                Dialog dialog = new Dialog();
+                dialog.getElement().setAttribute("aria-label", "Edit Trends!");
+                //Config user-form
+                TrendsForm form = new TrendsForm(trend, dialog);
+                dialog.add(form);
+                dialog.open();
             });
             Button delButton = new Button("", VaadinIcon.CLOSE.create());
             delButton.addClickListener(e -> {
@@ -88,8 +94,12 @@ public class TrendsView extends Composite<Div> {
         //Note:On providing AddNewItemListener to GridView, will enable GridSearchView to show 'Add New!' Button.
         gridView.addNewItemEventListener(event -> {
             //TODO: Popup New Item FormView:
-            UI ui = event.getSource().getUI().orElse(null);
-            EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Add New Item Clicked!"));
+            Dialog dialog = new Dialog();
+            dialog.getElement().setAttribute("aria-label", "Create New Trends!");
+            //Config user-form
+            TrendsForm form = new TrendsForm(null, dialog);
+            dialog.add(form);
+            dialog.open();
         });
         //For Dynamic Table Height.
         gridView.getGrid().setAllRowsVisible(true);
