@@ -59,6 +59,11 @@ public class FormActionBar extends HorizontalLayout {
                 this.close.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 add(this.close);
             }
+        } else {
+            if (isEnableSave()) {
+                this.save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                add(this.save);
+            }
         }
     }
 
