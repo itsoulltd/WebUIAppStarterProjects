@@ -44,7 +44,7 @@ public class TrendsForm extends FormLayout {
             this.actionBar.addOnSaveAction((e) -> {
                 //TODO
                 UI ui = e.getSource().getUI().orElse(null);
-                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Save New Trends:" + trend.getEmail()));
+                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Save New Trends:" + trend.getTitle()));
             });
             //
             if (this.trend == null) {
