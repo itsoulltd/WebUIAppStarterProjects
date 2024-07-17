@@ -67,6 +67,14 @@ public class FormActionBar extends HorizontalLayout {
         }
     }
 
+    public void setSaveButtonDisableOnClick(boolean disableOnClick) {
+        this.save.setDisableOnClick(disableOnClick);
+    }
+
+    public void setSaveButtonEnable(boolean enable) {
+        this.save.setEnabled(enable);
+    }
+
     public void addOnSaveAction(ComponentEventListener<ClickEvent<Button>> eventListener) {
         if (eventListener == null) return;
         this.enableSave = (eventListener != null);
