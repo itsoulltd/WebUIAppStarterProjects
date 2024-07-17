@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 public class FormActionBar extends HorizontalLayout {
 
-    private boolean enableSave; //By default false;
+    private boolean activateSave; //By default false;
     private Dialog dialog;
     private Button save = new Button("SAVE", VaadinIcon.CHECK_CIRCLE.create());
     private Button close = new Button("CLOSE", VaadinIcon.CLOSE.create());
@@ -32,8 +32,8 @@ public class FormActionBar extends HorizontalLayout {
         this.dialog = dialog;
     }
 
-    public boolean isEnableSave() {
-        return enableSave;
+    public boolean isActivateSave() {
+        return activateSave;
     }
 
     public void updateSaveButton(String title, VaadinIcon vIcon) {
@@ -52,7 +52,7 @@ public class FormActionBar extends HorizontalLayout {
         //
         if (dialog != null) {
             this.close.addClickListener((e) -> dialog.close());
-            if (isEnableSave()) {
+            if (isActivateSave()) {
                 this.save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 add(this.close, this.save);
             } else {
@@ -60,7 +60,7 @@ public class FormActionBar extends HorizontalLayout {
                 add(this.close);
             }
         } else {
-            if (isEnableSave()) {
+            if (isActivateSave()) {
                 this.save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 add(this.save);
             }
@@ -77,7 +77,7 @@ public class FormActionBar extends HorizontalLayout {
 
     public void addOnSaveAction(ComponentEventListener<ClickEvent<Button>> eventListener) {
         if (eventListener == null) return;
-        this.enableSave = (eventListener != null);
+        this.activateSave = (eventListener != null);
         this.save.addClickListener(eventListener);
     }
 }
