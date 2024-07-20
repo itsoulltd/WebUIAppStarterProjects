@@ -1,6 +1,7 @@
 package com.infoworks.lab.components.presenters.Forms;
 
 import com.infoworks.lab.components.component.FormActionBar;
+import com.infoworks.lab.config.ValidationConfig;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
 import com.infoworks.lab.domain.entities.Trend;
@@ -8,9 +9,13 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.textfield.TextField;
+
+import javax.validation.Validator;
 
 public class TrendsForm extends FormLayout {
 
@@ -41,10 +46,21 @@ public class TrendsForm extends FormLayout {
         this.actionBar.setJustifyContentMode(JustifyContentMode.END);
         if (this.dialog != null) {
             //This will enableSave button:
+            this.actionBar.setSaveButtonDisableOnClick(true);
             this.actionBar.addOnSaveAction((e) -> {
-                //TODO
                 UI ui = e.getSource().getUI().orElse(null);
-                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Save New Trends:" + trend.getTitle()));
+                Validator validator = ValidationConfig.getValidator();
+                String messages = ValidationConfig.validateWithMessage(validator, trend);
+                if (messages != null) {
+                    Notification notification = Notification.show(messages);
+                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                    this.actionBar.setSaveButtonEnable(true);
+                } else {
+                    //TODO: Now save entity:
+                    EventQueue.dispatchTask(new DisplayAsyncNotification(ui
+                            , "Save New Trends:" + trend.getTitle()));
+                    dialog.close();
+                }
             });
             //
             if (this.trend == null) {

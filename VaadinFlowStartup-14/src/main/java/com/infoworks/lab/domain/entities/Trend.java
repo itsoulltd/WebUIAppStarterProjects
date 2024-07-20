@@ -1,10 +1,13 @@
 package com.infoworks.lab.domain.entities;
 
+import com.infoworks.lab.rest.validation.Email.EmailPattern;
 import com.it.soul.lab.sql.entity.PrimaryKey;
 import com.it.soul.lab.sql.entity.TableName;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity(name = "Trend")
 @TableName(value = "Trend")
@@ -17,13 +20,19 @@ public class Trend extends Persistable<Integer, Long>{
     @NotNull
     private Integer id = 0;
 
+    @NotEmpty(message = "title must not empty or null!")
+    @Size(min = 4, max = 20, message = "4 <= title <= 20")
     private String title;
     private String subtitle;
     private String description;
-    private boolean enabled = false;
-    private String pictureUrl;
-    private String phone = "01712645517";
+
+
+    @EmailPattern(message = "Invalid email!")
     private String email = "info@trend.com";
+
+    private String phone;
+    private String pictureUrl;
+    private boolean enabled = false;
 
     public Trend() {}
 
