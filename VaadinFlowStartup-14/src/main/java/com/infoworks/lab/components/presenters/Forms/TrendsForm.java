@@ -13,6 +13,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 
 import javax.validation.Validator;
@@ -23,8 +24,8 @@ public class TrendsForm extends FormLayout {
     private Dialog dialog;
     private TextField title = new TextField("Title");
     private TextField subtitle = new TextField("Subtitle");
-    private TextField description = new TextField("Descriptions");
     private TextField email = new TextField("Email");
+    private TextArea description = new TextArea("Descriptions");
     private FormActionBar actionBar;
 
     public TrendsForm(Trend trend, Dialog dialog) {
@@ -41,7 +42,6 @@ public class TrendsForm extends FormLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        //TODO: UI need to be User-Entity:
         //
         this.actionBar.setDefaultVerticalComponentAlignment(Alignment.STRETCH);
         this.actionBar.setJustifyContentMode(JustifyContentMode.END);
@@ -49,6 +49,12 @@ public class TrendsForm extends FormLayout {
             //This will enableSave button:
             this.actionBar.setSaveButtonDisableOnClick(true);
             this.actionBar.addOnSaveAction((e) -> {
+                //Read from ui-component and fill entity:
+                trend.setTitle(title.getValue());
+                trend.setSubtitle(subtitle.getValue());
+                trend.setDescription(description.getValue());
+                trend.setEmail(email.getValue());
+                //
                 UI ui = e.getSource().getUI().orElse(null);
                 Validator validator = ValidationConfig.getValidator();
                 String messages = ValidationConfig.validateWithMessage(validator, trend);
@@ -66,18 +72,18 @@ public class TrendsForm extends FormLayout {
             //
             if (this.trend == null) {
                 this.trend = new Trend();
-                add(title, subtitle, description
-                        , email, actionBar);
+                add(title, subtitle, email, description
+                        , actionBar);
             } else {
-                add(title, subtitle, description
-                        , email, actionBar);
+                add(title, subtitle, email, description
+                        , actionBar);
             }
         } else {
             //Make all field un-editable:
             title.setValue(trend.getTitle());
             subtitle.setValue(trend.getSubtitle());
-            description.setValue(trend.getDescription());
             email.setValue(trend.getEmail());
+            description.setValue(trend.getDescription());
             add(title, subtitle, description, email);
         }
         //UI config:
@@ -88,6 +94,7 @@ public class TrendsForm extends FormLayout {
                 new ResponsiveStep("300px", 2)
         );
         // Stretch the username & actionBar field over 2 columns
+        setColspan(email, 2);
         setColspan(description, 2);
         setColspan(actionBar, 2);
     }
