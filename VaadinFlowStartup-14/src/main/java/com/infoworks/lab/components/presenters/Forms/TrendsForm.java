@@ -24,6 +24,7 @@ public class TrendsForm extends FormLayout {
     private TextField title = new TextField("Title");
     private TextField subtitle = new TextField("Subtitle");
     private TextField description = new TextField("Descriptions");
+    private TextField email = new TextField("Email");
     private FormActionBar actionBar;
 
     public TrendsForm(Trend trend, Dialog dialog) {
@@ -65,20 +66,19 @@ public class TrendsForm extends FormLayout {
             //
             if (this.trend == null) {
                 this.trend = new Trend();
-                add(title, subtitle
-                        , description
-                        , actionBar);
+                add(title, subtitle, description
+                        , email, actionBar);
             } else {
-                add(title, subtitle
-                        , description
-                        , actionBar);
+                add(title, subtitle, description
+                        , email, actionBar);
             }
         } else {
             //Make all field un-editable:
             title.setValue(trend.getTitle());
             subtitle.setValue(trend.getSubtitle());
             description.setValue(trend.getDescription());
-            add(title, subtitle, description);
+            email.setValue(trend.getEmail());
+            add(title, subtitle, description, email);
         }
         //UI config:
         setResponsiveSteps(

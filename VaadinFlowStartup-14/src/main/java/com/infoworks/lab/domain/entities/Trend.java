@@ -14,8 +14,7 @@ import javax.validation.constraints.Size;
 public class Trend extends Persistable<Integer, Long>{
 
     @PrimaryKey(name="id", auto=true)
-    @Id
-    @Column(length = 100)
+    @Id @Column(length = 100)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @NotNull
     private Integer id = 0;
@@ -23,12 +22,16 @@ public class Trend extends Persistable<Integer, Long>{
     @NotEmpty(message = "title must not empty or null!")
     @Size(min = 4, max = 20, message = "4 <= title <= 20")
     private String title;
+
+    @Size(max = 56, message = "subtitle <= 56")
     private String subtitle;
+
+    @Size(max = 256, message = "description <= 256")
     private String description;
 
 
     @EmailPattern(message = "Invalid email!")
-    private String email = "info@trend.com";
+    private String email = "";
 
     private String phone;
     private String pictureUrl;
