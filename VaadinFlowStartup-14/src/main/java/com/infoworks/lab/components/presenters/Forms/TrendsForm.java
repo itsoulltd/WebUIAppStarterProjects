@@ -35,8 +35,7 @@ public class TrendsForm extends FormLayout {
     }
 
     public TrendsForm(Trend trend) {
-        this.trend = trend;
-        this.actionBar = new FormActionBar();
+        this(trend, null);
     }
 
     @Override
