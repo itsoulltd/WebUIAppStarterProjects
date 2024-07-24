@@ -1,5 +1,6 @@
 package com.infoworks.lab.components.ui;
 
+import com.infoworks.lab.components.component.ConfirmDeleteAction;
 import com.infoworks.lab.components.presenters.Forms.TrendsForm;
 import com.infoworks.lab.components.presenters.GridView.GridView;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
@@ -79,9 +80,24 @@ public class TrendsView extends Composite<Div> {
             });
             Button delButton = new Button("", VaadinIcon.CLOSE.create());
             delButton.addClickListener(e -> {
-                //TODO: Popup Delete Confirmation Window:
-                UI ui = e.getSource().getUI().orElse(null);
-                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Delete: " + trend.getTitle()));
+                //Popup Delete Confirmation Window:
+                Dialog dialog = new Dialog();
+                dialog.getElement().setAttribute("aria-label", "Edit User!");
+                dialog.addDetachListener((closeEvn) -> {
+                    //Now reload fetchTask and countTask in sequence:
+                    UI ui = closeEvn.getSource().getUI().orElse(null);
+                    this.gridView.dispatchAsyncLoad(ui);
+                });
+                //Config delete-confirmation:
+                ConfirmDeleteAction confirm = new ConfirmDeleteAction(dialog
+                        , new Span("Are you sure about deleting trend: " + trend.getTitle()));
+                confirm.addOnDeleteAction((event) -> {
+                    //TODO: implement delete action:
+                    System.out.println("Delete: " + trend.getId());
+                    dialog.close();
+                });
+                dialog.add(confirm);
+                dialog.open();
             });
             HorizontalLayout layout = new HorizontalLayout();
             layout.add(editButton, delButton);
