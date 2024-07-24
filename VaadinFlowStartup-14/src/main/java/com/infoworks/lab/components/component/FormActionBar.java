@@ -41,9 +41,19 @@ public class FormActionBar extends HorizontalLayout {
         if(vIcon != null) this.save.setIcon(vIcon.create());
     }
 
+    public void updateSaveButton(String title, VaadinIcon vIcon, ButtonVariant...themes) {
+        updateSaveButton(title, vIcon);
+        this.save.addThemeVariants(themes);
+    }
+
     public void updateCloseButton(String title, VaadinIcon vIcon) {
         if(title != null && !title.isEmpty()) this.close.setText(title);
         if(vIcon != null) this.close.setIcon(vIcon.create());
+    }
+
+    public void updateCloseButton(String title, VaadinIcon vIcon, ButtonVariant...themes) {
+        updateCloseButton(title, vIcon);
+        this.close.addThemeVariants(themes);
     }
 
     @Override
