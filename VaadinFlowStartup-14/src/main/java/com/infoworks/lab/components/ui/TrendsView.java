@@ -67,6 +67,11 @@ public class TrendsView extends Composite<Div> {
                 //TODO: Popup Edit FormView:
                 Dialog dialog = new Dialog();
                 dialog.getElement().setAttribute("aria-label", "Edit Trends!");
+                dialog.addDetachListener((dlgCloseEvent) -> {
+                    //Now reload GridView using fetchTask and countTask in sequence Or otherwise:
+                    UI ui = dlgCloseEvent.getSource().getUI().orElse(null);
+                    this.gridView.dispatchAsyncLoad(ui);
+                });
                 //Config user-form
                 TrendsForm form = new TrendsForm(trend, dialog);
                 dialog.add(form);
@@ -96,6 +101,11 @@ public class TrendsView extends Composite<Div> {
             //TODO: Popup New Item FormView:
             Dialog dialog = new Dialog();
             dialog.getElement().setAttribute("aria-label", "Create New Trends!");
+            dialog.addDetachListener((dlgCloseEvent) -> {
+                //Now reload GridView using fetchTask and countTask in sequence Or otherwise:
+                UI ui = dlgCloseEvent.getSource().getUI().orElse(null);
+                this.gridView.dispatchAsyncLoad(ui);
+            });
             //Config user-form
             TrendsForm form = new TrendsForm(null, dialog);
             dialog.add(form);
