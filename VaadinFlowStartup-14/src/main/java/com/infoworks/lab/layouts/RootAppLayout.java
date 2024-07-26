@@ -2,14 +2,13 @@ package com.infoworks.lab.layouts;
 
 import com.infoworks.lab.components.component.VImage;
 import com.infoworks.lab.components.ui.GeoTrackerView;
-import com.infoworks.lab.components.ui.UsersView;
 import com.infoworks.lab.components.ui.ProfileView;
 import com.infoworks.lab.components.ui.TrendsView;
+import com.infoworks.lab.components.ui.UsersView;
 import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.rest.models.Response;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -59,7 +58,7 @@ public class RootAppLayout extends AppLayout {
         btn.setSizeFull();
         btn.addClickListener(e -> {
             AuthRepository authRepo = new AuthRepository();
-            String authToken = UI.getCurrent().getSession().getAttribute(AuthRepository.X_AUTH_TOKEN).toString();
+            String authToken = AuthRepository.parseToken();
             authRepo.doLogout(authToken, (isSuccess, msg) -> {
                 if (isSuccess) {
                     UserSessionManagement.handleSessionExpireEvent(new Response().setStatus(401));
