@@ -18,6 +18,11 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_RESET_TOKEN = "Reset-Pass-Token";
 
+    public static String parseToken() {
+        Optional<Object> optToken = Optional.ofNullable(UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN));
+        return optToken.isPresent() ? optToken.get().toString() : null;
+    }
+
     @Override
     protected String schema() {
         return "http://";

@@ -7,6 +7,7 @@ import com.infoworks.lab.domain.beans.tasks.FetchItems;
 import com.infoworks.lab.domain.beans.tasks.FetchItemsCount;
 import com.infoworks.lab.domain.beans.tasks.SearchItems;
 import com.infoworks.lab.domain.models.SecureSearchQuery;
+import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.rest.models.pagination.Pagination;
 import com.infoworks.lab.rest.models.pagination.SortOrder;
 import com.infoworks.lab.rest.repository.RestRepository;
@@ -26,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.infoworks.lab.domain.repository.AuthRepository.X_AUTH_TOKEN;
 
 public class GridView<T> extends VerticalLayout implements GridFooter.ActionEvent, GridSearchView.SearchEvent {
 
@@ -127,7 +126,7 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
                 .getProperties((Class<EntityInterface>)type, skipProperties);
         SecureSearchQuery query = Pagination.createQuery(SecureSearchQuery.class, grid.getPageSize(), SortOrder.DESC);
         query.setPage(0);
-        query.setAuthorization(UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString());
+        query.setAuthorization(AuthRepository.parseToken());
         //Iterate Over Search-Properties:
         for (Property prop : searchProps) {
             query.getPredicate()

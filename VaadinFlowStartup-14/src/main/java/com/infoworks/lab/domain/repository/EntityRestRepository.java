@@ -9,19 +9,26 @@ import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.rest.models.*;
 import com.infoworks.lab.rest.repository.RestRepository;
 import com.infoworks.lab.rest.template.Invocation;
-import com.vaadin.flow.component.UI;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.infoworks.lab.domain.repository.AuthRepository.X_AUTH_TOKEN;
-
 public abstract class EntityRestRepository<E extends Persistable, ID> extends HttpTemplate<E, Message> implements RestRepository<E, ID> {
 
     public EntityRestRepository(Object... config) {
         super(config);
+    }
+
+    private String token;
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token == null ? AuthRepository.parseToken() : token;
     }
 
     @Override
@@ -81,7 +88,7 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
     public E insert(E ent){
         try {
             if (ent.getAuthorization() == null) {
-                String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+                String token = getToken();
                 ent.setAuthorization(token);
             }
             E response = (E) post(ent);
@@ -98,7 +105,7 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
     public E update(E ent, ID id){
         try {
             if (ent.getAuthorization() == null) {
-                String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+                String token = getToken();
                 ent.setAuthorization(token);
             }
             ent.setId(id);
@@ -114,7 +121,7 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
     }
 
     public boolean delete(ID id){
-        String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+        String token = getToken();
         return delete(id, token);
     }
 
@@ -134,7 +141,7 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
         try {
             if (searchQuery instanceof SecureSearchQuery) {
                 if (((SecureSearchQuery) searchQuery).getAuthorization() == null) {
-                    String token = UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString();
+                    String token = getToken();
                     ((SecureSearchQuery) searchQuery).setAuthorization(token);
                 }
             }

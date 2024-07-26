@@ -2,18 +2,16 @@ package com.infoworks.lab.domain.executor;
 
 import com.infoworks.lab.components.rest.RestRepositoryExecutor;
 import com.infoworks.lab.domain.models.SecureSearchQuery;
+import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.rest.models.pagination.Pagination;
 import com.infoworks.lab.rest.models.pagination.SortOrder;
 import com.infoworks.lab.rest.repository.RestRepository;
 import com.it.soul.lab.sql.query.SQLSelectQuery;
 import com.it.soul.lab.sql.query.models.Property;
-import com.vaadin.flow.component.UI;
 
 import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Logger;
-
-import static com.infoworks.lab.domain.repository.AuthRepository.X_AUTH_TOKEN;
 
 public class RepositoryExecutor extends RestRepositoryExecutor {
 
@@ -39,7 +37,7 @@ public class RepositoryExecutor extends RestRepositoryExecutor {
                 List<Property> searchProps = sqlSelectQuery.getWhereProperties().getProperties();
                 SecureSearchQuery query = Pagination.createQuery(SecureSearchQuery.class, limit, SortOrder.DESC);
                 query.setPage(page);
-                query.setAuthorization(UI.getCurrent().getSession().getAttribute(X_AUTH_TOKEN).toString());
+                query.setAuthorization(AuthRepository.parseToken());
                 //Iterate Over Search-Properties:
                 if (searchProps.size() > 0) {
                     for (Property prop : searchProps) {
