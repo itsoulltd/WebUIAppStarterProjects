@@ -12,12 +12,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 public class ConfirmDeleteAction extends VerticalLayout {
 
-    private Dialog dialog;
     private FormActionBar actionBar;
     private Component message;
 
     public ConfirmDeleteAction(Dialog dialog, Component message) {
-        this.dialog = dialog;
         this.message = message;
         this.actionBar = new FormActionBar(dialog);
         setSpacing(true);
@@ -27,7 +25,7 @@ public class ConfirmDeleteAction extends VerticalLayout {
     }
 
     public void setDialog(Dialog dialog) {
-        this.dialog = dialog;
+        this.actionBar.setDialog(dialog);
     }
 
     public boolean isActivateSave() {
