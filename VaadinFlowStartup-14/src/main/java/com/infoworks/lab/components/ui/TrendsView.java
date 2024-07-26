@@ -82,7 +82,7 @@ public class TrendsView extends Composite<Div> {
             delButton.addClickListener(e -> {
                 //Popup Delete Confirmation Window:
                 Dialog dialog = new Dialog();
-                dialog.getElement().setAttribute("aria-label", "Delete User!");
+                dialog.getElement().setAttribute("aria-label", "Delete Trend!");
                 dialog.addDetachListener((closeEvn) -> {
                     //Now reload fetchTask and countTask in sequence:
                     UI ui = closeEvn.getSource().getUI().orElse(null);
