@@ -1,6 +1,8 @@
 package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
+import com.infoworks.lab.config.ApplicationProperties;
+import com.infoworks.lab.config.RequestURI;
 import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.jjwt.JWTPayload;
 import com.infoworks.lab.jjwt.TokenValidator;
@@ -25,7 +27,7 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
 
     @Override
     protected String schema() {
-        return "http://";
+        return RequestURI.SCHEMA_HTTP;
     }
 
     @Override
@@ -83,11 +85,7 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
 
     public boolean disableLogin(String username, String password) {
         //if(app.auth.disable==true)
-        String disableStr = Optional.ofNullable((System.getProperty("app.auth.disable") == null)
-                ? System.getenv("app.auth.disable")
-                : System.getProperty("app.auth.disable")).orElse("false");
-        boolean disable = Boolean.parseBoolean(disableStr);
-        return disable
+        return ApplicationProperties.IS_AUTH_DISABLE
                 && username.equalsIgnoreCase("admin")
                 && password.equalsIgnoreCase("admin");
     }

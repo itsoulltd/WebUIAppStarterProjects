@@ -2,6 +2,7 @@ package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.spring.SocketTemplate;
 import com.infoworks.lab.client.spring.SocketType;
+import com.infoworks.lab.config.RequestURI;
 import com.it.soul.lab.sql.query.models.Property;
 
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class WebSocketRepository {
     protected Optional<Object> hostPort = getEnvProperty("port", Integer.class);
 
     public String getSchema() {
-        return schema.isPresent() ? schema.get().toString() : "ws://";
+        return schema.isPresent() ? schema.get().toString() : RequestURI.SCHEMA_WS;
     }
     public String getHostName() {
         return hostName.isPresent() ? hostName.get().toString() : "localhost";

@@ -1,5 +1,6 @@
 package com.infoworks.lab.domain.repository;
 
+import com.infoworks.lab.config.RequestURI;
 import com.infoworks.lab.domain.models.OStreetGeocode;
 import com.infoworks.lab.rest.models.Message;
 import com.infoworks.lab.rest.models.SearchQuery;
@@ -37,7 +38,7 @@ public class OStreetRepository extends EntityRestRepository<OStreetGeocode, Stri
 
     @Override
     protected String api() {
-        return "https://nominatim.openstreetmap.org/search.php";
+        return RequestURI.OPEN_STREET_SEARCH_API;
     }
 
     @Override

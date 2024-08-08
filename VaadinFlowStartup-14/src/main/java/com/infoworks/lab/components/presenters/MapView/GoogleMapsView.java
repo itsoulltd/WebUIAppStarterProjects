@@ -21,11 +21,10 @@ package com.infoworks.lab.components.presenters.MapView;
  */
 
 import com.infoworks.lab.components.ui.BaseComposite;
+import com.infoworks.lab.config.ApplicationProperties;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-
-import java.util.Optional;
 
 @SuppressWarnings("serial")
 public abstract class GoogleMapsView extends BaseComposite<Div> {
@@ -36,9 +35,7 @@ public abstract class GoogleMapsView extends BaseComposite<Div> {
         //Load from VM Options: -Dgoogle.maps.api=<api-key>
         //OR from docker-environment: - google.maps.api: <api-key>
         //IF-None-Of-These-Are-There-Then pass = null;
-        String apiKey = Optional.ofNullable(System.getProperty("google.maps.api") != null
-                ? System.getProperty("google.maps.api")
-                : System.getenv("google.maps.api")).orElse(null);
+        String apiKey = ApplicationProperties.GOOGLE_MAP_API_KEY;
         if (apiKey == null) {
             getContent().add(new H2("Api key is needed to run the demo, " +
                     "pass it using the following system property: '-Dgoogle.maps.api=<your-api-key>'"));

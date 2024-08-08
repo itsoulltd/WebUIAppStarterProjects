@@ -1,6 +1,7 @@
 package com.infoworks.lab.domain.repository;
 
 import com.infoworks.lab.client.jersey.HttpTemplate;
+import com.infoworks.lab.config.RequestURI;
 import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.entities.Persistable;
 import com.infoworks.lab.domain.models.Authorization;
@@ -33,7 +34,7 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
 
     @Override
     protected String schema() {
-        return "http://";
+        return RequestURI.SCHEMA_HTTP;
     }
 
     @Override

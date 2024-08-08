@@ -1,6 +1,7 @@
 package com.infoworks.lab.domain.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.infoworks.lab.config.RequestURI;
 import com.infoworks.lab.domain.entities.User;
 import com.infoworks.lab.domain.models.Authorization;
 import com.infoworks.lab.exceptions.HttpInvocationException;
@@ -10,7 +11,6 @@ import com.infoworks.lab.rest.models.QueryParam;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class UserRepository extends EntityRestRepository<User, Integer> {
 
@@ -20,18 +20,18 @@ public class UserRepository extends EntityRestRepository<User, Integer> {
 
     @Override
     protected String host() {
-        return Optional.ofNullable(System.getenv("app.user.host")).orElse("localhost");
+        return RequestURI.USER_HOST;
     }
 
     @Override
     protected Integer port() {
-        String portStr = Optional.ofNullable(System.getenv("app.user.port")).orElse("8080");
+        String portStr = RequestURI.USER_PORT;
         return Integer.valueOf(portStr);
     }
 
     @Override
     protected String api() {
-        return Optional.ofNullable(System.getenv("app.user.api")).orElse("user");
+        return RequestURI.USER_API;
     }
 
     @Override
