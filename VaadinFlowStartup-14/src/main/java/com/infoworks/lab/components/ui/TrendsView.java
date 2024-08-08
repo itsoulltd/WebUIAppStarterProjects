@@ -93,7 +93,9 @@ public class TrendsView extends Composite<Div> {
                         , new Span("Are you sure about deleting trend: " + trend.getTitle()));
                 confirm.addOnDeleteAction((event) -> {
                     //TODO: implement delete action:
-                    System.out.println("Delete: " + trend.getId());
+                    UI ui = event.getSource().getUI().orElse(null);
+                    EventQueue.dispatchTask(new DisplayAsyncNotification(ui
+                            , "Delete: " + trend.getTitle()));
                     dialog.close();
                 });
                 dialog.add(confirm);
