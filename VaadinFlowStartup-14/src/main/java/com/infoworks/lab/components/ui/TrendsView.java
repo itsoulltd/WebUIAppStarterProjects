@@ -15,6 +15,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.contextmenu.GridContextMenu;
 import com.vaadin.flow.component.grid.contextmenu.GridMenuItem;
@@ -25,8 +26,10 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
+import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.router.Route;
 
 import java.util.concurrent.TimeUnit;
@@ -58,67 +61,21 @@ public class TrendsView extends Composite<Div> {
                 , 10
                 , new TrendRepository()
                 , "enabled");
-        gridView.getGrid().addColumn(createTemplateRenderer()).setHeader("Trend")
+        gridView.getGrid().addColumn(createTemplateRenderer())
+                .setHeader("Trend")
                 .setAutoWidth(true).setFlexGrow(26);
-        gridView.getGrid().addColumn(createStatusComponentRenderer()).setHeader("Status")
+        gridView.getGrid().addColumn(createStatusComponentRenderer())
+                .setHeader("Status")
                 .setAutoWidth(true).setFlexGrow(2);
         //Configure Action Columns:
         //Add Edit & Delete:
-        gridView.getGrid().addComponentColumn(trend -> {
-            Button editButton = new Button("", VaadinIcon.EDIT.create());
-            editButton.addClickListener(e -> {
-                //TODO: Popup Edit FormView:
-                Dialog dialog = new Dialog();
-                dialog.getElement().setAttribute("aria-label", "Edit Trends!");
-                dialog.addDetachListener((dlgCloseEvent) -> {
-                    //Now reload GridView using fetchTask and countTask in sequence Or otherwise:
-                    UI ui = dlgCloseEvent.getSource().getUI().orElse(null);
-                    this.gridView.dispatchAsyncLoad(ui);
-                });
-                //Config user-form
-                TrendsForm form = new TrendsForm(trend, dialog);
-                dialog.add(form);
-                dialog.open();
-            });
-            Button delButton = new Button("", VaadinIcon.CLOSE.create());
-            delButton.addClickListener(e -> {
-                //Popup Delete Confirmation Window:
-                Dialog dialog = new Dialog();
-                dialog.getElement().setAttribute("aria-label", "Delete Trend!");
-                dialog.addDetachListener((closeEvn) -> {
-                    //Now reload fetchTask and countTask in sequence:
-                    UI ui = closeEvn.getSource().getUI().orElse(null);
-                    this.gridView.dispatchAsyncLoad(ui);
-                });
-                //Config delete-confirmation:
-                ConfirmDeleteAction confirm = new ConfirmDeleteAction(dialog
-                        , new Span("Are you sure about deleting trend: " + trend.getTitle()));
-                confirm.setDeleteButtonDisableOnClick(true);
-                confirm.addOnDeleteAction((event) -> {
-                    UI ui = event.getSource().getUI().orElse(null);
-                    //TODO: implement delete action:
-                    //Can we dispatch in delayed by 1 Sec:
-                    //Must dispatch using scheduler on UI thread:
-                    System.out.println("Delete: " + trend.getId());
-                    EventQueue.dispatch(1
-                            , TimeUnit.SECONDS
-                            , () -> ui.access(() -> dialog.close()));
-                });
-                dialog.add(confirm);
-                dialog.open();
-            });
-            HorizontalLayout layout = new HorizontalLayout();
-            layout.add(editButton, delButton);
-            return layout;
-        }).setAutoWidth(true).setFlexGrow(1);
+        gridView.getGrid().addComponentColumn(createActionBar())
+                .setHeader("Action")
+                .setTextAlign(ColumnTextAlign.CENTER)
+                .setAutoWidth(true).setFlexGrow(1);
         //Add Context-Menu:
-        gridView.getGrid().addComponentColumn(trend -> {
-            MenuBar menuBar = new MenuBar();
-            menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
-            MenuItem menuItem = menuBar.addItem("•••");
-            menuItem.getElement().setAttribute("aria-label", "More options");
-            return menuBar;
-        }).setAutoWidth(true).setFlexGrow(1);
+        gridView.getGrid().addComponentColumn(createContextMenuBar())
+                .setAutoWidth(true).setFlexGrow(1);
         //Configure Add New Item Button Event on GridSearchView:
         //Note:On providing AddNewItemListener to GridView, will enable GridSearchView to show 'Add New!' Button.
         gridView.addNewItemEventListener(event -> {
@@ -163,6 +120,92 @@ public class TrendsView extends Composite<Div> {
             span.getElement().getThemeList().add(theme);
             //span.getElement().setAttribute("theme", theme);
         });
+    }
+
+    private ValueProvider<Trend, HorizontalLayout> createActionBar() {
+        return (trend) -> {
+            Button recycleButton = new Button("", VaadinIcon.RECYCLE.create());
+            recycleButton.addClickListener(e -> {
+                UI ui = e.getSource().getUI().orElse(null);
+                Dialog dialog = new Dialog();
+                dialog.addDetachListener((dlgCloseEvent) -> {
+                    //Update GridView:
+                    this.gridView.dispatchAsyncLoad(ui);
+                });
+                //Using progress-bar: how we can do progress during blocking rest-api call:
+                ProgressBar progressBar = new ProgressBar();
+                progressBar.addAttachListener(evn -> {
+                    //Can we dispatch in delayed by 1 Sec:
+                    //Must dispatch using scheduler on UI thread:
+                    EventQueue.dispatch(1
+                            , TimeUnit.SECONDS
+                            , () -> ui.access(() -> dialog.close()));
+                });
+                progressBar.setIndeterminate(true);
+                Div progressBarLabel = new Div();
+                progressBarLabel.setText("Recycle In Progress...");
+                dialog.add(progressBarLabel, progressBar);
+                dialog.open();
+            });
+            //
+            Button editButton = new Button("", VaadinIcon.EDIT.create());
+            editButton.addClickListener(e -> {
+                //TODO: Popup Edit FormView:
+                Dialog dialog = new Dialog();
+                dialog.getElement().setAttribute("aria-label", "Edit Trends!");
+                dialog.addDetachListener((dlgCloseEvent) -> {
+                    //Now reload GridView using fetchTask and countTask in sequence Or otherwise:
+                    UI ui = dlgCloseEvent.getSource().getUI().orElse(null);
+                    this.gridView.dispatchAsyncLoad(ui);
+                });
+                //Config user-form
+                TrendsForm form = new TrendsForm(trend, dialog);
+                dialog.add(form);
+                dialog.open();
+            });
+            //
+            Button delButton = new Button("", VaadinIcon.CLOSE.create());
+            delButton.addClickListener(e -> {
+                //Popup Delete Confirmation Window:
+                Dialog dialog = new Dialog();
+                dialog.getElement().setAttribute("aria-label", "Delete Trend!");
+                dialog.addDetachListener((closeEvn) -> {
+                    //Now reload fetchTask and countTask in sequence:
+                    UI ui = closeEvn.getSource().getUI().orElse(null);
+                    this.gridView.dispatchAsyncLoad(ui);
+                });
+                //Config delete-confirmation:
+                ConfirmDeleteAction confirm = new ConfirmDeleteAction(dialog
+                        , new Span("Are you sure about deleting trend: " + trend.getTitle()));
+                confirm.setDeleteButtonDisableOnClick(true);
+                confirm.addOnDeleteAction((event) -> {
+                    UI ui = event.getSource().getUI().orElse(null);
+                    //TODO: implement delete action:
+                    //Can we dispatch in delayed by 1 Sec:
+                    //Must dispatch using scheduler on UI thread:
+                    System.out.println("Delete: " + trend.getId());
+                    EventQueue.dispatch(1
+                            , TimeUnit.SECONDS
+                            , () -> ui.access(() -> dialog.close()));
+                });
+                dialog.add(confirm);
+                dialog.open();
+            });
+            //
+            HorizontalLayout layout = new HorizontalLayout();
+            layout.add(recycleButton, editButton, delButton);
+            return layout;
+        };
+    }
+
+    private ValueProvider<Trend, MenuBar> createContextMenuBar() {
+        return (trend) -> {
+            MenuBar menuBar = new MenuBar();
+            menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+            MenuItem menuItem = menuBar.addItem("•••");
+            menuItem.getElement().setAttribute("aria-label", "More options");
+            return menuBar;
+        };
     }
 
     //Custom GridContextMenu:
