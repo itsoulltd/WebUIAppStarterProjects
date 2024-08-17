@@ -81,7 +81,7 @@ public class EventQueue extends AbstractTaskQueue {
         }
     }
 
-    public static void dispatch(int delay, TimeUnit unit, Callable callable) {
+    public static void dispatch(long delay, TimeUnit unit, Callable callable) {
         if (delay > 0) {
             Object evnQueue = UI.getCurrent().getSession().getAttribute(X_EVENT_SCHEDULER_EXECUTOR);
             if (evnQueue != null && evnQueue instanceof ScheduledExecutorService) {
