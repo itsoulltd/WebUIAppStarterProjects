@@ -29,6 +29,8 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.router.Route;
 
+import java.util.concurrent.TimeUnit;
+
 @Route(value = RoutePath.TRENDS_VIEW, layout = RootAppLayout.class)
 public class TrendsView extends Composite<Div> {
 
@@ -91,12 +93,16 @@ public class TrendsView extends Composite<Div> {
                 //Config delete-confirmation:
                 ConfirmDeleteAction confirm = new ConfirmDeleteAction(dialog
                         , new Span("Are you sure about deleting trend: " + trend.getTitle()));
+                confirm.setDeleteButtonDisableOnClick(true);
                 confirm.addOnDeleteAction((event) -> {
-                    //TODO: implement delete action:
                     UI ui = event.getSource().getUI().orElse(null);
-                    EventQueue.dispatchTask(new DisplayAsyncNotification(ui
-                            , "Delete: " + trend.getTitle()));
-                    dialog.close();
+                    //TODO: implement delete action:
+                    //Can we dispatch in delayed by 1 Sec:
+                    //Must dispatch using scheduler on UI thread:
+                    System.out.println("Delete: " + trend.getId());
+                    EventQueue.dispatch(1
+                            , TimeUnit.SECONDS
+                            , () -> ui.access(() -> dialog.close()));
                 });
                 dialog.add(confirm);
                 dialog.open();
