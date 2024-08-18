@@ -25,6 +25,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -193,6 +194,7 @@ public class TrendsView extends Composite<Div> {
             });
             //
             HorizontalLayout layout = new HorizontalLayout();
+            layout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
             layout.add(recycleButton, editButton, delButton);
             return layout;
         };
