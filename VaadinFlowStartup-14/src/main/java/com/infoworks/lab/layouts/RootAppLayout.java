@@ -54,7 +54,7 @@ public class RootAppLayout extends AppLayout {
 
     private Tab logout() {
         final Button btn = new Button();
-        btn.setText("Logout");
+        btn.setText(RoutePath.LOGOUT_VIEW);
         btn.setSizeFull();
         btn.addClickListener(e -> {
             AuthRepository authRepo = new AuthRepository();
@@ -67,30 +67,30 @@ public class RootAppLayout extends AppLayout {
         });
         //
         final Tab tab = new Tab(btn);
-        tab2Workspace.put(tab, new Label("Logout"));
+        tab2Workspace.put(tab, new Label(RoutePath.LOGOUT_VIEW));
         return tab;
     }
 
     private Tab profile() {
-        final Tab  tab   = new Tab("Profile");
+        final Tab  tab   = new Tab(RoutePath.PROFILE_VIEW);
         tab2Workspace.put(tab, new ProfileView());
         return tab;
     }
 
     private Tab trends() {
-        final Tab tab = new Tab("Trends View");
+        final Tab tab = new Tab(RoutePath.TRENDS_VIEW);
         tab2Workspace.put(tab, new TrendsView());
         return tab;
     }
 
     private Tab users() {
-        final Tab  tab   = new Tab("Users");
+        final Tab  tab   = new Tab(RoutePath.USERS_CRUD_VIEW);
         tab2Workspace.put(tab, new UsersView());
         return tab;
     }
 
     private Tab trackerView() {
-        final Tab  tab   = new Tab("Geo Tracker");
+        final Tab  tab   = new Tab(RoutePath.GEO_TRACKER_VIEW);
         tab2Workspace.put(tab, new GeoTrackerView());
         return tab;
     }
