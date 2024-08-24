@@ -1,7 +1,7 @@
 package com.infoworks.lab.components.ui;
 
 import com.infoworks.lab.components.component.ConfirmDeleteAction;
-import com.infoworks.lab.components.component.IndeterminateProgressDialog;
+import com.infoworks.lab.components.component.IndeterminateDialog;
 import com.infoworks.lab.components.presenters.Forms.TrendsForm;
 import com.infoworks.lab.components.presenters.GridView.GridView;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
@@ -128,7 +128,7 @@ public class TrendsView extends Composite<Div> {
             Button recycleButton = new Button("", VaadinIcon.RECYCLE.create());
             recycleButton.addClickListener(e -> {
                 UI ui = e.getSource().getUI().orElse(null);
-                Dialog dialog = new IndeterminateProgressDialog("Recycle In Progress...");
+                Dialog dialog = new IndeterminateDialog("Recycle In Progress...");
                 dialog.addDetachListener((dlgCloseEvent) -> {
                     //Update GridView:
                     this.gridView.dispatchAsyncLoad(ui);

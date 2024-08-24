@@ -5,11 +5,11 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.progressbar.ProgressBar;
 
-public class IndeterminateProgressDialog extends Dialog {
+public class IndeterminateDialog extends Dialog {
 
     private String message;
 
-    public IndeterminateProgressDialog(String message) {
+    public IndeterminateDialog(String message) {
         this.message = message;
     }
 
