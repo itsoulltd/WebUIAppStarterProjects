@@ -1,6 +1,7 @@
 package com.infoworks.lab.components.ui;
 
 import com.infoworks.lab.components.component.ConfirmDeleteAction;
+import com.infoworks.lab.components.component.IndeterminateProgressDialog;
 import com.infoworks.lab.components.presenters.Forms.TrendsForm;
 import com.infoworks.lab.components.presenters.GridView.GridView;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
@@ -27,7 +28,6 @@ import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.function.ValueProvider;
@@ -128,24 +128,20 @@ public class TrendsView extends Composite<Div> {
             Button recycleButton = new Button("", VaadinIcon.RECYCLE.create());
             recycleButton.addClickListener(e -> {
                 UI ui = e.getSource().getUI().orElse(null);
-                Dialog dialog = new Dialog();
+                Dialog dialog = new IndeterminateProgressDialog("Recycle In Progress...");
                 dialog.addDetachListener((dlgCloseEvent) -> {
                     //Update GridView:
                     this.gridView.dispatchAsyncLoad(ui);
                 });
                 //Using progress-bar: how we can do progress during blocking rest-api call:
-                ProgressBar progressBar = new ProgressBar();
-                progressBar.addAttachListener(evn -> {
+                dialog.addAttachListener(evn -> {
                     //Can we dispatch in delayed by 1 Sec:
                     //Must dispatch using scheduler on UI thread:
                     EventQueue.dispatch(1
                             , TimeUnit.SECONDS
                             , () -> ui.access(() -> dialog.close()));
                 });
-                progressBar.setIndeterminate(true);
-                Div progressBarLabel = new Div();
-                progressBarLabel.setText("Recycle In Progress...");
-                dialog.add(progressBarLabel, progressBar);
+                //Open Dialog:
                 dialog.open();
             });
             //
