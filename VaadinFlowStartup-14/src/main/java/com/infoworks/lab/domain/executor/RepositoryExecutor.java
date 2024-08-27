@@ -16,9 +16,23 @@ import java.util.logging.Logger;
 public class RepositoryExecutor extends RestRepositoryExecutor {
 
     protected final Logger LOG = Logger.getLogger(this.getClass().getSimpleName());
+    private String token;
+
+    public RepositoryExecutor(RestRepository repository, String token) {
+        super(repository);
+        this.token = token;
+    }
 
     public RepositoryExecutor(RestRepository repository) {
-        super(repository);
+        this(repository, null);
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
@@ -37,7 +51,7 @@ public class RepositoryExecutor extends RestRepositoryExecutor {
                 List<Property> searchProps = sqlSelectQuery.getWhereProperties().getProperties();
                 SecureSearchQuery query = Pagination.createQuery(SecureSearchQuery.class, limit, SortOrder.DESC);
                 query.setPage(page);
-                query.setAuthorization(AuthRepository.parseToken());
+                query.setAuthorization(getToken());
                 //Iterate Over Search-Properties:
                 if (searchProps.size() > 0) {
                     for (Property prop : searchProps) {

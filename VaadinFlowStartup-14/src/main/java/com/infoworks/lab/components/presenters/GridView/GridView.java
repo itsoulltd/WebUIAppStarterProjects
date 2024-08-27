@@ -177,7 +177,7 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
                 .getProperties((Class<EntityInterface>)type, skipProperties);
         SecureSearchQuery query = Pagination.createQuery(SecureSearchQuery.class, grid.getPageSize(), SortOrder.DESC);
         query.setPage(0);
-        query.setAuthorization(AuthRepository.parseToken());
+        query.setAuthorization(AuthRepository.parseToken(event.getSource().getUI().orElse(null)));
         //Iterate Over Search-Properties:
         for (Property prop : searchProps) {
             query.getPredicate()

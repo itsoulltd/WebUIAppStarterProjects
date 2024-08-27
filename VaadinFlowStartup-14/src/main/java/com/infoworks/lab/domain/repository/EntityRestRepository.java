@@ -29,7 +29,7 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
     }
 
     public String getToken() {
-        return token == null ? AuthRepository.parseToken() : token;
+        return token;
     }
 
     @Override

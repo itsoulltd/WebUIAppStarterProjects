@@ -58,7 +58,7 @@ public class RootAppLayout extends AppLayout {
         btn.setSizeFull();
         btn.addClickListener(e -> {
             AuthRepository authRepo = new AuthRepository();
-            String authToken = AuthRepository.parseToken();
+            String authToken = AuthRepository.parseToken(e.getSource().getUI().orElse(null));
             authRepo.doLogout(authToken, (isSuccess, msg) -> {
                 if (isSuccess) {
                     UserSessionManagement.handleSessionExpireEvent(new Response().setStatus(401));
