@@ -20,6 +20,7 @@ public class RequestURI {
 
     public static HttpHeaders createHeaderFrom(String userToken) {
         HttpHeaders httpHeaders = new HttpHeaders();
+        if (userToken == null) return httpHeaders;
         if (userToken.startsWith("Bearer")){
             httpHeaders.set(HttpHeaders.AUTHORIZATION, userToken);
         } else {
