@@ -49,6 +49,16 @@ public class RootAppLayout extends AppLayout {
         //Hamburger Menu:
         DrawerToggle hamburgerMenu = new DrawerToggle();
         //Left-Side Layout:
+        HorizontalLayout leftPane = createLeftPane();
+        //Menu Tabs:
+        final Tabs tabs = getTabs();
+        //AppLayout buildup:
+        addToDrawer(tabs);
+        addToNavbar(hamburgerMenu, leftPane);
+    }
+
+    private HorizontalLayout createLeftPane() {
+        //Left-Side Layout:
         H1 title = new H1(ApplicationProperties.APP_DISPLAY_NAME);
         title.getStyle()
                 .set("font-size", "var(--lumo-font-size-l)")
@@ -56,15 +66,12 @@ public class RootAppLayout extends AppLayout {
         Image logo = VImage.loadFromImages(LOGO_URL, ApplicationProperties.APP_DISPLAY_NAME);
         logo.setWidth("74px");
         logo.setHeight("36px");
-        HorizontalLayout leftPan = new HorizontalLayout();
-        leftPan.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        leftPan.setWidth("350px");
-        leftPan.add(logo, title);
-        //Menu Tabs:
-        final Tabs tabs = getTabs();
-        //AppLayout buildup:
-        addToDrawer(tabs);
-        addToNavbar(hamburgerMenu, leftPan);
+        //
+        HorizontalLayout leftPane = new HorizontalLayout();
+        leftPane.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        leftPane.setWidth("350px");
+        leftPane.add(logo, title);
+        return leftPane;
     }
 
     private Tabs getTabs() {
