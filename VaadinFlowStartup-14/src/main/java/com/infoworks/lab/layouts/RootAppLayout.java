@@ -46,18 +46,18 @@ public class RootAppLayout extends AppLayout {
     private Map<Tab, Component> tab2Workspace = new HashMap<>();
 
     public RootAppLayout() {
-        //Hamburger Menu:
-        DrawerToggle hamburgerMenu = new DrawerToggle();
-        //Left-Side Layout:
-        HorizontalLayout leftPane = createLeftPane();
+        //TopBar Layout:
+        Component topBar = createTopBar();
         //Menu Tabs:
         final Tabs tabs = getTabs();
         //AppLayout buildup:
         addToDrawer(tabs);
-        addToNavbar(hamburgerMenu, leftPane);
+        addToNavbar(topBar);
     }
 
-    private HorizontalLayout createLeftPane() {
+    private Component createTopBar() {
+        //Hamburger Menu:
+        DrawerToggle hamburgerMenu = new DrawerToggle();
         //Left-Side Layout:
         H1 title = new H1(ApplicationProperties.APP_DISPLAY_NAME);
         title.getStyle()
@@ -67,11 +67,14 @@ public class RootAppLayout extends AppLayout {
         logo.setWidth("74px");
         logo.setHeight("36px");
         //
-        HorizontalLayout leftPane = new HorizontalLayout();
-        leftPane.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        leftPane.setWidth("350px");
-        leftPane.add(logo, title);
-        return leftPane;
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        layout.setWidthFull();
+        layout.setHeightFull();
+        layout.getStyle().set("border-bottom", "1px solid #c5c5c5");
+        layout.add(hamburgerMenu, title, logo);
+        return layout;
     }
 
     private Tabs getTabs() {
