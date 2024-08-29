@@ -75,6 +75,11 @@ public class RootAppLayout extends AppLayout {
                 , trackerView()
                 , logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
+        tabs.addSelectedChangeListener(event -> {
+            final Tab selectedTab = event.getSelectedTab();
+            final Component component = tab2Workspace.get(selectedTab);
+            if(component != null) setContent(component);
+        });
         return tabs;
     }
 
@@ -93,7 +98,7 @@ public class RootAppLayout extends AppLayout {
         //RouteLinks:
         RouterLink link = new RouterLink();
         link.add(icon, new Span(viewName));
-        link.setRoute(viewClass);
+        if(viewClass != null) link.setRoute(viewClass);
         link.setTabIndex(-1);
         return new Tab(link);
     }
@@ -136,7 +141,11 @@ public class RootAppLayout extends AppLayout {
 
     private Tab trackerView() {
         String viewName = RoutePath.menuName(RoutePath.GEO_TRACKER_VIEW);
-        final Tab tab = createTab(VaadinIcon.MAP_MARKER, viewName, GeoTrackerView.class);
+        //CAUTION: To reuse content, we have to use tab2Workspace storage.
+        // at the same time please do not pass viewClass in createTab(),
+        // this will create duplicate content.
+        final Tab tab = createTab(VaadinIcon.MAP_MARKER, viewName, null);
+        tab2Workspace.put(tab, new GeoTrackerView());
         return tab;
     }
 
