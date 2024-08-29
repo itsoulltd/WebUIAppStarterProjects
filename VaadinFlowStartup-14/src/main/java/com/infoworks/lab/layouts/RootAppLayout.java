@@ -20,6 +20,8 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.tabs.Tab;
@@ -44,8 +46,9 @@ public class RootAppLayout extends AppLayout {
     private Map<Tab, Component> tab2Workspace = new HashMap<>();
 
     public RootAppLayout() {
-        //Left-Side Layout:
+        //Hamburger Menu:
         DrawerToggle hamburgerMenu = new DrawerToggle();
+        //Left-Side Layout:
         H1 title = new H1(ApplicationProperties.APP_DISPLAY_NAME);
         title.getStyle()
                 .set("font-size", "var(--lumo-font-size-l)")
@@ -53,11 +56,15 @@ public class RootAppLayout extends AppLayout {
         Image logo = VImage.loadFromImages(LOGO_URL, ApplicationProperties.APP_DISPLAY_NAME);
         logo.setWidth("74px");
         logo.setHeight("36px");
+        HorizontalLayout leftPan = new HorizontalLayout();
+        leftPan.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        leftPan.setWidth("350px");
+        leftPan.add(logo, title);
         //Menu Tabs:
         final Tabs tabs = getTabs();
         //AppLayout buildup:
         addToDrawer(tabs);
-        addToNavbar(hamburgerMenu, logo, title);
+        addToNavbar(hamburgerMenu, leftPan);
     }
 
     private Tabs getTabs() {
@@ -68,21 +75,21 @@ public class RootAppLayout extends AppLayout {
                 , trackerView()
                 , logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
-        tabs.addSelectedChangeListener(event -> {
-            final Tab selectedTab = event.getSelectedTab();
-            final Component component = tab2Workspace.get(selectedTab);
-            setContent(component);
-        });
         return tabs;
     }
 
-    private Tab createTab(VaadinIcon viewIcon, String viewName, Class<? extends Component> viewClass) {
+    private Icon createTabIcon(VaadinIcon viewIcon) {
         Icon icon = viewIcon.create();
-        icon.getStyle()
-                .set("box-sizing", "border-box")
+        icon.getStyle().set("box-sizing", "border-box")
                 .set("margin-inline-end", "var(--lumo-space-m)")
                 .set("margin-inline-start", "var(--lumo-space-xs)")
                 .set("padding", "var(--lumo-space-xs)");
+        return icon;
+    }
+
+    private Tab createTab(VaadinIcon viewIcon, String viewName, Class<? extends Component> viewClass) {
+        //Design tab-icon:
+        Icon icon = createTabIcon(viewIcon);
         //RouteLinks:
         RouterLink link = new RouterLink();
         link.add(icon, new Span(viewName));
@@ -92,8 +99,7 @@ public class RootAppLayout extends AppLayout {
     }
 
     private Tab logout() {
-        final Button btn = new Button();
-        btn.setText(RoutePath.LOGOUT_VIEW);
+        final Button btn = new Button(RoutePath.LOGOUT_VIEW, createTabIcon(VaadinIcon.SIGN_OUT));
         btn.setSizeFull();
         btn.addClickListener(e -> {
             AuthRepository authRepo = new AuthRepository();
@@ -111,26 +117,26 @@ public class RootAppLayout extends AppLayout {
     }
 
     private Tab profile() {
-        final Tab  tab   = new Tab(RoutePath.PROFILE_VIEW);
-        tab2Workspace.put(tab, new ProfileView());
+        String viewName = RoutePath.menuName(RoutePath.PROFILE_VIEW);
+        final Tab tab = createTab(VaadinIcon.USER_STAR, viewName, ProfileView.class);
         return tab;
     }
 
     private Tab trends() {
-        final Tab tab = new Tab(RoutePath.TRENDS_VIEW);
-        tab2Workspace.put(tab, new TrendsView());
+        String viewName = RoutePath.menuName(RoutePath.TRENDS_VIEW);
+        final Tab tab = createTab(VaadinIcon.TWITTER, viewName, TrendsView.class);
         return tab;
     }
 
     private Tab users() {
-        final Tab  tab   = new Tab(RoutePath.USERS_CRUD_VIEW);
-        tab2Workspace.put(tab, new UsersView());
+        String viewName = RoutePath.menuName(RoutePath.USERS_CRUD_VIEW);
+        final Tab tab = createTab(VaadinIcon.USERS, viewName, UsersView.class);
         return tab;
     }
 
     private Tab trackerView() {
-        final Tab  tab   = new Tab(RoutePath.GEO_TRACKER_VIEW);
-        tab2Workspace.put(tab, new GeoTrackerView());
+        String viewName = RoutePath.menuName(RoutePath.GEO_TRACKER_VIEW);
+        final Tab tab = createTab(VaadinIcon.MAP_MARKER, viewName, GeoTrackerView.class);
         return tab;
     }
 

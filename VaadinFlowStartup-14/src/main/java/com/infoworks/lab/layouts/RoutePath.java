@@ -9,6 +9,10 @@ public class RoutePath {
     public static final String LOGOUT_VIEW = "Logout";
     public static final String USERS_CRUD_VIEW = "Users";
     public static final String PROFILE_VIEW = "Profile";
-    public static final String TRENDS_VIEW = "Trends View";
-    public static final String GEO_TRACKER_VIEW = "Geo Tracker";
+    public static final String TRENDS_VIEW = "Trends_View";
+    public static final String GEO_TRACKER_VIEW = "Geo_Tracker";
+
+    public static String menuName(String routePath) {
+        return routePath.replaceAll("_", " ");
+    }
 }
