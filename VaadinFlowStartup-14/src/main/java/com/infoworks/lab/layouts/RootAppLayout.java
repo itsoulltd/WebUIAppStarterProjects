@@ -129,7 +129,7 @@ public class RootAppLayout extends AppLayout {
 
     private Tab trends() {
         String viewName = RoutePath.menuName(RoutePath.TRENDS_VIEW);
-        final Tab tab = createTab(VaadinIcon.TWITTER, viewName, TrendsView.class);
+        final Tab tab = createTab(VaadinIcon.LINE_BAR_CHART, viewName, TrendsView.class);
         return tab;
     }
 
