@@ -28,6 +28,9 @@ services:
           context: .
           dockerfile: Dockerfile
        environment:
+          app.display.name: MyApp
+          app.display.version: v1.0
+          app.display.mode: Development
           app.db.name: testDB
           app.db.host: mysql-db
           app.db.port: 3306
