@@ -127,15 +127,15 @@ public class RootAppLayout extends AppLayout {
         return tab;
     }
 
-    private Tab trends() {
-        String viewName = RoutePath.menuName(RoutePath.TRENDS_VIEW);
-        final Tab tab = createTab(VaadinIcon.LINE_BAR_CHART, viewName, TrendsView.class);
-        return tab;
-    }
-
     private Tab users() {
         String viewName = RoutePath.menuName(RoutePath.USERS_CRUD_VIEW);
         final Tab tab = createTab(VaadinIcon.USERS, viewName, UsersView.class);
+        return tab;
+    }
+
+    private Tab trends() {
+        String viewName = RoutePath.menuName(RoutePath.TRENDS_VIEW);
+        final Tab tab = createTab(VaadinIcon.LINE_BAR_CHART, viewName, TrendsView.class);
         return tab;
     }
 
