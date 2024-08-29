@@ -17,5 +17,7 @@ public class ApplicationProperties {
                     : System.getenv("google.maps.api")
     ).orElse(null);
 
-    //public static String ABC_XY = Optional.ofNullable(System.getenv("")).orElse("");
+    /*public static String ABC_XY = Optional.ofNullable(
+            System.getProperty("") != null ? System.getProperty("") : System.getenv("")
+    ).orElse("");*/
 }
