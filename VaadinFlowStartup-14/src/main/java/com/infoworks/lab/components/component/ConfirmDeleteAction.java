@@ -45,6 +45,7 @@ public class ConfirmDeleteAction extends VerticalLayout {
         super.onAttach(attachEvent);
         actionBar.updateSaveButton("DELETE", VaadinIcon.TRASH, ButtonVariant.LUMO_ERROR);
         actionBar.updateCloseButton("CLOSE", VaadinIcon.CLOSE, ButtonVariant.LUMO_PRIMARY);
+        actionBar.setWidthFull();
         add(message, actionBar);
     }
 

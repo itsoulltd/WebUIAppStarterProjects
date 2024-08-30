@@ -9,12 +9,15 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
+import java.util.stream.Stream;
+
 public class FormActionBar extends HorizontalLayout {
 
     private boolean activateSave; //By default false;
     private Dialog dialog;
     private Button save = new Button("SAVE", VaadinIcon.CHECK_CIRCLE.create());
     private Button close = new Button("CLOSE", VaadinIcon.CLOSE.create());
+    private Alignment[] borderAlignments = new Alignment[] {Alignment.AUTO};
 
     public FormActionBar(Dialog dialog) {
         this.dialog = dialog;
@@ -59,6 +62,17 @@ public class FormActionBar extends HorizontalLayout {
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
+        //Set Border Line:
+        Stream.of(borderAlignments).forEach(alignment -> {
+            if (alignment == Alignment.END)
+                getStyle().set("border-right", "1px solid #c5c5c5");
+            else if (alignment == Alignment.START)
+                getStyle().set("border-left", "1px solid #c5c5c5");
+            else if (alignment == Alignment.BASELINE)
+                getStyle().set("border-bottom", "1px solid #c5c5c5");
+            else
+                getStyle().set("border-top", "1px solid #c5c5c5");
+        });
         //
         if (dialog != null) {
             this.close.addClickListener((e) -> dialog.close());
@@ -89,5 +103,9 @@ public class FormActionBar extends HorizontalLayout {
         if (eventListener == null) return;
         this.activateSave = (eventListener != null);
         this.save.addClickListener(eventListener);
+    }
+
+    public void setBorderAlignments(Alignment...alignments) {
+        this.borderAlignments = alignments;
     }
 }
