@@ -1,5 +1,9 @@
 package com.infoworks.lab.components.ui;
 
+import com.infoworks.lab.components.component.CardView;
+import com.infoworks.lab.components.component.FileDownload.FileDownload;
+import com.infoworks.lab.components.component.FileUpload.FileUpload;
+import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
 import com.infoworks.lab.layouts.RootAppLayout;
@@ -8,17 +12,21 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
+import java.util.concurrent.TimeUnit;
+
 @Route(value = RoutePath.PROFILE_VIEW, layout = RootAppLayout.class)
 public class ProfileView extends Composite<Div> {
 
     private String message = "Hello Vaadin EventQueue!";
+    private CardView cardRevenue;
 
     public ProfileView() {
         getContent().add(new Span("Profile"));
@@ -32,8 +40,89 @@ public class ProfileView extends Composite<Div> {
         super.onAttach(attachEvent);
         //
         VerticalLayout root = new VerticalLayout();
-        addSampleComponent(root);
+        //addSampleComponent(root);
+        //Cards:
+        HorizontalLayout cardViewRow1 = new HorizontalLayout();
+        cardViewRow1.setSpacing(false);
+        //Revenue Card:
+        cardRevenue = new CardView("  Revenue  ", 732.09, 320.27);
+        cardRevenue.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
+        cardViewRow1.add(cardRevenue);
+        //TotalOrder Card:
+        CardView totalOrders = new CardView("  Total Orders  ", 531.0, 0.0);
+        totalOrders.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
+        cardViewRow1.add(totalOrders);
+        //AssignedOrder Card:
+        CardView assignedOrders = new CardView("  Assigned Orders  ", 231.0, 0.0);
+        assignedOrders.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
+        cardViewRow1.add(assignedOrders);
+        //CompleteOrder Card:
+        CardView completeOrders = new CardView("  Completed Orders  ", 101.0, 200.0);
+        completeOrders.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
+        cardViewRow1.add(completeOrders);
+        //TransferredOrder Card:
+        CardView transferOrders = new CardView("  Transferred Orders  ", 68.0, 75.0);
+        transferOrders.setBorderAlignments(FlexComponent.Alignment.BASELINE);
+        cardViewRow1.add(transferOrders);
+        //Download View:
+        FileDownload downloadView = new FileDownload("Download Sample (*.xlsx): "
+                , VaadinIcon.CLOUD_DOWNLOAD_O.create()
+                , "/Download/file_example_XLSX_50.xlsx");
+        //Upload View:
+        int maxFileSizeInMB = ApplicationProperties.APP_MAX_SIZE_IN_MB;
+        FileUpload uploadView = new FileUpload();
+        uploadView.setWidthFull();
+        uploadView.setTitle(createTitle());
+        uploadView.setTitleHint(createSubtitle(maxFileSizeInMB));
+        uploadView.setUploadBtnTitle("Upload Batch File");
+        uploadView.setUploadDropLabel(createDropLabel());
+        uploadView.setAcceptedFileTypes("application/vnd.ms-excel"
+                , "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                , ".xls"
+                , ".xlsx");
+        uploadView.setIncorrectFileTypeError("Please provide a Microsoft Excel (OpenXML) document.");
+        uploadView.setMaxFileSizeInMB(maxFileSizeInMB);
+        uploadView.setFileMaxSizeError("The file exceeds the maximum allowed size " + maxFileSizeInMB + "MB.");
+        uploadView.setListener((event, ios) -> {
+            //TODO:
+            System.out.println("FileName: " + event.getFileName());
+            System.out.println("FileSize: " + event.getContentLength());
+            System.out.println("FileType: " + event.getMIMEType());
+        });
+        //Add to view:
+        root.add(cardViewRow1, downloadView, uploadView);
         getContent().add(root);
+        //Now dispatch Rest-Api Calls:
+        UI ui = UI.getCurrent();
+        EventQueue.dispatch(700, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> {
+                    //Update Revenue Card View: UI
+                    this.cardRevenue.update(980.87, 732.09);
+                }));
+        //
+    }
+
+    private H4 createTitle() {
+        H4 title = new H4("Upload file to create order in batch");
+        title.getStyle().set("margin-top", "0");
+        return title;
+    }
+
+    private Paragraph createSubtitle(int maxFileSizeInMB) {
+        Paragraph titleHint = new Paragraph("Accepted file formats: Microsoft Excel (.xls/.xlsx)"
+                + " and maximum allowed size of " + maxFileSizeInMB + "MB.");
+        titleHint.getStyle().set("color", "var(--lumo-secondary-text-color)");
+        return titleHint;
+    }
+
+    private Span createDropLabel() {
+        Span cloudHint = new Span("Files will be uploaded to our cloud. Please note our ");
+        Anchor policyLink = new Anchor(
+                "https://vaadin.com/privacy-policy"
+                , "privacy policy"
+                , AnchorTarget.BLANK
+        );
+        return new Span(cloudHint, policyLink);
     }
 
     private void addSampleComponent(VerticalLayout root) {

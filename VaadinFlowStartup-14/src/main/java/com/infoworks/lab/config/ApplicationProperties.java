@@ -4,6 +4,7 @@ import java.util.Optional;
 
 public class ApplicationProperties {
 
+    public static final int APP_MAX_SIZE_IN_MB = 2;
     public static Boolean IS_AUTH_DISABLE = Boolean.parseBoolean(
             Optional.ofNullable(
                     System.getProperty("app.auth.disable") != null
