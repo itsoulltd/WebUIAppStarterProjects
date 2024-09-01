@@ -5,6 +5,9 @@ import java.util.Optional;
 public class ApplicationProperties {
 
     public static final int APP_MAX_SIZE_IN_MB = 2;
+    public static final String SAMPLE_CREATE_ORDER_XLSX = "/Download/file_example_XLSX_50.xlsx";
+    public static final String SAMPLE_CREATE_ORDER_XLS = "/Download/file_example_XLS_10.xls";
+
     public static Boolean IS_AUTH_DISABLE = Boolean.parseBoolean(
             Optional.ofNullable(
                     System.getProperty("app.auth.disable") != null

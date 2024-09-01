@@ -67,10 +67,10 @@ public class ProfileView extends Composite<Div> {
         //Download View:
         FileDownload downloadView_1 = new FileDownload("Download Sample (*.xlsx): "
                 , VaadinIcon.CLOUD_DOWNLOAD_O.create()
-                , "/Download/file_example_XLSX_50.xlsx");
+                , ApplicationProperties.SAMPLE_CREATE_ORDER_XLSX);
         FileDownload downloadView_2 = new FileDownload("Download Sample (*.xls): "
                 , VaadinIcon.CLOUD_DOWNLOAD_O.create()
-                , "/Download/file_example_XLS_10.xls");
+                , ApplicationProperties.SAMPLE_CREATE_ORDER_XLS);
         HorizontalLayout downloadGroup = new HorizontalLayout();
         downloadGroup.setWidthFull();
         downloadGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
