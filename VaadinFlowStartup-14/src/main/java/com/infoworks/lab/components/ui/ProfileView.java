@@ -65,9 +65,17 @@ public class ProfileView extends Composite<Div> {
         transferOrders.setBorderAlignments(FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(transferOrders);
         //Download View:
-        FileDownload downloadView = new FileDownload("Download Sample (*.xlsx): "
+        FileDownload downloadView_1 = new FileDownload("Download Sample (*.xlsx): "
                 , VaadinIcon.CLOUD_DOWNLOAD_O.create()
                 , "/Download/file_example_XLSX_50.xlsx");
+        FileDownload downloadView_2 = new FileDownload("Download Sample (*.xls): "
+                , VaadinIcon.CLOUD_DOWNLOAD_O.create()
+                , "/Download/file_example_XLS_10.xls");
+        HorizontalLayout downloadGroup = new HorizontalLayout();
+        downloadGroup.setWidthFull();
+        downloadGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        downloadGroup.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        downloadGroup.add(downloadView_1, downloadView_2);
         //Upload View:
         int maxFileSizeInMB = ApplicationProperties.APP_MAX_SIZE_IN_MB;
         FileUpload uploadView = new FileUpload();
@@ -90,7 +98,7 @@ public class ProfileView extends Composite<Div> {
             System.out.println("FileType: " + event.getMIMEType());
         });
         //Add to view:
-        root.add(cardViewRow1, downloadView, uploadView);
+        root.add(cardViewRow1, downloadGroup, uploadView);
         getContent().add(root);
         //Now dispatch Rest-Api Calls:
         UI ui = UI.getCurrent();
