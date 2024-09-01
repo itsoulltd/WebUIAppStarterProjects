@@ -91,7 +91,7 @@ public class ProfileView extends Composite<Div> {
         uploadView.setIncorrectFileTypeError("Please provide a Microsoft Excel (OpenXML) document.");
         uploadView.setMaxFileSizeInMB(maxFileSizeInMB);
         uploadView.setFileMaxSizeError("The file exceeds the maximum allowed size " + maxFileSizeInMB + "MB.");
-        uploadView.setListener((event, ios) -> {
+        uploadView.setListener((event, iso) -> {
             //TODO:
             System.out.println("FileName: " + event.getFileName());
             System.out.println("FileSize: " + event.getContentLength());
