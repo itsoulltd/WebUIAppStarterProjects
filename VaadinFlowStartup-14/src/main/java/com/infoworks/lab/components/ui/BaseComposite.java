@@ -29,7 +29,7 @@ public class BaseComposite<D extends Div> extends Composite<D> implements Before
             UserSessionManagement.handleSessionExpireEvent(new Response().setStatus(401));
         } else {
             AuthRepository repository = new AuthRepository();
-            if (repository.disableLogin("admin", "admin")) {
+            if (repository.isAuthDisable("admin", "admin")) {
                 return;
             }
             //On every tab-refresh checking token validation would be more secure:
