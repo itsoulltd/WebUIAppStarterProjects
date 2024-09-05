@@ -70,18 +70,17 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
     public String generateTokenWhenSecurityIsDisable(String username, String password) {
         //Return jwt-test-token for admin/admin or tenant/tenant
         if (username.equalsIgnoreCase("admin")) {
-            return generateJWToken(username, password, UserRole.ADMIN.roles());
+            return generateJWToken(username, UserRole.ADMIN.roles());
         } else if (username.equalsIgnoreCase("tenant")) {
-            return generateJWToken(username, password, UserRole.TENANT.roles());
+            return generateJWToken(username, UserRole.TENANT.roles());
         }
         return null; //Null or Empty will be treated as Invalid Token!
     }
 
-    private String generateJWToken(String username, String password, String...roles) {
+    private String generateJWToken(String username, String...roles) {
         JWTHeader header = new JWTHeader().setAlg("HS256").setTyp("JWT");
         JWTPayload payload = new JWTPayload()
                 .setIss(username)
-                .addData("password", password)
                 .addData("roles", String.join(",", roles))
                 .addData("username", username);
         TokenProvider provider = new JWTokenProvider(UUID.randomUUID().toString())
