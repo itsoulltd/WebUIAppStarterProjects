@@ -31,10 +31,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.renderer.TemplateRenderer;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.util.concurrent.TimeUnit;
 
+@PageTitle("Trends")
 @Route(value = RoutePath.TRENDS_VIEW, layout = ApplicationLayout.class)
 public class TrendsView extends Composite<Div> {
 

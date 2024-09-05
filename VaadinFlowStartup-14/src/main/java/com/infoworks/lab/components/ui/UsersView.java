@@ -22,11 +22,13 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@PageTitle("Users")
 @Route(value = RoutePath.USERS_CRUD_VIEW, layout = ApplicationLayout.class)
 public class UsersView extends Composite<Div> implements Crud.EventListener<User>{
 
