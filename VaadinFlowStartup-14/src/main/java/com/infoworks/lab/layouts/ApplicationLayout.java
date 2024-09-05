@@ -10,16 +10,17 @@ import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.rest.models.Response;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.Push;
@@ -66,14 +67,43 @@ public class ApplicationLayout extends AppLayout {
         Image logo = VImage.loadFromImages(LOGO_URL, ApplicationProperties.APP_DISPLAY_NAME);
         logo.setWidth("74px");
         logo.setHeight("36px");
+        HorizontalLayout left = new HorizontalLayout();
+        left.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        left.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        left.setWidthFull();
+        left.setHeightFull();
+        left.add(hamburgerMenu, title);
+        //Right-Side Layout:
+        MenuBar userInfoBar = new MenuBar();
+        MenuItem item = userInfoBar.addItem(new Span(new Span("John Smith"), createTabIcon(VaadinIcon.USER)));
+        SubMenu subMenu = item.getSubMenu();
+        subMenu.addItem(new Anchor(
+                "https://vaadin.com/privacy-policy"
+                , "About"
+                , AnchorTarget.BLANK
+        ));
+        subMenu.addItem(new Anchor(
+                "https://vaadin.com/privacy-policy"
+                , "Help"
+                , AnchorTarget.BLANK
+        ));
+        subMenu.add(new Hr());
+        subMenu.addItem(new Span(createTabIcon(VaadinIcon.EXIT), new Span("Logout"))
+                , onLogoutClickEvent());
+        HorizontalLayout right = new HorizontalLayout();
+        right.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        right.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        right.setWidthFull();
+        right.setHeightFull();
+        right.add(userInfoBar);
         //
         HorizontalLayout layout = new HorizontalLayout();
         layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.EVENLY);
         layout.setWidthFull();
         layout.setHeightFull();
         layout.getStyle().set("border-bottom", "1px solid #c5c5c5");
-        layout.add(hamburgerMenu, title, logo);
+        layout.add(left, right);
         return layout;
     }
 
@@ -116,19 +146,23 @@ public class ApplicationLayout extends AppLayout {
     private Tab logout() {
         final Button btn = new Button(RoutePath.LOGOUT_VIEW, createTabIcon(VaadinIcon.SIGN_OUT));
         btn.setSizeFull();
-        btn.addClickListener(e -> {
+        btn.addClickListener(onLogoutClickEvent());
+        //
+        final Tab tab = new Tab(btn);
+        tab2Workspace.put(tab, new Label(RoutePath.LOGOUT_VIEW));
+        return tab;
+    }
+
+    private ComponentEventListener onLogoutClickEvent() {
+        return (event) -> {
             AuthRepository authRepo = new AuthRepository();
-            String authToken = AuthRepository.parseToken(e.getSource().getUI().orElse(null));
+            String authToken = AuthRepository.parseToken(event.getSource().getUI().orElse(null));
             authRepo.doLogout(authToken, (isSuccess, msg) -> {
                 if (isSuccess) {
                     UserSessionManagement.handleSessionExpireEvent(new Response().setStatus(401));
                 }
             });
-        });
-        //
-        final Tab tab = new Tab(btn);
-        tab2Workspace.put(tab, new Label(RoutePath.LOGOUT_VIEW));
-        return tab;
+        };
     }
 
     private Tab profile() {
