@@ -77,16 +77,16 @@ public class ApplicationLayout extends AppLayout {
         MenuBar userInfoBar = new MenuBar();
         MenuItem item = userInfoBar.addItem(new Span(new Span("John Smith"), createTabIcon(VaadinIcon.USER)));
         SubMenu subMenu = item.getSubMenu();
-        subMenu.addItem(new Anchor(
-                "https://vaadin.com/privacy-policy"
+        subMenu.addItem(new Span(createTabIcon(VaadinIcon.INFO_CIRCLE), new Anchor(
+                "/pages/about.html"
                 , "About"
                 , AnchorTarget.BLANK
-        ));
-        subMenu.addItem(new Anchor(
-                "https://vaadin.com/privacy-policy"
+        )));
+        subMenu.addItem(new Span(createTabIcon(VaadinIcon.SITEMAP), new Anchor(
+                "/pages/help.html"
                 , "Help"
                 , AnchorTarget.BLANK
-        ));
+        )));
         subMenu.add(new Hr());
         subMenu.addItem(new Span(createTabIcon(VaadinIcon.EXIT), new Span("Logout"))
                 , onLogoutClickEvent());
