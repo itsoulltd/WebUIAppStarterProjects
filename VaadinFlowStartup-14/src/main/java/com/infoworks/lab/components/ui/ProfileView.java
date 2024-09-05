@@ -6,7 +6,7 @@ import com.infoworks.lab.components.component.FileUpload.FileUpload;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
-import com.infoworks.lab.layouts.RootAppLayout;
+import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
@@ -22,7 +22,7 @@ import com.vaadin.flow.router.Route;
 
 import java.util.concurrent.TimeUnit;
 
-@Route(value = RoutePath.PROFILE_VIEW, layout = RootAppLayout.class)
+@Route(value = RoutePath.PROFILE_VIEW, layout = ApplicationLayout.class)
 public class ProfileView extends Composite<Div> {
 
     private String message = "Hello Vaadin EventQueue!";

@@ -40,12 +40,12 @@ import java.util.Map;
 @CssImport(value = "./styles/shared-styles.css", include = "view-styles")
 @PWA(name = "Time Tracking", shortName = "Ticker")
 @Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
-public class RootAppLayout extends AppLayout {
+public class ApplicationLayout extends AppLayout {
 
     private static final String LOGO_URL = "logo.png";
     private Map<Tab, Component> tab2Workspace = new HashMap<>();
 
-    public RootAppLayout() {
+    public ApplicationLayout() {
         //TopBar Layout:
         Component topBar = createTopBar();
         //Menu Tabs:

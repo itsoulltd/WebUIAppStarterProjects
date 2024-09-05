@@ -32,7 +32,7 @@ import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.OStreetAddressSearch;
 import com.infoworks.lab.domain.models.OStreetGeocode;
 import com.infoworks.lab.domain.repository.OStreetRepository;
-import com.infoworks.lab.layouts.RootAppLayout;
+import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Random;
 
 @PageTitle("GeoLocation Tracker")
-@Route(value = RoutePath.GEO_TRACKER_VIEW, layout = RootAppLayout.class)
+@Route(value = RoutePath.GEO_TRACKER_VIEW, layout = ApplicationLayout.class)
 @SuppressWarnings("serial")
 public class GeoTrackerView extends GoogleMapsView {
 

@@ -8,7 +8,7 @@ import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
 import com.infoworks.lab.domain.entities.Trend;
 import com.infoworks.lab.domain.repository.TrendRepository;
-import com.infoworks.lab.layouts.RootAppLayout;
+import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
@@ -35,7 +35,7 @@ import com.vaadin.flow.router.Route;
 
 import java.util.concurrent.TimeUnit;
 
-@Route(value = RoutePath.TRENDS_VIEW, layout = RootAppLayout.class)
+@Route(value = RoutePath.TRENDS_VIEW, layout = ApplicationLayout.class)
 public class TrendsView extends Composite<Div> {
 
     private GridView gridView;

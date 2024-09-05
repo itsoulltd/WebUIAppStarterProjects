@@ -14,7 +14,7 @@ import com.infoworks.lab.domain.models.Gender;
 import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.domain.repository.UserRepository;
 import com.infoworks.lab.jsql.ExecutorType;
-import com.infoworks.lab.layouts.RootAppLayout;
+import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
@@ -27,7 +27,7 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(value = RoutePath.USERS_CRUD_VIEW, layout = RootAppLayout.class)
+@Route(value = RoutePath.USERS_CRUD_VIEW, layout = ApplicationLayout.class)
 public class UsersView extends Composite<Div> implements Crud.EventListener<User>{
 
     private SearchBar<User> iSearchBar;
