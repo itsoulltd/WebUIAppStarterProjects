@@ -4,6 +4,7 @@ import com.infoworks.lab.client.jersey.HttpTemplate;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.config.RequestURI;
 import com.infoworks.lab.config.UserRole;
+import com.infoworks.lab.domain.entities.User;
 import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.jjwt.JWTHeader;
 import com.infoworks.lab.jjwt.JWTPayload;
@@ -12,6 +13,7 @@ import com.infoworks.lab.jwtoken.definition.TokenProvider;
 import com.infoworks.lab.jwtoken.services.JWTokenProvider;
 import com.infoworks.lab.rest.models.Message;
 import com.infoworks.lab.rest.models.Response;
+import com.it.soul.lab.sql.query.models.Property;
 import com.vaadin.flow.component.UI;
 
 import java.io.IOException;
@@ -25,6 +27,19 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
 
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_RESET_TOKEN = "Reset-Pass-Token";
+
+    public static User currentPrincipleFromToken(UI ui, Property usernameKey) {
+        User principle = new User();
+        principle.setName("");
+        String token = parseToken(ui);
+        JWTPayload payload = TokenValidator.parsePayload(token, JWTPayload.class);
+        if (payload != null && payload.getData() != null) {
+            String issuer = payload.getIss();
+            principle.setName(payload.getData().getOrDefault(usernameKey.getKey(), issuer));
+        }
+        principle.setAuthorization(token);
+        return principle;
+    }
 
     public static String parseToken(UI ui) {
         Optional<Object> optToken = (ui != null)

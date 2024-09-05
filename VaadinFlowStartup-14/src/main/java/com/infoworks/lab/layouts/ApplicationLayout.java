@@ -7,10 +7,13 @@ import com.infoworks.lab.components.ui.TrendsView;
 import com.infoworks.lab.components.ui.UsersView;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.config.UserSessionManagement;
+import com.infoworks.lab.domain.entities.User;
 import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.rest.models.Response;
+import com.it.soul.lab.sql.query.models.Property;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -75,7 +78,7 @@ public class ApplicationLayout extends AppLayout {
         left.add(hamburgerMenu, title);
         //Right-Side Layout:
         MenuBar userInfoBar = new MenuBar();
-        MenuItem item = userInfoBar.addItem(new Span(new Span("John Smith"), createTabIcon(VaadinIcon.USER)));
+        MenuItem item = userInfoBar.addItem(prepareUserInfo());
         SubMenu subMenu = item.getSubMenu();
         subMenu.addItem(new Span(createTabIcon(VaadinIcon.INFO_CIRCLE), new Anchor(
                 "/pages/about.html"
@@ -105,6 +108,15 @@ public class ApplicationLayout extends AppLayout {
         layout.getStyle().set("border-bottom", "1px solid #c5c5c5");
         layout.add(left, right);
         return layout;
+    }
+
+    private Component prepareUserInfo() {
+        User principle = AuthRepository.currentPrincipleFromToken(UI.getCurrent(), new Property("username"));
+        Icon icon = VaadinIcon.USER.create();
+        icon.getStyle().set("margin-left", "5px");
+        String username = principle.getName();
+        Span component = new Span(new Span(username), icon);
+        return component;
     }
 
     private Tabs getTabs() {
