@@ -85,7 +85,7 @@ public class CardView extends VerticalLayout {
         Icon moveIcon = movement > 0.0 ? createIcon(VaadinIcon.ARROW_UP) : createIcon(VaadinIcon.ARROW_DOWN);
         String moveVal = movement > 0.0
                 ? String.format("+%.2f %s", movement, "%")
-                : String.format("-%.2f %s", movement, "%");
+                : String.format("%.2f %s", movement, "%");
         String badgeTheme = movement > 0.0 ? "badge success" : "badge error";
         if (movementBadge == null) {
             movementBadge = new Span(moveIcon, new Span(moveVal));
@@ -101,7 +101,7 @@ public class CardView extends VerticalLayout {
         movementBadge.getStyle().set("box-sizing", "border-box");
         movementBadge.getStyle().set("border-radius", "var(--lumo-border-radius-s)");
         movementBadge.getStyle().set("text-align", "center");
-        if (movement <= 0.0) { //In this case we can dim the view.
+        if (movement == 0.0) { //In this case we can dim the view.
             movementBadge.getStyle().set("opacity","0.5");
             movementBadge.getStyle().set("color","#e6f3ff");
         }
