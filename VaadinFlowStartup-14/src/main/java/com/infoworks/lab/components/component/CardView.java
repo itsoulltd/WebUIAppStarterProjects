@@ -74,10 +74,14 @@ public class CardView extends VerticalLayout {
     }
 
     public List<Component> update(Double currentVal, Double previousVal) {
+        return update("%.2f", currentVal, previousVal);
+    }
+
+    public List<Component> update(String displayFormat, Double currentVal, Double previousVal) {
         List<Component> components = new ArrayList<>();
         //
         if(cardValue == null) cardValue = new H3(currentVal.toString());
-        else cardValue.setText(currentVal.toString());
+        else cardValue.setText(String.format(displayFormat, currentVal));
         components.add(0, cardValue);
         //
         Double movement = calculateMovement(currentVal, previousVal);

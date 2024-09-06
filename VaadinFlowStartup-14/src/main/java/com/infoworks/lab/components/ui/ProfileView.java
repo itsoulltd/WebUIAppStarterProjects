@@ -107,7 +107,7 @@ public class ProfileView extends Composite<Div> {
         EventQueue.dispatch(700, TimeUnit.MILLISECONDS
                 , () -> ui.access(() -> {
                     //Update Revenue Card View: UI
-                    this.cardRevenue.update(980.87, 732.09);
+                    this.cardRevenue.update("$ %.2f", 980.87, 732.09);
                 }));
         //
     }
