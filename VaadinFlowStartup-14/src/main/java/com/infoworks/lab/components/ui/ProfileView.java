@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 public class ProfileView extends Composite<Div> {
 
     private String message = "Hello Vaadin EventQueue!";
-    private CardView cardRevenue;
 
     public ProfileView() {
         getContent().add(new Span("Profile"));
@@ -47,7 +46,7 @@ public class ProfileView extends Composite<Div> {
         HorizontalLayout cardViewRow1 = new HorizontalLayout();
         cardViewRow1.setSpacing(false);
         //Revenue Card:
-        cardRevenue = new CardView("  Revenue  ", 732.09, 320.27);
+        CardView cardRevenue = new CardView("  Revenue  ", 732.09, 320.27);
         cardRevenue.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(cardRevenue);
         //TotalOrder Card:
@@ -107,7 +106,7 @@ public class ProfileView extends Composite<Div> {
         EventQueue.dispatch(700, TimeUnit.MILLISECONDS
                 , () -> ui.access(() -> {
                     //Update Revenue Card View: UI
-                    this.cardRevenue.update("$ %.2f", 980.87, 732.09);
+                    cardRevenue.update("$ %.2f", 980.87, 732.09);
                 }));
         //
     }
