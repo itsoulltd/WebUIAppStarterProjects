@@ -112,7 +112,8 @@ public class CardView extends VerticalLayout {
 
     private double calculateMovement(double current, double previous) {
         if (previous <= 0.0) return 0.0;
-        double val = (current * 100) / previous;
+        double increase = current - previous;
+        double val = (increase / previous) * 100;
         return val;
     }
 
