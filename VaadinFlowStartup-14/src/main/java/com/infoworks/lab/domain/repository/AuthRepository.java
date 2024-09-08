@@ -111,23 +111,22 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
 
     @Override
     protected String host() {
-        return Optional.ofNullable(System.getenv("app.auth.host")).orElse("localhost");
+        return RequestURI.AUTH_HOST;
     }
 
     @Override
     protected Integer port() {
-        String portStr = Optional.ofNullable(System.getenv("app.auth.port")).orElse("8080");
-        return Integer.valueOf(portStr);
+        return Integer.valueOf(RequestURI.AUTH_PORT);
     }
 
     @Override
     protected String api() {
-        return Optional.ofNullable(System.getenv("app.auth.login")).orElse("/api/auth/auth/v1");
+        return RequestURI.AUTH_API;
     }
 
     @Override
     protected synchronized String domain() throws MalformedURLException {
-        return Optional.ofNullable(System.getenv("app.auth.domain")).orElse(super.domain());
+        return RequestURI.AUTH_BASE;
     }
 
     public void doLogin(String username , String password, BiConsumer<Boolean, String> consumer) {

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class EntityRestRepository<E extends Persistable, ID> extends HttpTemplate<E, Message> implements RestRepository<E, ID> {
 
@@ -40,13 +39,12 @@ public abstract class EntityRestRepository<E extends Persistable, ID> extends Ht
 
     @Override
     protected String host() {
-        return Optional.ofNullable(System.getenv("app.api.host")).orElse("localhost");
+        return RequestURI.APP_HOST;
     }
 
     @Override
     protected Integer port() {
-        String portStr = Optional.ofNullable(System.getenv("app.api.port")).orElse("8080");
-        return Integer.valueOf(portStr);
+        return Integer.valueOf(RequestURI.APP_PORT);
     }
 
     protected abstract String api();
