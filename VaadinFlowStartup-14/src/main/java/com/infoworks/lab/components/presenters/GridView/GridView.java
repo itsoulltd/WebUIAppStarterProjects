@@ -1,7 +1,6 @@
 package com.infoworks.lab.components.presenters.GridView;
 
 import com.infoworks.lab.beans.tasks.definition.Task;
-import com.infoworks.lab.components.crud.components.views.search.SearchBarConfigurator;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.FetchItems;
 import com.infoworks.lab.domain.beans.tasks.FetchItemsCount;
@@ -27,8 +26,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -173,8 +172,7 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
             LOG.log(Level.WARNING, "Bean-Class Type dose not confirm to <EntityInterface>.");
             return;
         }
-        List<Property> searchProps = new SearchBarConfigurator()
-                .getProperties((Class<EntityInterface>)type, skipProperties);
+        List<Property> searchProps = getProperties((Class<EntityInterface>)type, skipProperties);
         SecureSearchQuery query = Pagination.createQuery(SecureSearchQuery.class, grid.getPageSize(), SortOrder.DESC);
         query.setPage(0);
         query.setAuthorization(AuthRepository.parseToken(event.getSource().getUI().orElse(null)));
@@ -188,6 +186,32 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         //Task searchTask = new SearchItems(ui, this, repository, query, 0);
         Task searchTask = getSearchTask(ui, query, 0);
         EventQueue.dispatchTask(searchTask);
+    }
+
+    public <Entity extends EntityInterface> List<Property> getProperties(Class<Entity> type, String...skipKeys) {
+        Entity item = null;
+        try {
+            item = type.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        if (!Objects.nonNull(item)) return new ArrayList<>();
+        List<Property> properties = new ArrayList<>();
+        //
+        Map<String, Object> propMap = item.marshallingToMap(false);
+        propMap.forEach((key, value) -> {
+            if (Arrays.stream(skipKeys)
+                    .noneMatch(val -> val.equalsIgnoreCase(key))) {
+                properties.add(new Property(key, value));
+            }
+        });
+        return properties;
     }
 
     @Override

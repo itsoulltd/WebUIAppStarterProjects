@@ -4,7 +4,6 @@ import com.infoworks.lab.components.component.VImage;
 import com.infoworks.lab.components.ui.GeoTrackerView;
 import com.infoworks.lab.components.ui.ProfileView;
 import com.infoworks.lab.components.ui.TrendsView;
-import com.infoworks.lab.components.ui.UsersView;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.entities.User;
@@ -122,7 +121,6 @@ public class ApplicationLayout extends AppLayout {
     private Tabs getTabs() {
         Tabs tabs = new Tabs(
                 profile()
-                , users()
                 , trends()
                 , trackerView()
                 , logout());
@@ -180,12 +178,6 @@ public class ApplicationLayout extends AppLayout {
     private Tab profile() {
         String viewName = RoutePath.menuName(RoutePath.PROFILE_VIEW);
         final Tab tab = createTab(VaadinIcon.USER_STAR, viewName, ProfileView.class);
-        return tab;
-    }
-
-    private Tab users() {
-        String viewName = RoutePath.menuName(RoutePath.USERS_CRUD_VIEW);
-        final Tab tab = createTab(VaadinIcon.USERS, viewName, UsersView.class);
         return tab;
     }
 
