@@ -34,7 +34,7 @@ public class SearchTask extends PostTask {
     }
 
     @Override
-    protected HttpEntity getBody() {
+    public HttpEntity getBody() {
         SearchQuery cQuery = this.updated != null ? this.updated : new SearchQuery();
         HttpEntity entity = new HttpEntity(cQuery, createHeaderFrom(this.token));
         return entity;
