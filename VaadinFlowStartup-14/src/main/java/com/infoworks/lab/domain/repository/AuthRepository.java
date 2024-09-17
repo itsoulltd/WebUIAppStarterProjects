@@ -27,6 +27,7 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
 
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
     public static final String X_RESET_TOKEN = "Reset-Pass-Token";
+    public static final String X_USER_KEY = "X-User-Key";
 
     public static User currentPrincipleFromToken(UI ui, Property usernameKey) {
         User principle = new User();
@@ -103,6 +104,15 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
                 .setPayload(payload).setHeader(header);
         String token = provider.generateToken(TokenProvider.defaultTokenTimeToLive());
         return token;
+    }
+
+    public static void saveUser(UI ui, User user) {
+        ui.getSession().setAttribute(X_USER_KEY, user);
+    }
+
+    public static User retrieveUser(UI ui) {
+        Object obj = ui.getSession().getAttribute(X_USER_KEY);
+        return (obj instanceof User) ? (User) obj : null;
     }
 
     @Override
