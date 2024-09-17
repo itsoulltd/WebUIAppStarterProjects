@@ -1,12 +1,12 @@
 package com.infoworks.lab.domain.repository;
 
+import com.infoworks.lab.beans.tasks.rest.client.spring.methods.GetTask;
 import com.infoworks.lab.client.spring.HttpTemplate;
 import com.infoworks.lab.config.RequestURI;
 import com.infoworks.lab.config.RestTemplateConfig;
 import com.infoworks.lab.config.UserSessionManagement;
 import com.infoworks.lab.domain.entities.Persistable;
 import com.infoworks.lab.domain.models.Authorization;
-import com.infoworks.lab.domain.models.SecureSearchQuery;
 import com.infoworks.lab.exceptions.HttpInvocationException;
 import com.infoworks.lab.rest.models.*;
 import com.infoworks.lab.rest.repository.RestRepository;
@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public abstract class EntitySpringRestRepository<E extends Persistable, ID> extends HttpTemplate<E, Message> implements RestRepository<E, ID> {
@@ -39,6 +40,13 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
 
     public String getToken() {
         return token;
+    }
+
+    public HttpHeaders getHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        String onlyToken = HttpInteractor.parseToken(getToken());
+        headers.set(HttpHeaders.AUTHORIZATION, HttpInteractor.authorizationValue(onlyToken));
+        return headers;
     }
 
     public RestTemplate getTemplate() {
@@ -61,7 +69,7 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
             String url = schema() + host() + ":" + port() + api() + "/rowCount";
             ResponseEntity<String> response = getTemplate().exchange(url
                     , HttpMethod.GET
-                    , new HttpEntity<>(null, new HttpHeaders())
+                    , new HttpEntity<>(null, getHeader())
                     , String.class);
             ItemCount iCount = Message.unmarshal(ItemCount.class, response.getBody());
             return iCount;
@@ -75,15 +83,13 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
 
     public List<E> fetch(Integer page, Integer limit) {
         try {
-            Response items = get(null, new QueryParam("page", page.toString()), new QueryParam("limit", limit.toString()));
-            if ( UserSessionManagement.handleSessionExpireEvent(items)) {
-                throw new HttpInvocationException("Unauthorized Access!");
-            }
-            if (items instanceof ResponseList){
-                List<E> collection = ((ResponseList)items).getCollections();
-                return collection;
-            }
-        } catch (HttpInvocationException e) {
+            String url = schema() + host() + ":" + port() + api();
+            GetTask task = new GetTask(url, "?page={page}&limit={limit}", page, limit);
+            task.setBody(new HashMap<>(), getToken());
+            task.setTemplate(RestTemplateConfig.getTemplate());
+            Response response = task.execute(null);
+            return unmarshal(response.getPayload());
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -95,7 +101,7 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
                 String token = getToken();
                 ent.setAuthorization(token);
             }
-            E response = (E) post(ent);
+            E response = post(ent);
             if (UserSessionManagement.handleSessionExpireEvent(response)) {
                 throw new HttpInvocationException("Unauthorized Access!");
             }
@@ -112,7 +118,7 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
                 ent.setAuthorization(token);
             }
             ent.setId(id);
-            E response = (E) put(ent);
+            E response = put(ent);
             if (UserSessionManagement.handleSessionExpireEvent(response)) {
                 throw new HttpInvocationException("Unauthorized Access!");
             }
@@ -138,16 +144,9 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
     }
 
     public List<E> search(SearchQuery searchQuery) {
-        List<E> ent;
         try {
-            if (searchQuery instanceof SecureSearchQuery) {
-                if (((SecureSearchQuery) searchQuery).getAuthorization() == null) {
-                    String token = getToken();
-                    String withPrefixToken = HttpInteractor.authorizationValue(token);
-                    ((SecureSearchQuery) searchQuery).setAuthorization(withPrefixToken);
-                }
-            }
-            ent = secureSearch(searchQuery);
+            List<E> ent = secureSearch(searchQuery);
+            return ent;
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (HttpInvocationException e) {
@@ -155,22 +154,14 @@ public abstract class EntitySpringRestRepository<E extends Persistable, ID> exte
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return ent;
     }
 
     protected List<E> secureSearch(SearchQuery query)
             throws IOException, HttpInvocationException {
-        //Pass Authorization token in HttpHeaders as auth-token.
-        HttpHeaders headers = new HttpHeaders();
-        if (query instanceof SecureSearchQuery) {
-            String withPrefixToken = ((SecureSearchQuery) query).getAuthorization();
-            headers.add(HttpHeaders.AUTHORIZATION, withPrefixToken);
-        }
-        //
         String url = schema() + host() + ":" + port() + api() + "/search";
         ResponseEntity<String> response = getTemplate().exchange(url
                 , HttpMethod.POST
-                , new HttpEntity<>(query, headers)
+                , new HttpEntity<>(query, getHeader())
                 , String.class);
         if (UserSessionManagement.handleSessionExpireEvent(
                 new Response().setStatus(response.getStatusCodeValue()))) {
