@@ -88,8 +88,9 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
             return generateJWToken(username, UserRole.ADMIN.roles());
         } else if (username.equalsIgnoreCase("tenant")) {
             return generateJWToken(username, UserRole.TENANT.roles());
+        } else {
+            return generateJWToken(username, UserRole.USER.roles());
         }
-        return null; //Null or Empty will be treated as Invalid Token!
     }
 
     private String generateJWToken(String username, String...roles) {
