@@ -9,6 +9,7 @@ import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
 import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -39,9 +40,8 @@ public class ProfileView extends Composite<Div> {
             getContent().removeAll();
         }
         super.onAttach(attachEvent);
-        //
+        //ProfileView Layout:
         VerticalLayout root = new VerticalLayout();
-        //addSampleComponent(root);
         //Cards:
         HorizontalLayout cardViewRow1 = new HorizontalLayout();
         cardViewRow1.setSpacing(false);
@@ -100,6 +100,10 @@ public class ProfileView extends Composite<Div> {
         });
         //Add to view:
         root.add(cardViewRow1, downloadGroup, uploadView);
+        //Add Messaging Round-Trip view:
+        Component messaging = createMessagingComponent();
+        root.add(messaging);
+        //Finally add the root layout to composite:
         getContent().add(root);
         //Now dispatch Rest-Api Calls:
         UI ui = UI.getCurrent();
@@ -134,9 +138,12 @@ public class ProfileView extends Composite<Div> {
         return new Span(cloudHint, policyLink);
     }
 
-    private void addSampleComponent(VerticalLayout root) {
+    private Component createMessagingComponent() {
         HorizontalLayout layout = new HorizontalLayout();
-        layout.setPadding(true);
+        //layout.setPadding(true);
+        layout.setSpacing(true);
+        layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
         //
         TextField messageLabel = new TextField("", "Enter Message!");
         messageLabel.addValueChangeListener((event) -> message = event.getValue());
@@ -146,7 +153,8 @@ public class ProfileView extends Composite<Div> {
             //Example How to do async ui update in Vaadin:
             UI ui = event.getSource().getUI().orElse(null);
             EventQueue.dispatchTask(new DisplayAsyncNotification(ui, message));
+            //EventQueue.dispatchTaskInQueue(new DisplayAsyncNotification(ui, message));
         }));
-        root.add(layout);
+        return layout;
     }
 }
