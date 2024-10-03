@@ -226,4 +226,12 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
             this.searchView.addNewEventListener(listener);
         }
     }
+
+    public void setRepository(RestRepository repository) {
+        this.repository = repository;
+    }
+
+    public GridSearchView getSearchView() {
+        return searchView;
+    }
 }
