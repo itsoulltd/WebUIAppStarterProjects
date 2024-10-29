@@ -1,4 +1,5 @@
-FROM library/tomcat:8.5.35
+#FROM library/tomcat:8.5.35
+FROM library/tomcat:9.0.40-jdk8-adoptopenjdk-openj9
 MAINTAINER lab.infoworks.com
 
 # Delete existing ROOT folder
