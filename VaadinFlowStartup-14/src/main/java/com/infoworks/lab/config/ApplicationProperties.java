@@ -38,7 +38,7 @@ public class ApplicationProperties {
             System.getProperty("app.display.mode") != null
                     ? System.getProperty("app.display.mode")
                     : System.getenv("app.display.mode")
-    ).orElse("Development");
+    ).orElse("DEV");
 
     /*public static String ABC_XY = Optional.ofNullable(
             System.getProperty("") != null ? System.getProperty("") : System.getenv("")

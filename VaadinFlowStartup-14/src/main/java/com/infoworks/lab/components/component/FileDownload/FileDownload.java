@@ -1,5 +1,6 @@
 package com.infoworks.lab.components.component.FileDownload;
 
+import com.infoworks.lab.config.ApplicationResources;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.html.Anchor;
@@ -14,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 public class FileDownload extends Div {
@@ -36,7 +36,7 @@ public class FileDownload extends Div {
     }
 
     public FileDownload(String title, Icon icon, String resourceName) {
-        this(title, icon, Paths.get("src","main","resources", resourceName));
+        this(title, icon, new ApplicationResources().getPath(resourceName));
     }
 
     @Override
