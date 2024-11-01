@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 
 import javax.validation.Validator;
 
@@ -68,15 +69,20 @@ public class TrendsForm extends FormLayout {
                     dialog.close();
                 }
             });
-            //
+            //If model is null:
             if (this.trend == null) {
                 this.trend = new Trend();
-                add(title, subtitle, email, description
-                        , actionBar);
-            } else {
-                add(title, subtitle, email, description
-                        , actionBar);
             }
+            //Update UI:
+            title.setRequired(true);
+            description.setHelperText("Max = 256");
+            description.setMaxLength(256);
+            description.setValueChangeMode(ValueChangeMode.EAGER);
+            description.addValueChangeListener(e ->
+                    e.getSource().setHelperText(e.getValue().length() + "/" + 256)
+            );
+            add(title, subtitle, email, description
+                    , actionBar);
         } else {
             //Make all field un-editable:
             title.setValue(trend.getTitle());
