@@ -118,4 +118,16 @@ public class GridFooter extends VerticalLayout {
         disableButton(FooterButtonType.Next);
         disableButton(FooterButtonType.Previous);
     }
+
+    public int getPage() {
+        return page;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public long getTotalCount() {
+        return totalCount;
+    }
 }

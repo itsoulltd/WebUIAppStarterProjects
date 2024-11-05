@@ -128,7 +128,8 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         if (ui == null) return;
         //Dispatch async event to fetch user-list:
         //Task task = new FetchItems(ui, this, repository, 0, grid.getPageSize(), 100);
-        Task task = getFetchTask(ui, 0, grid.getPageSize(), 100);
+        //Task task = getFetchTask(ui, 0, grid.getPageSize(), 100);
+        Task task = getFetchTask(ui, footer.getPage(), footer.getPageSize(), 100);
         EventQueue.dispatchTask(task);
         //Dispatch async event to fetch count:
         //Task countTask = new FetchItemsCount(ui, footer, repository);
