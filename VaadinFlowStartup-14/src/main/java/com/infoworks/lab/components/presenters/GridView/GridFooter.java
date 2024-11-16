@@ -72,7 +72,9 @@ public class GridFooter extends VerticalLayout {
         if (count.getStatus() == 200) {
             totalCount = count.getCount();
             titleLabel.setText(String.format(TOTAL_COUNT_TITLE, totalCount));
-            if (totalCount > 0 && totalCount > paginationCarry) {
+            if (totalCount <= 0) {
+                reset();
+            } else if (totalCount > 0 && totalCount > paginationCarry) {
                 enableButton(FooterButtonType.Next);
             }
         } else {
