@@ -43,9 +43,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @PageTitle("GeoLocation Tracker")
 @Route(value = RoutePath.GEO_TRACKER_VIEW, layout = ApplicationLayout.class)
@@ -102,6 +105,7 @@ public class GeoTrackerView extends GoogleMapsView {
 
         //Create marker to track location
         GoogleMapMarker locationMarker = createMapMarker("You're here");
+        registerMarkerClickEvent(UI.getCurrent(), locationMarker, "What time is it?");
         gmaps.addMarker(locationMarker);
 
         //Add listener to obtain id when track location is activated
@@ -131,6 +135,21 @@ public class GeoTrackerView extends GoogleMapsView {
         locationMarker.setDraggable(false);
         locationMarker.setIconUrl(pickMarkerIconUrl());
         return locationMarker;
+    }
+
+    private void registerMarkerClickEvent(UI ui, GoogleMapMarker marker, String title) {
+        //Add click event:
+        marker.addClickListener(e -> {
+            System.out.println("Marker Clicked!");
+            EventQueue.dispatch(100, TimeUnit.MILLISECONDS
+                    , () -> ui.access(() -> {
+                        //Update Current Time:
+                        String now = DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalTime.now());
+                        String html = String.format("%s <br> Now: %s", title, now);
+                        marker.addInfoWindow(html);
+                    }));
+        });
+        //
     }
 
     private String pickMarkerIconUrl() {
