@@ -65,13 +65,12 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
         Optional<Object> optToken = Optional.ofNullable(ui.getSession().getAttribute(X_AUTH_TOKEN));
         if (optToken.isPresent()) {
             String token = optToken.get().toString();
-            return matchAnyRole(ui, token, anyRoles);
+            return matchAnyRole(token, anyRoles);
         }
         return false;
     }
 
-    public static boolean matchAnyRole(UI ui, String token, String...anyRoles) {
-        if (ui == null) return false;
+    public static boolean matchAnyRole(String token, String...anyRoles) {
         if (token != null) {
             JWTPayload payload = TokenValidator.parsePayload(token, JWTPayload.class);
             String userHasRoles = payload.getData().get("roles");
