@@ -17,7 +17,6 @@ import com.it.soul.lab.sql.query.models.Property;
 import com.vaadin.flow.component.UI;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -66,6 +65,14 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
         Optional<Object> optToken = Optional.ofNullable(ui.getSession().getAttribute(X_AUTH_TOKEN));
         if (optToken.isPresent()) {
             String token = optToken.get().toString();
+            return matchAnyRole(ui, token, anyRoles);
+        }
+        return false;
+    }
+
+    public static boolean matchAnyRole(UI ui, String token, String...anyRoles) {
+        if (ui == null) return false;
+        if (token != null) {
             JWTPayload payload = TokenValidator.parsePayload(token, JWTPayload.class);
             String userHasRoles = payload.getData().get("roles");
             if (userHasRoles == null || userHasRoles.isEmpty()) return false;
@@ -133,11 +140,6 @@ public class AuthRepository extends HttpTemplate<Response, Message> {
     @Override
     protected String api() {
         return RequestURI.AUTH_API;
-    }
-
-    @Override
-    protected synchronized String domain() throws MalformedURLException {
-        return RequestURI.AUTH_BASE;
     }
 
     public void doLogin(String username , String password, BiConsumer<Boolean, String> consumer) {
