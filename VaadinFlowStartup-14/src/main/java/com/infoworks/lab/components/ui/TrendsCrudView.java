@@ -22,6 +22,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
@@ -66,10 +67,6 @@ public class TrendsCrudView extends Composite<Div> {
             getContent().removeAll();
         }
         super.onAttach(attachEvent);
-        //FormActionBar Config:
-        bottomActionBar.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.STRETCH);
-        bottomActionBar.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
-        bottomActionBar.setWidthFull();
         //Add to UI:
         //Form:
         Component formLayout = createEntityForm();
@@ -116,7 +113,7 @@ public class TrendsCrudView extends Composite<Div> {
             UI ui = e.getSource().getUI().orElse(null);
             onClearAction(ui);
         });
-        //Action Bar:
+        //Form Action Bar:
         HorizontalLayout actionBar = new HorizontalLayout();
         //actionBar.setSpacing(true);
         actionBar.setPadding(true);
@@ -143,8 +140,22 @@ public class TrendsCrudView extends Composite<Div> {
                         }));
             }
         });
+        //Grid Container:
+        VerticalLayout gridLayout = new VerticalLayout();
+        gridLayout.setPadding(true);
+        gridLayout.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
+        gridLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        gridLayout.setWidthFull();
+        gridLayout.add(grid);
+        if (dialog != null) {
+            //FormActionBar Config:
+            bottomActionBar.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.STRETCH);
+            bottomActionBar.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+            bottomActionBar.setWidthFull();
+            gridLayout.add(bottomActionBar);
+        }
         //Adding to UI:
-        getContent().add(formLayout, actionBar, grid, bottomActionBar);
+        getContent().add(formLayout, actionBar, gridLayout);
         //Dispatch fetch:
         UI ui = UI.getCurrent();
         reloadGrid(ui);
