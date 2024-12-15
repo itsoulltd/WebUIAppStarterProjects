@@ -3,7 +3,6 @@ package com.infoworks.lab.components.ui;
 import com.infoworks.lab.components.component.FormActionBar;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.entities.Trend;
-import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.domain.repository.TrendRepository;
 import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
@@ -98,14 +97,13 @@ public class TrendsCrudView extends Composite<Div> {
         delete.addClickListener(e -> {
             UI ui = e.getSource().getUI().orElse(null);
             if (selected != null) {
-                TrendRepository repository = new TrendRepository();
-                boolean isDeleted = repository.delete(selected.getId(), AuthRepository.parseToken(ui));
+                boolean isDeleted = onEntityDeleteAction(selected);
                 if(isDeleted) {
                     onClearAction(ui);
                     reloadGrid(ui);
                 }
             } else {
-                Notification notification = Notification.show("Please select an Order!"
+                Notification notification = Notification.show("Failed to Delete!"
                         , 1500
                         , Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -133,7 +131,7 @@ public class TrendsCrudView extends Composite<Div> {
             UI ui = selectionEvent.getSource().getUI().orElse(null);
             Set<Trend> isSelected = selectionEvent.getAllSelectedItems();
             if (isSelected.size() > 0) {
-                //Fetch CreateOrder from server
+                //Update Form with Selected-Item:
                 Trend trend = isSelected.iterator().next();
                 selected = trend;
                 EventQueue.dispatch(100, TimeUnit.MILLISECONDS
@@ -150,6 +148,12 @@ public class TrendsCrudView extends Composite<Div> {
         //Dispatch fetch:
         UI ui = UI.getCurrent();
         reloadGrid(ui);
+    }
+
+    private boolean onEntityDeleteAction(Trend selected) {
+        //TrendRepository repository = new TrendRepository();
+        //return repository.delete(selected.getId(), AuthRepository.parseToken(UI.getCurrent()));
+        return false;
     }
 
     private void onClearAction(UI ui) {
@@ -201,15 +205,15 @@ public class TrendsCrudView extends Composite<Div> {
         grid.setAllRowsVisible(true);
         grid.setWidthFull();
         //Columns
-        grid.addColumn(order -> order.getId())
+        grid.addColumn(trend -> trend.getId())
                 .setHeader("Uuid").setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(2);
 
-        grid.addColumn(order -> order.getTitle())
+        grid.addColumn(trend -> trend.getTitle())
                 .setHeader("Title").setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(4);
 
-        grid.addColumn(order -> order.getSubtitle())
+        grid.addColumn(trend -> trend.getSubtitle())
                 .setHeader("Subtitle").setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(4);
         return grid;
