@@ -3,6 +3,7 @@ package com.infoworks.lab.layouts;
 import com.infoworks.lab.components.component.VImage;
 import com.infoworks.lab.components.ui.GeoTrackerView;
 import com.infoworks.lab.components.ui.ProfileView;
+import com.infoworks.lab.components.ui.TrendsCrudView;
 import com.infoworks.lab.components.ui.TrendsView;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.config.UserSessionManagement;
@@ -122,6 +123,7 @@ public class ApplicationLayout extends AppLayout {
         Tabs tabs = new Tabs(
                 profile()
                 , trends()
+                , trendsCrud()
                 , trackerView()
                 , logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
@@ -184,6 +186,12 @@ public class ApplicationLayout extends AppLayout {
     private Tab trends() {
         String viewName = RoutePath.menuName(RoutePath.TRENDS_VIEW);
         final Tab tab = createTab(VaadinIcon.LINE_BAR_CHART, viewName, TrendsView.class);
+        return tab;
+    }
+
+    private Tab trendsCrud() {
+        String viewName = RoutePath.menuName(RoutePath.TRENDS_CRUD_VIEW);
+        final Tab tab = createTab(VaadinIcon.LINE_CHART, viewName, TrendsCrudView.class);
         return tab;
     }
 

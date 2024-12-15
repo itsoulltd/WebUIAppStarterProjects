@@ -9,6 +9,7 @@ public class RoutePath {
     public static final String LOGOUT_VIEW = "Logout";
     public static final String PROFILE_VIEW = "Profile";
     public static final String TRENDS_VIEW = "Trends_View";
+    public static final String TRENDS_CRUD_VIEW = "Trends_Crud_View";
     public static final String GEO_TRACKER_VIEW = "Geo_Tracker";
 
     public static String menuName(String routePath) {
