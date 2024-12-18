@@ -19,9 +19,9 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 
 import javax.validation.Validator;
 
-public class TrendsForm extends FormLayout {
+public class TrendsForm<Entity extends Trend> extends FormLayout {
 
-    private Trend trend;
+    private Entity entity;
     private Dialog dialog;
     private TextField title = new TextField("Title");
     private TextField subtitle = new TextField("Subtitle");
@@ -29,14 +29,18 @@ public class TrendsForm extends FormLayout {
     private TextArea description = new TextArea("Descriptions");
     private FormActionBar actionBar;
 
-    public TrendsForm(Trend trend, Dialog dialog) {
-        this.trend = trend;
+    public TrendsForm(Entity entity, Dialog dialog) {
+        this.entity = entity;
         this.dialog = dialog;
         this.actionBar = new FormActionBar(dialog);
     }
 
-    public TrendsForm(Trend trend) {
-        this(trend, null);
+    public TrendsForm(Entity entity) {
+        this(entity, null);
+    }
+
+    private Entity newEntity() {
+        return (Entity) new Trend();
     }
 
     @Override
@@ -50,14 +54,14 @@ public class TrendsForm extends FormLayout {
             this.actionBar.setSaveButtonDisableOnClick(true);
             this.actionBar.addOnSaveAction((e) -> {
                 //Read from ui-component and fill entity:
-                trend.setTitle(title.getValue());
-                trend.setSubtitle(subtitle.getValue());
-                trend.setDescription(description.getValue());
-                trend.setEmail(email.getValue());
+                entity.setTitle(title.getValue());
+                entity.setSubtitle(subtitle.getValue());
+                entity.setDescription(description.getValue());
+                entity.setEmail(email.getValue());
                 //
                 UI ui = e.getSource().getUI().orElse(null);
                 Validator validator = ValidationConfig.getValidator();
-                String messages = ValidationConfig.validateWithMessage(validator, trend);
+                String messages = ValidationConfig.validateWithMessage(validator, entity);
                 if (messages != null) {
                     Notification notification = Notification.show(messages);
                     notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
@@ -65,13 +69,13 @@ public class TrendsForm extends FormLayout {
                 } else {
                     //TODO: Now save entity:
                     EventQueue.dispatchTask(new DisplayAsyncNotification(ui
-                            , "Save New Trends:" + trend.getTitle()));
+                            , "Save New:" + entity.getTitle()));
                     dialog.close();
                 }
             });
             //If model is null:
-            if (this.trend == null) {
-                this.trend = new Trend();
+            if (this.entity == null) {
+                this.entity = newEntity();
             }
             //Update UI:
             title.setRequired(true);
@@ -85,10 +89,10 @@ public class TrendsForm extends FormLayout {
                     , actionBar);
         } else {
             //Make all field un-editable:
-            title.setValue(trend.getTitle());
-            subtitle.setValue(trend.getSubtitle());
-            email.setValue(trend.getEmail());
-            description.setValue(trend.getDescription());
+            title.setValue(entity.getTitle());
+            subtitle.setValue(entity.getSubtitle());
+            email.setValue(entity.getEmail());
+            description.setValue(entity.getDescription());
             add(title, subtitle, description, email);
         }
         //UI config:

@@ -3,6 +3,7 @@ package com.infoworks.lab.components.ui;
 import com.infoworks.lab.components.component.FormActionBar;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.entities.Trend;
+import com.infoworks.lab.domain.repository.EntityRestRepository;
 import com.infoworks.lab.domain.repository.TrendRepository;
 import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
@@ -37,14 +38,14 @@ import java.util.concurrent.TimeUnit;
 
 @PageTitle("Trends CRUD")
 @Route(value = RoutePath.TRENDS_CRUD_VIEW, layout = ApplicationLayout.class)
-public class TrendsCrudView extends Composite<Div> {
+public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
 
     private Dialog dialog;
     private FormActionBar bottomActionBar;
     private EventType formEventType = EventType.CREATE;
-    private Trend selected;
-    private Grid<Trend> grid;
-    private SimpleDataSource<Integer, Trend> entityCache = new SimpleDataSource<>();
+    private Entity selected;
+    private Grid<Entity> grid;
+    private SimpleDataSource<Integer, Entity> entityCache = new SimpleDataSource<>();
     private Map<String, Component> formLayoutMap = new ConcurrentHashMap<>();
 
     public TrendsCrudView(Dialog dialog) {
@@ -54,6 +55,22 @@ public class TrendsCrudView extends Composite<Div> {
 
     public TrendsCrudView() {
         this(null);
+    }
+
+    private Class<Entity> getEntityClass() {
+        return (Class<Entity>) Trend.class;
+    }
+
+    private Entity newEntity() {
+        return (Entity) new Trend();
+    }
+
+    private EntityRestRepository repository;
+    private EntityRestRepository getRepository() {
+        if (repository == null) {
+            repository = new TrendRepository();
+        }
+        return repository;
     }
 
     @Override
@@ -70,7 +87,7 @@ public class TrendsCrudView extends Composite<Div> {
         //Add to UI:
         //Form:
         Component formLayout = createEntityForm();
-        updateFormFields(new Trend(), formLayoutMap);
+        updateFormFields(newEntity(), formLayoutMap);
         //ActionBar:Save Button
         Button save = new Button("Save", VaadinIcon.FORM.create());
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -122,21 +139,21 @@ public class TrendsCrudView extends Composite<Div> {
         actionBar.setWidthFull();
         actionBar.add(save, delete, clear);
         //Grid:
-        grid = createGrid(10);
+        grid = createGrid(getEntityClass(), 10);
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
         grid.addSelectionListener(selectionEvent -> {
             UI ui = selectionEvent.getSource().getUI().orElse(null);
-            Set<Trend> isSelected = selectionEvent.getAllSelectedItems();
+            Set<Entity> isSelected = selectionEvent.getAllSelectedItems();
             if (isSelected.size() > 0) {
                 //Update Form with Selected-Item:
-                Trend trend = isSelected.iterator().next();
-                selected = trend;
+                Entity entity = isSelected.iterator().next();
+                selected = entity;
                 EventQueue.dispatch(100, TimeUnit.MILLISECONDS
                         , () -> ui.access(() -> {
                             formEventType = EventType.UPDATE;
                             updateSaveTextState();
                             updateFormFields(selected, formLayoutMap);
-                            updateSaveAndDeleteActiveState(trend);
+                            updateSaveAndDeleteActiveState(entity);
                         }));
             }
         });
@@ -161,9 +178,8 @@ public class TrendsCrudView extends Composite<Div> {
         reloadGrid(ui);
     }
 
-    private boolean onEntityDeleteAction(Trend selected) {
-        //TrendRepository repository = new TrendRepository();
-        //return repository.delete(selected.getId(), AuthRepository.parseToken(UI.getCurrent()));
+    private boolean onEntityDeleteAction(Entity selected) {
+        //return getRepository().delete(selected.getId(), AuthRepository.parseToken(UI.getCurrent()));
         return false;
     }
 
@@ -171,7 +187,7 @@ public class TrendsCrudView extends Composite<Div> {
         selected = null;
         formEventType = EventType.CREATE;
         updateSaveTextState();
-        updateFormFields(new Trend(), formLayoutMap);
+        updateFormFields(newEntity(), formLayoutMap);
         updateSaveAndDeleteActiveState(null);
     }
 
@@ -186,10 +202,10 @@ public class TrendsCrudView extends Composite<Div> {
         }
     }
 
-    private void updateSaveAndDeleteActiveState(Trend trend) {
+    private void updateSaveAndDeleteActiveState(Entity entity) {
         Button save = (Button) formLayoutMap.get("save");
         Button delete = (Button) formLayoutMap.get("delete");
-        if (trend == null) {
+        if (entity == null) {
             save.setEnabled(true);
             delete.setEnabled(true);
             return;
@@ -200,8 +216,8 @@ public class TrendsCrudView extends Composite<Div> {
     private void reloadGrid(UI ui) {
         EventQueue.dispatch(250, TimeUnit.MILLISECONDS
                 , () -> ui.access(() -> {
-                    TrendRepository repository = new TrendRepository();
-                    List<Trend> fetched = repository.fetch(0, 20);
+                    //TODO:
+                    List<Entity> fetched = (List<Entity>) getRepository().fetch(0, 20);
                     this.grid.setItems(fetched);
                     //Caching:
                     if (this.entityCache.size() > 0) this.entityCache.clear();
@@ -209,22 +225,22 @@ public class TrendsCrudView extends Composite<Div> {
                 }));
     }
 
-    private Grid<Trend> createGrid(int pageSize) {
-        Grid<Trend> grid = new Grid<>(Trend.class, false);
+    private Grid<Entity> createGrid(Class<Entity> type, int pageSize) {
+        Grid<Entity> grid = new Grid<>(type, false);
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES);
         grid.setPageSize(pageSize);
         grid.setAllRowsVisible(true);
         grid.setWidthFull();
         //Columns
-        grid.addColumn(trend -> trend.getId())
+        grid.addColumn(entity -> entity.getId())
                 .setHeader("Uuid").setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(2);
 
-        grid.addColumn(trend -> trend.getTitle())
+        grid.addColumn(entity -> entity.getTitle())
                 .setHeader("Title").setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(4);
 
-        grid.addColumn(trend -> trend.getSubtitle())
+        grid.addColumn(entity -> entity.getSubtitle())
                 .setHeader("Subtitle").setTextAlign(ColumnTextAlign.CENTER)
                 .setFlexGrow(4);
         return grid;
@@ -300,15 +316,15 @@ public class TrendsCrudView extends Composite<Div> {
         return splitLayout;
     }
 
-    private void updateFormFields(Trend trend, Map<String, Component> formLayoutMap) {
+    private void updateFormFields(Entity entity, Map<String, Component> formLayoutMap) {
         //Update Form Fields:
     }
 
-    private void updateEntity(Trend trend, Map<String, Component> formLayoutMap) {
+    private void updateEntity(Entity entity, Map<String, Component> formLayoutMap) {
         //Get All Fields:
     }
 
-    private boolean onEntitySaveAction(EventType formEventType, Trend selected) {
+    private boolean onEntitySaveAction(EventType formEventType, Entity selected) {
         //TODO:
         return false;
     }
