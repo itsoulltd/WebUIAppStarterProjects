@@ -3,11 +3,11 @@ package com.infoworks.lab.components.ui;
 import com.infoworks.lab.components.component.FormActionBar;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.entities.Trend;
-import com.infoworks.lab.domain.repository.EntityRestRepository;
 import com.infoworks.lab.domain.repository.TrendRepository;
 import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.infoworks.lab.rest.models.events.EventType;
+import com.infoworks.lab.rest.repository.RestRepository;
 import com.it.soul.lab.data.simple.SimpleDataSource;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
@@ -65,8 +65,8 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
         return (Entity) new Trend();
     }
 
-    private EntityRestRepository repository;
-    private EntityRestRepository getRepository() {
+    private RestRepository repository;
+    private RestRepository getRepository() {
         if (repository == null) {
             repository = new TrendRepository();
         }
