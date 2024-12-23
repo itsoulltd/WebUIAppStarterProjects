@@ -319,6 +319,7 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
     }
 
     private void updateFormFields(Entity entity, Map<String, Component> formLayoutMap) {
+        this.selected = entity;
         //Update Form Fields:
         TextField title = (TextField) formLayoutMap.get("title");
         if(entity.getTitle() != null) title.setValue(entity.getTitle());
@@ -369,7 +370,7 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
             return false;
         }
         //TODO:
-        if (this.formEventType == EventType.UPDATE) {
+        if (formEventType == EventType.UPDATE) {
             Notification notification = Notification.show("Update Successful!"
                     , 1500
                     , Notification.Position.TOP_CENTER);
