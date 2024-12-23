@@ -1,6 +1,7 @@
 package com.infoworks.lab.components.ui;
 
 import com.infoworks.lab.components.component.FormActionBar;
+import com.infoworks.lab.config.ValidationConfig;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.entities.Trend;
 import com.infoworks.lab.domain.repository.TrendRepository;
@@ -31,6 +32,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import javax.validation.Validator;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -318,13 +320,54 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
 
     private void updateFormFields(Entity entity, Map<String, Component> formLayoutMap) {
         //Update Form Fields:
+        TextField title = (TextField) formLayoutMap.get("title");
+        if(entity.getTitle() != null) title.setValue(entity.getTitle());
+        else title.setValue("");
+
+        TextField subtitle = (TextField) formLayoutMap.get("subtitle");
+        if (entity.getSubtitle() != null) subtitle.setValue(entity.getSubtitle());
+        else subtitle.setValue("");
+
+        TextArea description = (TextArea) formLayoutMap.get("detail");
+        if(entity.getDescription() != null) description.setValue(entity.getDescription());
+        else description.setValue("");
+
+        TextField email = (TextField) formLayoutMap.get("email");
+        if(entity.getEmail() != null) email.setValue(entity.getEmail());
+        else email.setValue("");
+
+        TextField phone = (TextField) formLayoutMap.get("phone");
+        if(entity.getPhone() != null) phone.setValue(entity.getPhone());
+        else phone.setValue("");
     }
 
     private void updateEntity(Entity entity, Map<String, Component> formLayoutMap) {
         //Get All Fields:
+        TextField title = (TextField) formLayoutMap.get("title");
+        entity.setTitle(title.getValue());
+
+        TextField subtitle = (TextField) formLayoutMap.get("subtitle");
+        entity.setSubtitle(subtitle.getValue());
+
+        TextArea description = (TextArea) formLayoutMap.get("detail");
+        entity.setDescription(description.getValue());
+
+        TextField email = (TextField) formLayoutMap.get("email");
+        entity.setEmail(email.getValue());
+
+        TextField phone = (TextField) formLayoutMap.get("phone");
+        entity.setPhone(phone.getValue());
     }
 
     private boolean onEntitySaveAction(EventType formEventType, Entity selected) {
+        updateEntity(selected, formLayoutMap);
+        Validator validator = ValidationConfig.getValidator();
+        String messages = ValidationConfig.validateWithMessage(validator, selected);
+        if (messages != null) {
+            Notification notification = Notification.show(messages);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
         //TODO:
         if (this.formEventType == EventType.UPDATE) {
             Notification notification = Notification.show("Update Successful!"
