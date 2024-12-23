@@ -25,7 +25,9 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.BigDecimalField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -258,14 +260,19 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
         formLayoutMap.put("title", title);
         itemLayout.setColspan(title, 2);
         itemLayout.add(title);
-        //Price:
-        BigDecimalField price = new BigDecimalField("Price: (E.g. 1.00 or 10.00)");
-        formLayoutMap.put("price", price);
-        price.setValue(new BigDecimal("0.00"));
-        //price.setHelperText("E.g. 1.00 or 10.00");
-        itemLayout.add(price);
+        //Subtitle:
+        TextField subtitle = new TextField("Subtitle:");
+        formLayoutMap.put("subtitle", subtitle);
+        itemLayout.setColspan(subtitle, 2);
+        itemLayout.add(subtitle);
         //Detail:
-        TextField description = new TextField("Detail:");
+        TextArea description = new TextArea("Detail:");
+        description.setHelperText("Max = 256");
+        description.setMaxLength(256);
+        description.setValueChangeMode(ValueChangeMode.EAGER);
+        description.addValueChangeListener(e ->
+                e.getSource().setHelperText(e.getValue().length() + "/" + 256)
+        );
         formLayoutMap.put("detail", description);
         itemLayout.setColspan(description, 3);
         itemLayout.add(description);
@@ -287,18 +294,17 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
         otherLayout.setColspan(amount, 2);
         otherLayout.add(amount);
         formLayoutMap.put("amount", amount);
-        //From Address:
-        TextField fromAddress = new TextField("From Address:");
-        fromAddress.setPlaceholder("e.g. street; block; zip; city; state; country");
-        otherLayout.setColspan(fromAddress, 2);
-        otherLayout.add(fromAddress);
-        formLayoutMap.put("fromAddress", fromAddress);
-        //To Address:
-        TextField toAddress = new TextField("To Address:");
-        toAddress.setPlaceholder("e.g. street; block; zip; city; state; country");
-        otherLayout.setColspan(toAddress, 2);
-        otherLayout.add(toAddress);
-        formLayoutMap.put("toAddress", toAddress);
+        //Email:
+        TextField email = new TextField("Email:");
+        email.setPlaceholder("e.g. xyz@gmail.com");
+        otherLayout.setColspan(email, 2);
+        otherLayout.add(email);
+        formLayoutMap.put("email", email);
+        //Phone:
+        TextField phone = new TextField("Contact:");
+        otherLayout.setColspan(phone, 2);
+        otherLayout.add(phone);
+        formLayoutMap.put("phone", phone);
         //End 2nd Form.
         //Final wrapper:
         HorizontalLayout splitLayout = new HorizontalLayout();
