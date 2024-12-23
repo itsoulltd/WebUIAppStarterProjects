@@ -97,12 +97,8 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
             if(isSaved) {
                 onClearAction(ui);
                 reloadGrid(ui);
-            } else {
-                Notification notification = Notification.show("Failed to Save!"
-                        , 1500
-                        , Notification.Position.TOP_CENTER);
-                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
+            //
         });
         formLayoutMap.put("save", save);
         //ActionBar: Delete Button
@@ -146,14 +142,13 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
             Set<Entity> isSelected = selectionEvent.getAllSelectedItems();
             if (isSelected.size() > 0) {
                 //Update Form with Selected-Item:
-                Entity entity = isSelected.iterator().next();
-                selected = entity;
+                formEventType = EventType.UPDATE;
+                selected = isSelected.iterator().next();
                 EventQueue.dispatch(100, TimeUnit.MILLISECONDS
                         , () -> ui.access(() -> {
-                            formEventType = EventType.UPDATE;
                             updateSaveTextState();
                             updateFormFields(selected, formLayoutMap);
-                            updateSaveAndDeleteActiveState(entity);
+                            updateSaveAndDeleteActiveState(selected);
                         }));
             }
         });
@@ -176,11 +171,6 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
         //Dispatch fetch:
         UI ui = UI.getCurrent();
         reloadGrid(ui);
-    }
-
-    private boolean onEntityDeleteAction(Entity selected) {
-        //return getRepository().delete(selected.getId(), AuthRepository.parseToken(UI.getCurrent()));
-        return false;
     }
 
     private void onClearAction(UI ui) {
@@ -218,11 +208,15 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
                 , () -> ui.access(() -> {
                     //TODO:
                     List<Entity> fetched = (List<Entity>) getRepository().fetch(0, 20);
-                    this.grid.setItems(fetched);
-                    //Caching:
-                    if (this.entityCache.size() > 0) this.entityCache.clear();
-                    fetched.forEach(obj -> this.entityCache.put(obj.getId(), obj));
+                    loadGrid(ui, fetched);
                 }));
+    }
+
+    private void loadGrid(UI ui, List<Entity> fetched) {
+        this.grid.setItems(fetched);
+        //Caching:
+        if (this.entityCache.size() > 0) this.entityCache.clear();
+        fetched.forEach(obj -> this.entityCache.put(obj.getId(), obj));
     }
 
     private Grid<Entity> createGrid(Class<Entity> type, int pageSize) {
@@ -326,6 +320,23 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
 
     private boolean onEntitySaveAction(EventType formEventType, Entity selected) {
         //TODO:
+        if (this.formEventType == EventType.UPDATE) {
+            Notification notification = Notification.show("Update Successful!"
+                    , 1500
+                    , Notification.Position.TOP_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            return true;
+        } else {
+            Notification notification = Notification.show("Failed to Save!"
+                    , 1500
+                    , Notification.Position.TOP_CENTER);
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            return false;
+        }
+    }
+
+    private boolean onEntityDeleteAction(Entity selected) {
+        //return getRepository().delete(selected.getId(), AuthRepository.parseToken(UI.getCurrent()));
         return false;
     }
 
