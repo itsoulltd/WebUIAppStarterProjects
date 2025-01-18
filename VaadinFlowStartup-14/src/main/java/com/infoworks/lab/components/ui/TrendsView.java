@@ -10,6 +10,7 @@ import com.infoworks.lab.domain.entities.Trend;
 import com.infoworks.lab.domain.repository.TrendRepository;
 import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
+import com.infoworks.lab.rest.repository.RestRepository;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
@@ -38,12 +39,28 @@ import java.util.concurrent.TimeUnit;
 
 @PageTitle("Trends")
 @Route(value = RoutePath.TRENDS_VIEW, layout = ApplicationLayout.class)
-public class TrendsView extends Composite<Div> {
+public class TrendsView<Entity extends Trend> extends Composite<Div> {
 
     private GridView gridView;
 
     public TrendsView() {
         getContent().add(new Span("Trends"));
+    }
+
+    private Class<Entity> getEntityClass() {
+        return (Class<Entity>) Trend.class;
+    }
+
+    private Entity newEntity() {
+        return (Entity) new Trend();
+    }
+
+    private RestRepository repository;
+    private RestRepository getRepository() {
+        if (repository == null) {
+            repository = new TrendRepository();
+        }
+        return repository;
     }
 
     @Override
@@ -60,9 +77,9 @@ public class TrendsView extends Composite<Div> {
     }
 
     private GridView createGridView() {
-        GridView<Trend> gridView = new GridView<>(Trend.class
+        GridView<Entity> gridView = new GridView<>(getEntityClass()
                 , 10
-                , new TrendRepository()
+                , getRepository()
                 , "enabled");
         gridView.getGrid().addColumn(createTemplateRenderer())
                 .setHeader("Trend")
@@ -100,8 +117,8 @@ public class TrendsView extends Composite<Div> {
         return gridView;
     }
 
-    private TemplateRenderer<Trend> createTemplateRenderer() {
-        return TemplateRenderer.<Trend>of(
+    private TemplateRenderer<Entity> createTemplateRenderer() {
+        return TemplateRenderer.<Entity>of(
                         "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
                                 + "<vaadin-avatar img=\"[[item.pictureUrl]]\" name=\"[[item.title]]\" alt=\"User avatar\"></vaadin-avatar>"
                                 + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
@@ -110,23 +127,23 @@ public class TrendsView extends Composite<Div> {
                                 + "      [[item.subtitle]]" + "    </span>"
                                 + "  </vaadin-vertical-layout>"
                                 + "</vaadin-horizontal-layout>")
-                .withProperty("pictureUrl", Trend::getPictureUrl)
-                .withProperty("title", Trend::getTitle)
-                .withProperty("subtitle", Trend::getSubtitle);
+                .withProperty("pictureUrl", Entity::getPictureUrl)
+                .withProperty("title", Entity::getTitle)
+                .withProperty("subtitle", Entity::getSubtitle);
     }
 
-    private ComponentRenderer<Span, Trend> createStatusComponentRenderer() {
-        return new ComponentRenderer<>(Span::new, (span, user) -> {
-            span.setText(user.isEnabled() ? "Active" : "Inactive");
+    private ComponentRenderer<Span, Entity> createStatusComponentRenderer() {
+        return new ComponentRenderer<>(Span::new, (span, entity) -> {
+            span.setText(entity.isEnabled() ? "Active" : "Inactive");
             String theme = String
-                    .format("badge %s", user.isEnabled() ? "success" : "error");
+                    .format("badge %s", entity.isEnabled() ? "success" : "error");
             span.getElement().getThemeList().add(theme);
             //span.getElement().setAttribute("theme", theme);
         });
     }
 
-    private ValueProvider<Trend, HorizontalLayout> createActionBar() {
-        return (trend) -> {
+    private ValueProvider<Entity, HorizontalLayout> createActionBar() {
+        return (entity) -> {
             Button recycleButton = new Button("", VaadinIcon.RECYCLE.create());
             recycleButton.addClickListener(e -> {
                 UI ui = e.getSource().getUI().orElse(null);
@@ -158,7 +175,7 @@ public class TrendsView extends Composite<Div> {
                     this.gridView.dispatchAsyncLoad(ui);
                 });
                 //Config user-form
-                TrendsForm form = new TrendsForm(trend, dialog);
+                TrendsForm form = new TrendsForm(entity, dialog);
                 dialog.add(form);
                 dialog.open();
             });
@@ -167,7 +184,7 @@ public class TrendsView extends Composite<Div> {
             delButton.addClickListener(e -> {
                 //Popup Delete Confirmation Window:
                 Dialog dialog = new Dialog();
-                dialog.getElement().setAttribute("aria-label", "Delete Trend!");
+                dialog.getElement().setAttribute("aria-label", "Delete Trends!");
                 dialog.addDetachListener((closeEvn) -> {
                     //Now reload fetchTask and countTask in sequence:
                     UI ui = closeEvn.getSource().getUI().orElse(null);
@@ -175,14 +192,14 @@ public class TrendsView extends Composite<Div> {
                 });
                 //Config delete-confirmation:
                 ConfirmDeleteAction confirm = new ConfirmDeleteAction(dialog
-                        , new Span("Are you sure about deleting trend: " + trend.getTitle()));
+                        , new Span("Are you sure about deleting entity: " + entity.getTitle()));
                 confirm.setDeleteButtonDisableOnClick(true);
                 confirm.addOnDeleteAction((event) -> {
                     UI ui = event.getSource().getUI().orElse(null);
                     //TODO: implement delete action:
                     //Can we dispatch in delayed by 1 Sec:
                     //Must dispatch using scheduler on UI thread:
-                    System.out.println("Delete: " + trend.getId());
+                    System.out.println("Delete: " + entity.getId());
                     EventQueue.dispatch(1
                             , TimeUnit.SECONDS
                             , () -> ui.access(() -> dialog.close()));
@@ -198,8 +215,8 @@ public class TrendsView extends Composite<Div> {
         };
     }
 
-    private ValueProvider<Trend, MenuBar> createContextMenuBar() {
-        return (trend) -> {
+    private ValueProvider<Entity, MenuBar> createContextMenuBar() {
+        return (entity) -> {
             MenuBar menuBar = new MenuBar();
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
             MenuItem menuItem = menuBar.addItem("•••");
@@ -214,16 +231,16 @@ public class TrendsView extends Composite<Div> {
             super(target);
 
             addItem("Edit"
-                    , e -> e.getItem().ifPresent(trend -> {
+                    , e -> e.getItem().ifPresent(entity -> {
                 //TODO: Popup Edit FormView:
                 UI ui = e.getSource().getUI().orElse(null);
-                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Edit: " + trend.getTitle()));
+                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Edit: " + entity.getTitle()));
             }));
             addItem("Delete"
-                    , e -> e.getItem().ifPresent(trend -> {
+                    , e -> e.getItem().ifPresent(entity -> {
                 //TODO: Popup Delete Confirmation Window:
                 UI ui = e.getSource().getUI().orElse(null);
-                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Delete: " + trend.getTitle()));
+                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Delete: " + entity.getTitle()));
             }));
 
             add(new Hr());
@@ -241,11 +258,11 @@ public class TrendsView extends Composite<Div> {
                         EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Call: " + trend.getPhone()));
                     }));
 
-            setDynamicContentHandler(trend -> {
+            setDynamicContentHandler(entity -> {
                 // Do not show context menu when header is clicked
-                if (trend == null) return false;
-                emailItem.setText(String.format("Email: %s", trend.getEmail()));
-                phoneItem.setText(String.format("Call: %s", trend.getPhone()));
+                if (entity == null) return false;
+                emailItem.setText(String.format("Email: %s", entity.getEmail()));
+                phoneItem.setText(String.format("Call: %s", entity.getPhone()));
                 return true;
             });
         }
