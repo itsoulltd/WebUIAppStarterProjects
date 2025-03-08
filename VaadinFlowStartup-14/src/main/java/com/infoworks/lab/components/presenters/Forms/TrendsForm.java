@@ -5,8 +5,12 @@ import com.infoworks.lab.config.ValidationConfig;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
 import com.infoworks.lab.domain.entities.Trend;
+import com.infoworks.lab.rest.models.events.EventType;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
@@ -18,9 +22,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
 import javax.validation.Validator;
+import java.util.Optional;
 
 public class TrendsForm<Entity extends Trend> extends FormLayout {
-
+    private EventType eventType;
     private Entity entity;
     private Dialog dialog;
     private TextField title = new TextField("Title");
@@ -32,6 +37,7 @@ public class TrendsForm<Entity extends Trend> extends FormLayout {
     public TrendsForm(Entity entity, Dialog dialog) {
         this.entity = entity;
         this.dialog = dialog;
+        this.eventType = (entity == null) ? EventType.CREATE : EventType.UPDATE;
         this.actionBar = new FormActionBar(dialog);
     }
 
@@ -52,47 +58,28 @@ public class TrendsForm<Entity extends Trend> extends FormLayout {
         if (this.dialog != null) {
             //This will enableSave button:
             this.actionBar.setSaveButtonDisableOnClick(true);
-            this.actionBar.addOnSaveAction((e) -> {
-                //Read from ui-component and fill entity:
-                entity.setTitle(title.getValue());
-                entity.setSubtitle(subtitle.getValue());
-                entity.setDescription(description.getValue());
-                entity.setEmail(email.getValue());
-                //
-                UI ui = e.getSource().getUI().orElse(null);
-                Validator validator = ValidationConfig.getValidator();
-                String messages = ValidationConfig.validateWithMessage(validator, entity);
-                if (messages != null) {
-                    Notification notification = Notification.show(messages);
-                    notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                    this.actionBar.setSaveButtonEnable(true);
-                } else {
-                    //TODO: Now save entity:
-                    EventQueue.dispatchTask(new DisplayAsyncNotification(ui
-                            , "Save New:" + entity.getTitle()));
-                    dialog.close();
-                }
-            });
+            this.actionBar.addOnSaveAction(onSaveAction());
             //If model is null:
             if (this.entity == null) {
                 this.entity = newEntity();
             }
             //Update UI:
-            title.setRequired(true);
-            description.setHelperText("Max = 256");
-            description.setMaxLength(256);
-            description.setValueChangeMode(ValueChangeMode.EAGER);
-            description.addValueChangeListener(e ->
-                    e.getSource().setHelperText(e.getValue().length() + "/" + 256)
-            );
+            if (eventType == EventType.UPDATE) {
+                title.setValue(Optional.ofNullable(entity.getTitle()).orElse(""));
+                subtitle.setValue(Optional.ofNullable(entity.getSubtitle()).orElse(""));
+                email.setValue(Optional.ofNullable(entity.getEmail()).orElse(""));
+                description.setValue(Optional.ofNullable(entity.getDescription()).orElse(""));
+            } else {
+                title.setRequired(true);
+            }
             add(title, subtitle, email, description
                     , actionBar);
         } else {
             //Make all field un-editable:
-            title.setValue(entity.getTitle());
-            subtitle.setValue(entity.getSubtitle());
-            email.setValue(entity.getEmail());
-            description.setValue(entity.getDescription());
+            title.setValue(Optional.ofNullable(entity.getTitle()).orElse(""));
+            subtitle.setValue(Optional.ofNullable(entity.getSubtitle()).orElse(""));
+            email.setValue(Optional.ofNullable(entity.getEmail()).orElse(""));
+            description.setValue(Optional.ofNullable(entity.getDescription()).orElse(""));
             add(title, subtitle, description, email);
         }
         //UI config:
@@ -102,9 +89,45 @@ public class TrendsForm<Entity extends Trend> extends FormLayout {
                 // Use two columns, if layout's width exceeds 500px
                 new ResponsiveStep("300px", 2)
         );
+        // UI Components config:
+        description.setHelperText("Max = 256");
+        description.setMaxLength(256);
+        description.setValueChangeMode(ValueChangeMode.EAGER);
+        description.addValueChangeListener(e ->
+                e.getSource().setHelperText(e.getValue().length() + "/" + 256)
+        );
         // Stretch the username & actionBar field over 2 columns
         setColspan(email, 2);
         setColspan(description, 2);
         setColspan(actionBar, 2);
+    }
+
+    private ComponentEventListener<ClickEvent<Button>> onSaveAction() {
+        return (event) -> {
+            //Read from ui-component and fill entity:
+            entity.setTitle(title.getValue());
+            entity.setSubtitle(subtitle.getValue());
+            entity.setDescription(description.getValue());
+            entity.setEmail(email.getValue());
+            //
+            UI ui = event.getSource().getUI().orElse(null);
+            Validator validator = ValidationConfig.getValidator();
+            String messages = ValidationConfig.validateWithMessage(validator, entity);
+            if (messages != null) {
+                Notification notification = Notification.show(messages);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                this.actionBar.setSaveButtonEnable(true);
+            } else {
+                //TODO: Now save entity:
+                if (eventType == EventType.UPDATE) {
+                    EventQueue.dispatchTask(new DisplayAsyncNotification(ui
+                            , "Update existing:" + entity.getTitle()));
+                } else {
+                    EventQueue.dispatchTask(new DisplayAsyncNotification(ui
+                            , "Save New:" + entity.getTitle()));
+                }
+                dialog.close();
+            }
+        };
     }
 }
