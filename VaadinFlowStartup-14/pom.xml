@@ -17,9 +17,8 @@
         <jersey2.version>2.27</jersey2.version>
         <jaxrs.version>2.1</jaxrs.version>
         <jsqleditor.version>1.1.5.6-RELEASE</jsqleditor.version>
-        <WebComponentKit.version>v1.15.3-RELEASE</WebComponentKit.version>
+        <WebComponentKit.version>v1.15.4-RELEASE</WebComponentKit.version>
         <spring.version>5.3.15</spring.version>
-        <jackson.version>2.18.3</jackson.version>
     </properties>
 
     <repositories>
@@ -148,35 +147,6 @@
             <groupId>com.github.itsoulltd.WebComponentKit</groupId>
             <artifactId>http-rest-client</artifactId>
             <version>${WebComponentKit.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-annotations</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.itsoulltd.WebComponentKit</groupId>
