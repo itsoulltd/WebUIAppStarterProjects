@@ -245,7 +245,7 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
-                <version>14.0.8</version>
+                <version>${vaadin.version}</version>
                 <executions>
                     <execution>
                         <goals>
