@@ -2,7 +2,7 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "dependencies": {
-    "@flowingcode/google-map": "3.7.1",
+    "@flowingcode/google-map": "3.8.1",
     "@googlemaps/markerclusterer": "2.0.8",
     "@polymer/iron-a11y-announcer": "3.0.2",
     "@polymer/iron-a11y-keys-behavior": "3.0.1",
@@ -61,8 +61,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "construct-style-sheets-polyfill": "3.0.4",
     "lit-element": "2.5.1",
-    "lit-html": "1.4.1",
-    "@vaadin/flow-deps": "./target/frontend"
+    "lit-html": "1.4.1"
   },
   "devDependencies": {
     "@types/node": "18.14.0",
@@ -88,7 +87,7 @@
   },
   "vaadin": {
     "dependencies": {
-      "@flowingcode/google-map": "3.7.1",
+      "@flowingcode/google-map": "3.8.1",
       "@googlemaps/markerclusterer": "2.0.8",
       "@polymer/iron-a11y-announcer": "3.0.2",
       "@polymer/iron-a11y-keys-behavior": "3.0.1",
@@ -171,6 +170,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "19a670578c3485b721e88228ab046744d6e88137f362a28a1a0b0ce1d7dddc25"
+    "hash": "e4d5658cfbb83d1da59d7340f9f90e39b46dd230a6581702dedde32fc0e32799"
   }
 }

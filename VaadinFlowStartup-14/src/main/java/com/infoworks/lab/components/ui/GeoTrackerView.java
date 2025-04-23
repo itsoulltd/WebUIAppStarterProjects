@@ -95,7 +95,7 @@ public class GeoTrackerView extends GoogleMapsView {
                 new Button("Start tracking my location", e -> gmaps.trackLocation());
         //Create button to stop location tracking
         Button stopLocationTrackingButton =
-                new Button("Stop tracking my location", e -> gmaps.stopTrackLocation(trackLocationId));
+                new Button("Stop tracking my location", e -> gmaps.stopTrackLocation());
 
         //Add Buttons:
         HorizontalLayout buttonBox = new HorizontalLayout(startLocationTrackingButton, stopLocationTrackingButton);
@@ -110,7 +110,7 @@ public class GeoTrackerView extends GoogleMapsView {
 
         //Add listener to obtain id when track location is activated
         gmaps.addLocationTrackingActivatedEventListener(ev -> {
-            trackLocationId = ev.getTrackLocationId();
+            trackLocationId = ev.getSource().getTrackLocationId();
         });
 
         //Add listener to know when location was updated and update location marker position
