@@ -81,10 +81,25 @@ public class ProfileView extends Composite<Div> {
         int maxFileSizeInMB = ApplicationProperties.APP_MAX_SIZE_IN_MB;
         FileUpload uploadView = new FileUpload();
         uploadView.setWidthFull();
-        uploadView.setTitle(createTitle());
-        uploadView.setTitleHint(createSubtitle(maxFileSizeInMB));
+        //Set UploadView Title:
+        H4 title = new H4("Upload file to create order in batch");
+        title.getStyle().set("margin-top", "0");
+        uploadView.setTitle(title);
+        //Set UploadView TitleHint:
+        Paragraph titleHint = new Paragraph("Accepted file formats: Microsoft Excel (.xls/.xlsx)"
+                + " and maximum allowed size of " + maxFileSizeInMB + "MB.");
+        titleHint.getStyle().set("color", "var(--lumo-secondary-text-color)");
+        uploadView.setTitleHint(titleHint);
+        //Set UploadView Privacy-Policy:
+        Span cloudHint = new Span("Files will be uploaded to our cloud. Please note our ");
+        Anchor policyLink = new Anchor(
+                "https://vaadin.com/privacy-policy"
+                , "privacy policy"
+                , AnchorTarget.BLANK
+        );
+        uploadView.setUploadDropLabel(new Span(cloudHint, policyLink));
+        //
         uploadView.setUploadBtnTitle("Upload Batch File");
-        uploadView.setUploadDropLabel(createDropLabel());
         uploadView.setAcceptedFileTypes("application/vnd.ms-excel"
                 , "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 , ".xls"
@@ -113,29 +128,6 @@ public class ProfileView extends Composite<Div> {
                     cardRevenue.update("$ %.2f", 980.87, 732.09);
                 }));
         //
-    }
-
-    private H4 createTitle() {
-        H4 title = new H4("Upload file to create order in batch");
-        title.getStyle().set("margin-top", "0");
-        return title;
-    }
-
-    private Paragraph createSubtitle(int maxFileSizeInMB) {
-        Paragraph titleHint = new Paragraph("Accepted file formats: Microsoft Excel (.xls/.xlsx)"
-                + " and maximum allowed size of " + maxFileSizeInMB + "MB.");
-        titleHint.getStyle().set("color", "var(--lumo-secondary-text-color)");
-        return titleHint;
-    }
-
-    private Span createDropLabel() {
-        Span cloudHint = new Span("Files will be uploaded to our cloud. Please note our ");
-        Anchor policyLink = new Anchor(
-                "https://vaadin.com/privacy-policy"
-                , "privacy policy"
-                , AnchorTarget.BLANK
-        );
-        return new Span(cloudHint, policyLink);
     }
 
     private Component createMessagingComponent() {
