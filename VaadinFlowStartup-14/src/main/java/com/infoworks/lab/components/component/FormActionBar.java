@@ -105,6 +105,14 @@ public class FormActionBar extends HorizontalLayout {
         this.save.addClickListener(eventListener);
     }
 
+    public void addOnCloseAction(ComponentEventListener<ClickEvent<Button>> eventListener) {
+        if (eventListener == null) return;
+        this.close.addClickListener((e) -> {
+            eventListener.onComponentEvent(e);
+            dialog.close();
+        });
+    }
+
     public void setBorderAlignments(Alignment...alignments) {
         this.borderAlignments = alignments;
     }
