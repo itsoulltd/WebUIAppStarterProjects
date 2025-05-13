@@ -173,6 +173,8 @@ public class ProfileView extends Composite<Div> {
             Dialog dialog = new Dialog();
             //ImageDownload imgView = new ImageDownload( this.imageUrl);
             ImageDownload imgView = new ImageDownload( this.imageUrl, "");
+            imgView.setDelaysInMillis(100);
+            imgView.setLoadingMessage("Please wait...loading");
             dialog.add(imgView);
             dialog.open();
         }));
