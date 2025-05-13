@@ -56,24 +56,28 @@ public class ImageDownload extends Div {
             Div label = new Div();
             label.setText(loadingMessage);
             add(label, bar);
+            //Dispatch Image in background:
+            UI ui = UI.getCurrent();
+            EventQueue.dispatch(delaysInMillis, TimeUnit.MILLISECONDS
+                    , () -> ui.access(() -> displayImage()));
+        } else {
+            displayImage();
         }
-        //Dispatch Image in background:
-        UI ui = UI.getCurrent();
-        EventQueue.dispatch(delaysInMillis, TimeUnit.MILLISECONDS
-                , () -> ui.access(() -> {
-                    try {
-                        Image img = createImage(UI.getCurrent().getUI().orElse(null));
-                        removeAll(); //remove existing progressBar and message:
-                        if (img != null) {
-                            img.setSizeFull();
-                            add(img);
-                        } else {
-                            add(new Span("DownloadTask or BaseUri not defined!"));
-                        }
-                    } catch (Exception e) {
-                        add(new Span(e.getLocalizedMessage()));
-                    }
-                }));
+    }
+
+    protected void displayImage() {
+        try {
+            Image img = createImage(UI.getCurrent().getUI().orElse(null));
+            removeAll(); //remove existing progressBar and message:
+            if (img != null) {
+                img.setSizeFull();
+                add(img);
+            } else {
+                add(new Span("DownloadTask or BaseUri not defined!"));
+            }
+        } catch (Exception e) {
+            add(new Span(e.getLocalizedMessage()));
+        }
     }
 
     private Image createImage(UI ui) throws Exception {
@@ -95,7 +99,7 @@ public class ImageDownload extends Div {
         return img;
     }
 
-    private Image createImage(UI ui, InputStream iso, String filename) throws Exception {
+    protected Image createImage(UI ui, InputStream iso, String filename) throws Exception {
         BufferedImage img = resService.readAsImage(iso, TYPE_INT_RGB);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         String fileExtension = ApplicationResources.getFileExtension(filename);

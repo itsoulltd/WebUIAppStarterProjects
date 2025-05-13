@@ -171,9 +171,10 @@ public class ProfileView extends Composite<Div> {
         //
         layout.add(new Button("Display Image", (event) -> {
             Dialog dialog = new Dialog();
-            //ImageDownload imgView = new ImageDownload( this.imageUrl);
-            ImageDownload imgView = new ImageDownload( this.imageUrl, "");
-            imgView.setDelaysInMillis(150);
+            //ImageDownload imgView = new ImageDownload( "img/about/team1.jpg"); //Load static image from webapp/*
+            //ImageDownload imgView = new ImageDownload( this.imageUrl); //Load from remote-url
+            ImageDownload imgView = new ImageDownload( this.imageUrl, ""); //Load from remote-url and dynamically render to view.
+            imgView.setDelaysInMillis(0);
             imgView.setLoadingMessage("Please wait...loading");
             dialog.add(imgView);
             dialog.open();
