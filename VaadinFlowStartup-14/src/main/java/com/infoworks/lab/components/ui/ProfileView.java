@@ -2,6 +2,7 @@ package com.infoworks.lab.components.ui;
 
 import com.infoworks.lab.components.component.CardView;
 import com.infoworks.lab.components.component.FileDownload.FileDownload;
+import com.infoworks.lab.components.component.FileDownload.ImageDownload;
 import com.infoworks.lab.components.component.FileUpload.FileUpload;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -118,6 +120,9 @@ public class ProfileView extends Composite<Div> {
         //Add Messaging Round-Trip view:
         Component messaging = createMessagingComponent();
         root.add(messaging);
+        //Add ImageView with Download and Display:
+        Component imageLoaderView = createImageLoaderViewComponent();
+        root.add(imageLoaderView);
         //Finally add the root layout to composite:
         getContent().add(root);
         //Now dispatch Rest-Api Calls:
@@ -146,6 +151,30 @@ public class ProfileView extends Composite<Div> {
             UI ui = event.getSource().getUI().orElse(null);
             EventQueue.dispatchTask(new DisplayAsyncNotification(ui, message));
             //EventQueue.dispatchTaskInQueue(new DisplayAsyncNotification(ui, message));
+        }));
+        return layout;
+    }
+
+    private String imageUrl = "";
+
+    private Component createImageLoaderViewComponent() {
+        HorizontalLayout layout = new HorizontalLayout();
+        //layout.setPadding(true);
+        layout.setSpacing(true);
+        layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        //
+        TextField urlLabel = new TextField("", "Enter Image Url!");
+        urlLabel.setWidth("500px");
+        urlLabel.addValueChangeListener((event) -> this.imageUrl = event.getValue());
+        layout.add(urlLabel);
+        //
+        layout.add(new Button("Display Image", (event) -> {
+            Dialog dialog = new Dialog();
+            //ImageDownload imgView = new ImageDownload( this.imageUrl);
+            ImageDownload imgView = new ImageDownload( this.imageUrl, "");
+            dialog.add(imgView);
+            dialog.open();
         }));
         return layout;
     }
