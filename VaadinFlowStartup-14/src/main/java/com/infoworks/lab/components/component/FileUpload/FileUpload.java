@@ -13,6 +13,7 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.upload.*;
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public class FileUpload extends Div {
@@ -67,8 +68,12 @@ public class FileUpload extends Div {
                 listener.onRejected(event);
         });
         upload.addSucceededListener(event -> {
-            if (listener != null)
-                listener.onSuccess(event, buffer.getInputStream());
+            if (listener != null) {
+                try (InputStream iso = buffer.getInputStream()) {
+                    listener.onSuccess(event, iso);
+                } catch (IOException e) { e.printStackTrace(); }
+            }
+
         });
         upload.addFailedListener(event -> {
             if (listener != null)

@@ -15,10 +15,8 @@ import com.vaadin.flow.server.StreamResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -101,11 +99,10 @@ public class ImageDownload extends Div {
     }
 
     protected Image createImage(UI ui, InputStream iso, String filename) throws Exception {
-        String fileExtension = ApplicationResources.getFileExtension(filename);
+        String format = ApplicationResources.getFileExtension(filename);
         BufferedImage img = resService.readAsImage(iso, TYPE_INT_RGB);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ImageIO.write(img, fileExtension, bos);
-        byte[] bytes = bos.toByteArray();
+        byte[] bytes = resService.readImageAsBytes(img
+                , (format.startsWith("png")) ? iResourceService.Format.PNG : iResourceService.Format.JPEG);
         //Create Image using dynamic content:
         StreamResource resource = new StreamResource(filename, () -> new ByteArrayInputStream(bytes));
         Image image = new Image(resource, getAlt());
