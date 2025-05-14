@@ -89,9 +89,10 @@ public class ImageDownload extends Div {
             if (response == null) throw new Exception("ResourceResponse was null. Task.execute(...) failed!");
             if (response.getStatus() != 200) throw new Exception(response.getError());
             if (response.getResource() != null) {
-                InputStream iso = response.getResource().getInputStream();
-                String filename = response.getResource().getFilename();
-                img = createImage(ui, iso, filename);
+                try (InputStream iso = response.getResource().getInputStream()) {
+                    String filename = response.getResource().getFilename();
+                    img = createImage(ui, iso, filename);
+                }
             }
         } else {
             img = new Image(baseUri, getAlt());
@@ -100,15 +101,13 @@ public class ImageDownload extends Div {
     }
 
     protected Image createImage(UI ui, InputStream iso, String filename) throws Exception {
+        String fileExtension = ApplicationResources.getFileExtension(filename);
         BufferedImage img = resService.readAsImage(iso, TYPE_INT_RGB);
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        String fileExtension = ApplicationResources.getFileExtension(filename);
         ImageIO.write(img, fileExtension, bos);
+        byte[] bytes = bos.toByteArray();
         //Create Image using dynamic content:
-        StreamResource resource = new StreamResource(filename, () -> {
-            byte[] bytes = bos.toByteArray();
-            return new ByteArrayInputStream(bytes);
-        });
+        StreamResource resource = new StreamResource(filename, () -> new ByteArrayInputStream(bytes));
         Image image = new Image(resource, getAlt());
         return image;
     }
