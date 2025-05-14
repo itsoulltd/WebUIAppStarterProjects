@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
 import java.util.Base64;
 import java.util.function.Consumer;
 
@@ -35,11 +36,14 @@ public class DownloadTask extends GetTask {
                     , getParams());
             if (getResponseListener() != null) {
                 String base64Encoded = null;
-                if (response != null && response.getBody() != null) {
-                    Resource resource = response.getBody();
-                    iResourceService service = iResourceService.create();
-                    byte[] bytes = service.readAsBytes(resource.getInputStream());
-                    base64Encoded = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+                if (response.hasBody()) {
+                    try (InputStream iso = response.getBody().getInputStream()) {
+                        if (iso != null) {
+                            iResourceService service = iResourceService.create();
+                            byte[] bytes = service.readAsBytes(iso);
+                            base64Encoded = new String(Base64.getEncoder().encode(bytes), "UTF-8");
+                        }
+                    }
                 }
                 getResponseListener().accept(base64Encoded);
             }
