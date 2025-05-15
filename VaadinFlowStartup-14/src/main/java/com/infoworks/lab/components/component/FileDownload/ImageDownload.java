@@ -3,7 +3,6 @@ package com.infoworks.lab.components.component.FileDownload;
 import com.infoworks.lab.config.ApplicationResources;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.rest.DownloadTask;
-import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.util.services.iResourceService;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
@@ -33,6 +32,7 @@ public class ImageDownload extends Div {
     private iResourceService resService = iResourceService.create();
     private String loadingMessage = "Loading Image...";
     private long delaysInMillis = 0;
+    private String authToken;
 
     public ImageDownload(String baseUri) {
         this.baseUri = baseUri;
@@ -82,7 +82,7 @@ public class ImageDownload extends Div {
         if (ui == null) return null;
         Image img = null;
         if (task != null) {
-            this.task.setBody(new HashMap<>(), AuthRepository.parseToken(ui));
+            if(getAuthToken() != null) task.setBody(new HashMap<>(), getAuthToken());
             DownloadTask.ResourceResponse response = task.execute(null);
             if (response == null) throw new Exception("ResourceResponse was null. Task.execute(...) failed!");
             if (response.getStatus() != 200) throw new Exception(response.getError());
@@ -155,5 +155,13 @@ public class ImageDownload extends Div {
 
     public void setDelaysInMillis(long delaysInMillis) {
         this.delaysInMillis = delaysInMillis;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 }

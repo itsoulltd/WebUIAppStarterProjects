@@ -7,6 +7,7 @@ import com.infoworks.lab.components.component.FileUpload.FileUpload;
 import com.infoworks.lab.config.ApplicationProperties;
 import com.infoworks.lab.domain.beans.queues.EventQueue;
 import com.infoworks.lab.domain.beans.tasks.DisplayAsyncNotification;
+import com.infoworks.lab.domain.repository.AuthRepository;
 import com.infoworks.lab.layouts.ApplicationLayout;
 import com.infoworks.lab.layouts.RoutePath;
 import com.vaadin.flow.component.AttachEvent;
@@ -176,6 +177,7 @@ public class ProfileView extends Composite<Div> {
             ImageDownload imgView = new ImageDownload( this.imageUrl, ""); //Load from remote-url and dynamically render to view.
             imgView.setDelaysInMillis(0);
             imgView.setLoadingMessage("Please wait...loading");
+            //imgView.setAuthToken(AuthRepository.parseToken(UI.getCurrent()));
             dialog.add(imgView);
             dialog.open();
         }));
