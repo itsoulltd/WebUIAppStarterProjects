@@ -14,6 +14,12 @@ public class ValidationConfig {
 
     public static final String BEAN_VALIDATION_KEY = "Bean_Validation_Key";
 
+    /**
+     * ValidatorFactory: Implementations are thread-safe and instances are typically cached and reused.
+     * Validator: Validates bean instances. Implementations of this interface must be thread-safe.
+     * Since this is a session based UI application, so validator object can be reused from session.
+     * @return
+     */
     public static Validator getValidator() {
         Object existing = UI.getCurrent().getSession().getAttribute(BEAN_VALIDATION_KEY);
         if (existing == null) {
