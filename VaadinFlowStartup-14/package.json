@@ -2,7 +2,7 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "dependencies": {
-    "@flowingcode/google-map": "3.8.1",
+    "@flowingcode/google-map": "3.8.2",
     "@googlemaps/markerclusterer": "2.0.8",
     "@polymer/iron-a11y-announcer": "3.0.2",
     "@polymer/iron-a11y-keys-behavior": "3.0.1",
@@ -87,7 +87,7 @@
   },
   "vaadin": {
     "dependencies": {
-      "@flowingcode/google-map": "3.8.1",
+      "@flowingcode/google-map": "3.8.2",
       "@googlemaps/markerclusterer": "2.0.8",
       "@polymer/iron-a11y-announcer": "3.0.2",
       "@polymer/iron-a11y-keys-behavior": "3.0.1",
@@ -170,6 +170,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "21ea2d331ed236301c71436edce7d0c3a6debb48a830f1660c28a2e0c02f9d61"
+    "hash": "1d6ec75a98dc6c2bf0c758ba81347754baa5853d3473c06cacb84479716dd35c"
   }
 }
