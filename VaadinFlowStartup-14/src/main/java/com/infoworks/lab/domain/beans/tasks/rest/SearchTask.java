@@ -5,22 +5,16 @@ import com.infoworks.lab.rest.models.QueryParam;
 import com.infoworks.lab.rest.models.SearchQuery;
 import org.springframework.http.HttpEntity;
 
-import java.util.function.Consumer;
-
 public class SearchTask extends PostTask {
 
     public SearchTask() {super();}
 
-    public SearchTask(String baseUri, String requestUri, Consumer<String> response) {
-        super(baseUri, requestUri, response);
-    }
-
-    private QueryParam query;
+    private QueryParam fixedQuery;
     private SearchQuery updated;
 
-    public SearchTask(String baseUri, String requestUri, QueryParam query) {
+    public SearchTask(String baseUri, String requestUri, QueryParam fixedQuery) {
         super(baseUri, requestUri);
-        this.query = query;
+        this.fixedQuery = fixedQuery;
     }
 
     public void updateQuery(SearchQuery updated) {
@@ -28,7 +22,7 @@ public class SearchTask extends PostTask {
         nQuery.setPage(updated.getPage());
         nQuery.setSize(updated.getSize());
         //
-        if(query != null) nQuery.add(query.getKey()).isEqualTo(query.getValue());
+        if(fixedQuery != null) nQuery.add(fixedQuery.getKey()).isEqualTo(fixedQuery.getValue());
         updated.getProperties().forEach(prm -> nQuery.getPredicate().or(prm.getKey()).isLike(prm.getValue()));
         this.updated = nQuery;
     }
