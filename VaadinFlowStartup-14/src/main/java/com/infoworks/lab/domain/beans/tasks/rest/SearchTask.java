@@ -28,7 +28,7 @@ public class SearchTask extends PostTask {
         nQuery.setPage(updated.getPage());
         nQuery.setSize(updated.getSize());
         //
-        nQuery.add(query.getKey()).isEqualTo(query.getValue());
+        if(query != null) nQuery.add(query.getKey()).isEqualTo(query.getValue());
         updated.getProperties().forEach(prm -> nQuery.getPredicate().or(prm.getKey()).isLike(prm.getValue()));
         this.updated = nQuery;
     }
