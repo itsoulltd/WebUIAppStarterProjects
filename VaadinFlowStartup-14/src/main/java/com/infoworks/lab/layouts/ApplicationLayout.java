@@ -90,9 +90,9 @@ public class ApplicationLayout extends AppLayout {
                 , "Help"
                 , AnchorTarget.BLANK
         )));
+        subMenu.addItem(new Span(createTabIcon(VaadinIcon.PACKAGE), new Span(ApplicationProperties.APP_DISPLAY_VERSION)));
         subMenu.add(new Hr());
-        subMenu.addItem(new Span(createTabIcon(VaadinIcon.EXIT), new Span("Logout"))
-                , onLogoutClickEvent());
+        subMenu.addItem(new Span(createTabIcon(VaadinIcon.EXIT), new Span("Logout")), onLogoutClickEvent());
         HorizontalLayout right = new HorizontalLayout();
         right.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         right.setJustifyContentMode(FlexComponent.JustifyContentMode.END);

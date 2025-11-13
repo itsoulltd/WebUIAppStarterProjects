@@ -15,6 +15,7 @@ import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
@@ -221,6 +222,20 @@ public class TrendsView<Entity extends Trend> extends Composite<Div> {
             menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
             MenuItem menuItem = menuBar.addItem("•••");
             menuItem.getElement().setAttribute("aria-label", "More options");
+            //Prepare per-row context-menu:
+            ContextMenu contextMenu = new ContextMenu(menuItem);
+            contextMenu.setOpenOnClick(true);
+            contextMenu.addItem("Edit", event -> {
+                //TODO: Popup Edit FormView:
+                UI ui = event.getSource().getUI().orElse(null);
+                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Edit: " + entity.getTitle()));
+            });
+            contextMenu.addItem("Delete", event -> {
+                //TODO: Popup Delete Confirmation Window:
+                UI ui = event.getSource().getUI().orElse(null);
+                EventQueue.dispatchTask(new DisplayAsyncNotification(ui, "Delete: " + entity.getTitle()));
+            });
+            //
             return menuBar;
         };
     }
