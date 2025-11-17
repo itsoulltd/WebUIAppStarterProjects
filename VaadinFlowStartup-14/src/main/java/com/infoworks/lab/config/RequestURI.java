@@ -24,6 +24,7 @@ public class RequestURI {
     public static String USER_PORT = Optional.ofNullable(System.getenv("app.user.port")).orElse("8080");
     public static String USER_BASE = RequestURI.SCHEMA_HTTP + RequestURI.USER_HOST + ":" + RequestURI.USER_PORT;
     public static String USER_API = Optional.ofNullable(System.getenv("app.user.api")).orElse("/api/user/v1");
+    public static String USER_REGISTRATION_API = Optional.ofNullable(System.getenv("app.user.registration.api")).orElse("/api/user/v1/registration");
 
     //public static String ABC_XY = Optional.ofNullable(System.getenv("")).orElse("");
 
