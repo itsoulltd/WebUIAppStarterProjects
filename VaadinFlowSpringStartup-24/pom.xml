@@ -68,6 +68,18 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- JFoundationKit & JSqlKit -->
+        <dependency>
+            <groupId>com.github.itsoulltd</groupId>
+            <artifactId>JFoundationKit</artifactId>
+            <version>v1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.itsoulltd</groupId>
+            <artifactId>JSqlKit</artifactId>
+            <version>v1.0.0</version>
+        </dependency>
+        <!-- -->
     </dependencies>
 
     <build>
