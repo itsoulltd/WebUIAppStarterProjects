@@ -17,7 +17,6 @@
         <module>VueJsSpringStartup-2</module>
         <module>VuetifySpringStartup-2</module>
         <module>SecureSpringMVCStarter</module>
-        <module>VaadinFlowSpringStartup-24</module>
     </modules>
 
     <properties>
