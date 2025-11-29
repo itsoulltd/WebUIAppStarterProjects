@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.infoworks.lab</groupId>
     <artifactId>vaadin-flow-spring-startup-24</artifactId>
-    <name>vaadin-flow-spring-startup-25</name>
+    <name>vaadin-flow-spring-startup-24</name>
     <version>v1.0.0</version>
     <packaging>jar</packaging>
 
