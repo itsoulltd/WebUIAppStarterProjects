@@ -26,3 +26,9 @@ If you use commercial components, pass the license key as a build secret:
 ```bash
 docker build --secret id=proKey,src=$HOME/.vaadin/proKey .
 ```
+
+To run specific Test Method from a TestClass without running main-application. 
+
+```bash
+~>$ mvn test -Dtest=<MyTest>#<test-method>
+```
