@@ -32,3 +32,9 @@ To run specific Test Method from a TestClass without running main-application.
 ```bash
 ~>$ mvn test -Dtest=<MyTest>#<test-method>
 ```
+
+To run application with mvn cmd:
+
+```bash
+~>$ mvn spring-boot:run -Dapp.auth.disable=true
+```

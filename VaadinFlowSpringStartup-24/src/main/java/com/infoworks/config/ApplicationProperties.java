@@ -1,7 +1,5 @@
 package com.infoworks.config;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import java.util.Optional;
 
 public class ApplicationProperties {
@@ -10,8 +8,13 @@ public class ApplicationProperties {
     public static final String SAMPLE_CREATE_ORDER_XLSX = "/Download/file_example_XLSX_50.xlsx";
     public static final String SAMPLE_CREATE_ORDER_XLS = "/Download/file_example_XLS_10.xls";
 
-    @Value("${app.auth.disable}")
-    public static Boolean IS_AUTH_DISABLE;
+    public static Boolean IS_AUTH_DISABLE = Boolean.parseBoolean(
+            Optional.ofNullable(
+                    System.getProperty("app.auth.disable") != null
+                            ? System.getProperty("app.auth.disable")
+                            : System.getenv("app.auth.disable")
+            ).orElse("true") //FIXME
+    );
 
     public static String GOOGLE_MAP_API_KEY = Optional.ofNullable(
             System.getProperty("google.maps.api") != null

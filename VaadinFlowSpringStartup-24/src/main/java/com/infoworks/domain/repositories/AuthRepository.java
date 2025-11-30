@@ -106,7 +106,7 @@ public class AuthRepository {
                 .setPayload(payload).setHeader(header);
         String token = provider.generateToken(TokenProvider.defaultTokenTimeToLive());
         return token;*/
-        return "";
+        return "TEST-TOKEN-FOR-" + username + String.join(",", roles);
     }
 
     public static void saveUser(UI ui, User user) {
