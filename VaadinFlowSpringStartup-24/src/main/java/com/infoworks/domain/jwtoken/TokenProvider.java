@@ -1,0 +1,22 @@
+package com.infoworks.domain.jwtoken;
+
+import java.security.Key;
+import java.util.Calendar;
+
+public interface TokenProvider extends AutoCloseable{
+
+	Key generateKey(String...args);
+	String generateToken(Calendar timeToLive) throws RuntimeException;
+	String refreshToken(String token, Calendar timeToLive) throws RuntimeException;
+	Boolean isValid(String token);
+	void makeExpire() throws RuntimeException;
+	void dispose();
+
+	static Calendar defaultTokenTimeToLive(){
+        /*By Default 1 hour (in production) token to live, if not provided.*/
+        Calendar cal = Calendar.getInstance();
+        int amount = 1  * 60 * 60;
+        cal.add(Calendar.SECOND, amount);
+        return cal;
+    }
+}

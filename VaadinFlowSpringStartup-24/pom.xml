@@ -80,6 +80,43 @@
             <version>v1.0.0</version>
         </dependency>
         <!-- -->
+        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.13.Final</version>
+        </dependency>
+        <!-- -->
+        <!-- Map-GeoLocation Dependencies -->
+        <!-- Vaadin-Addons: https://github.com/FlowingCode/GoogleMapsAddon -->
+        <!--<dependency>
+            <groupId>com.flowingcode.vaadin.addons</groupId>
+            <artifactId>google-maps</artifactId>
+            <version>2.2.3</version>
+        </dependency>-->
+        <dependency>
+            <groupId>com.google.maps</groupId>
+            <artifactId>google-maps-services</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.hsr</groupId>
+            <artifactId>geohash</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-databind</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- -->
     </dependencies>
 
     <build>
