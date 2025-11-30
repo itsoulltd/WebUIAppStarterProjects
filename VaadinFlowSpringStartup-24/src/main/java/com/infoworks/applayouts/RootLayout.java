@@ -24,7 +24,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
@@ -34,7 +33,6 @@ import java.util.Map;
 
 //@Push
 //@PWA(name = "Time Tracking", shortName = "Ticker")
-//@Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
 public class RootLayout extends AppLayout {
 
     private static final String LOGO_URL = "logo.png";

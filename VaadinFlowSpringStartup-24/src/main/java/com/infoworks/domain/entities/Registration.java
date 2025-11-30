@@ -1,7 +1,7 @@
 package com.infoworks.domain.entities;
 
 import com.infoworks.domain.models.Gender;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;

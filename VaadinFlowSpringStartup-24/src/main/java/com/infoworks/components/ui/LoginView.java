@@ -11,7 +11,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.Route;
 
 import java.util.Objects;
@@ -20,7 +19,6 @@ import java.util.Objects;
  * The Login view contains a button and a click listener.
  */
 @Route(value = RoutePath.LOGIN_VIEW)
-@Viewport("width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes, viewport-fit=cover")
 public class LoginView extends VerticalLayout {
 
     public LoginView() {
