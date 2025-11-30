@@ -80,10 +80,11 @@ public class AuthRepository {
     }
 
     public boolean isAuthDisable(String username, String password) {
+        return ApplicationProperties.IS_AUTH_DISABLE;
         //if(app.auth.disable==true)
-        return ApplicationProperties.IS_AUTH_DISABLE &&
+        /*return ApplicationProperties.IS_AUTH_DISABLE &&
                 ((username.equalsIgnoreCase("admin") && password.equalsIgnoreCase("admin"))
-                        || (username.equalsIgnoreCase("tenant") && password.equalsIgnoreCase("tenant")));
+                        || (username.equalsIgnoreCase("tenant") && password.equalsIgnoreCase("tenant")));*/
     }
 
     public String generateTokenWhenSecurityIsDisable(String username, String password) {
