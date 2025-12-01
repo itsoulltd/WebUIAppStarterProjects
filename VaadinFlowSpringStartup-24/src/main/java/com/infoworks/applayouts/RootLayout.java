@@ -2,6 +2,8 @@ package com.infoworks.applayouts;
 
 import com.infoworks.components.component.VImage;
 import com.infoworks.components.ui.ProfileView;
+import com.infoworks.components.ui.TrendsCrudView;
+import com.infoworks.components.ui.TrendsView;
 import com.infoworks.config.ApplicationProperties;
 import com.infoworks.config.UserSessionManagement;
 import com.infoworks.domain.entities.User;
@@ -107,6 +109,8 @@ public class RootLayout extends AppLayout {
     private Tabs getTabs() {
         Tabs tabs = new Tabs(
                 profile()
+                , trends()
+                , trendsCrud()
                 , logout());
         tabs.setOrientation(Tabs.Orientation.VERTICAL);
         tabs.addSelectedChangeListener(event -> {
@@ -165,7 +169,7 @@ public class RootLayout extends AppLayout {
         return tab;
     }
 
-    /*private Tab trends() {
+    private Tab trends() {
         String viewName = RoutePath.menuName(RoutePath.TRENDS_VIEW);
         final Tab tab = createTab(VaadinIcon.LINE_BAR_CHART, viewName, TrendsView.class);
         return tab;
@@ -177,7 +181,7 @@ public class RootLayout extends AppLayout {
         return tab;
     }
 
-    private Tab trackerView() {
+    /*private Tab trackerView() {
         String viewName = RoutePath.menuName(RoutePath.GEO_TRACKER_VIEW);
         //CAUTION: To reuse content, we have to use tab2Workspace storage.
         // at the same time please do not pass viewClass in createTab(),
