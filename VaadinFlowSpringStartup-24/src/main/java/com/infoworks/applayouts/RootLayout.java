@@ -78,7 +78,7 @@ public class RootLayout extends AppLayout {
                 , AnchorTarget.BLANK
         )));
         subMenu.addItem(new Span(createTabIcon(VaadinIcon.PACKAGE), new Span(ApplicationProperties.APP_DISPLAY_VERSION)));
-        subMenu.add(new Hr());
+        subMenu.addComponent(new Hr());
         subMenu.addItem(new Span(createTabIcon(VaadinIcon.EXIT), new Span("Logout")), onLogoutClickEvent());
         HorizontalLayout right = new HorizontalLayout();
         right.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);

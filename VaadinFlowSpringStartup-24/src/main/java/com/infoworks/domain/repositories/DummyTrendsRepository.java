@@ -25,7 +25,7 @@ public class DummyTrendsRepository {
         return null;
     }
 
-    public List<Trend> fetch(Integer page, Integer limit) {
+    public List<Trend> fetchDummyTrends(Integer page, Integer limit) {
         //return super.fetch(page, limit);
         //FIXME: For Testing Hardcoded value:
         List<Trend> trends = new ArrayList<>();
