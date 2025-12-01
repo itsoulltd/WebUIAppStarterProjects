@@ -1,11 +1,11 @@
 package com.infoworks.applayouts;
 
 import com.infoworks.components.component.VImage;
+import com.infoworks.components.ui.ProfileView;
 import com.infoworks.config.ApplicationProperties;
 import com.infoworks.config.UserSessionManagement;
 import com.infoworks.domain.entities.User;
 import com.infoworks.domain.repositories.AuthRepository;
-import com.infoworks.components.ui.ProfileView;
 import com.infoworks.objects.Response;
 import com.infoworks.orm.Property;
 import com.vaadin.flow.component.Component;
@@ -22,8 +22,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.page.Push;
-import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.RouterLink;
@@ -31,8 +29,6 @@ import com.vaadin.flow.router.RouterLink;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Push
-//@PWA(name = "Time Tracking", shortName = "Ticker")
 public class RootLayout extends AppLayout {
 
     private static final String LOGO_URL = "logo.png";
