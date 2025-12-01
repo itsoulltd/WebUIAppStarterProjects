@@ -47,6 +47,11 @@ public class Trend extends Persistable<Integer, Long>{
         this.description = description;
     }
 
+    public Trend(Integer id, String title, String subtitle, String description, boolean enabled) {
+        this(id, title, subtitle, description);
+        this.enabled = enabled;
+    }
+
     @Override
     public Integer getId() {
         return id;

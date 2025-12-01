@@ -79,21 +79,26 @@ public class TrendsView<Entity extends Trend> extends Composite<Div> {
         GridView<Entity> gridView = new GridView(getEntityClass()
                 , 10
                 , "enabled");
+
         gridView.getGrid().addColumn(createTemplateRenderer())
                 .setHeader("Trend")
-                .setAutoWidth(true).setFlexGrow(26);
+                .setAutoWidth(true).setFlexGrow(18);
+
         gridView.getGrid().addColumn(createStatusComponentRenderer())
                 .setHeader("Status")
-                .setAutoWidth(true).setFlexGrow(2);
+                .setAutoWidth(true).setFlexGrow(4);
+
         //Configure Action Columns:
         //Add Edit & Delete:
         gridView.getGrid().addComponentColumn(createActionBar())
                 .setHeader("Action")
                 .setTextAlign(ColumnTextAlign.CENTER)
-                .setAutoWidth(true).setFlexGrow(1);
+                .setAutoWidth(true).setFlexGrow(6);
+
         //Add Context-Menu:
         gridView.getGrid().addComponentColumn(createContextMenuBar())
-                .setAutoWidth(true).setFlexGrow(1);
+                .setAutoWidth(true).setFlexGrow(2);
+
         //Configure Add New Item Button Event on GridSearchView:
         //Note:On providing AddNewItemListener to GridView, will enable GridSearchView to show 'Add New!' Button.
         gridView.addNewItemEventListener(event -> {
@@ -110,6 +115,7 @@ public class TrendsView<Entity extends Trend> extends Composite<Div> {
             dialog.add(form);
             dialog.open();
         });
+
         //For Dynamic Table Height.
         gridView.getGrid().setAllRowsVisible(true);
         return gridView;
@@ -117,14 +123,20 @@ public class TrendsView<Entity extends Trend> extends Composite<Div> {
 
     private LitRenderer<Entity> createTemplateRenderer() {
         return LitRenderer.<Entity>of(
-                        "<vaadin-horizontal-layout style=\"align-items: center;\" theme=\"spacing\">"
-                                + "<vaadin-avatar img=\"[[item.pictureUrl]]\" name=\"[[item.title]]\" alt=\"User avatar\"></vaadin-avatar>"
-                                + "  <vaadin-vertical-layout style=\"line-height: var(--lumo-line-height-m);\">"
-                                + "    <span> [[item.title]] </span>"
-                                + "    <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">"
-                                + "      [[item.subtitle]]" + "    </span>"
-                                + "  </vaadin-vertical-layout>"
-                                + "</vaadin-horizontal-layout>")
+                        "<vaadin-horizontal-layout style=\"align-items: center; gap: 10px;\">\n" +
+                                "    <vaadin-avatar \n" +
+                                "        img=\"${item.pictureUrl}\" \n" +
+                                "        name=\"${item.title}\"\n" +
+                                "        style=\"--vaadin-avatar-size: 40px;\">\n" +
+                                "    </vaadin-avatar>\n" +
+                                "\n" +
+                                "    <vaadin-vertical-layout style=\"padding: 0;\">\n" +
+                                "        <span style=\"font-weight: bold;\">${item.name}</span>\n" +
+                                "        <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">\n" +
+                                "              ${item.subtitle}\n" +
+                                "        </span>\n" +
+                                "     </vaadin-vertical-layout>\n" +
+                                "</vaadin-horizontal-layout>")
                 .withProperty("pictureUrl", Entity::getPictureUrl)
                 .withProperty("title", Entity::getTitle)
                 .withProperty("subtitle", Entity::getSubtitle);

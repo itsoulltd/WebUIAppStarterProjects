@@ -41,10 +41,10 @@ public class DummyTrendsRepository {
         //return super.fetch(page, limit);
         //FIXME: For Testing Hardcoded value:
         List<Trend> trends = new ArrayList<>();
-        trends.add(new Trend(1,"Facebook","Almost 20 years old","Let's not be critical!"));
-        trends.add(new Trend(2,"Twitter","Almost 20 years old","Let's not be critical!"));
-        trends.add(new Trend(3,"Instagram","Almost 20 years old","Let's not be critical!"));
-        trends.add(new Trend(4,"X-Handle","Almost 20 years old","Let's not be critical!"));
+        trends.add(new Trend(1,"Facebook","40 years old","Let's not be critical!", true));
+        trends.add(new Trend(2,"Twitter","Almost 35 years old","Kind of critical!", true));
+        trends.add(new Trend(3,"Instagram","61 years old","Quite normal!"));
+        trends.add(new Trend(4,"X","Almost 20 years old","In between critical!", true));
         return trends;
     }
 
