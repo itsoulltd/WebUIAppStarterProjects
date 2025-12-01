@@ -1,10 +1,22 @@
 package com.infoworks.domain.repositories;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.infoworks.components.presenters.GridView.GridFooter;
+import com.infoworks.components.presenters.GridView.GridView;
+import com.infoworks.config.RequestURI;
 import com.infoworks.domain.entities.Trend;
 import com.infoworks.domain.models.ItemCount;
+import com.infoworks.domain.tasks.PagingGetTask;
+import com.infoworks.domain.tasks.SearchTask;
+import com.infoworks.objects.MessageParser;
+import com.infoworks.orm.Property;
+import com.infoworks.utils.rest.client.GetTask;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.grid.Grid;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DummyTrendsRepository {
@@ -42,5 +54,57 @@ public class DummyTrendsRepository {
         ItemCount count = new ItemCount();
         count.setCount(4l);
         return count;
+    }
+
+    public PagingGetTask createPagingTask(UI ui, GridView gridView) {
+        //FIXME:
+        PagingGetTask pagingTask = new PagingGetTask(RequestURI.APP_BASE, "/api/trends/v1"
+                , new Property("limit","10")
+                , new Property("page", "0"));
+        pagingTask.setBody(new HashMap<>(), AuthRepository.parseToken(ui));
+        //
+        Grid grid = gridView.getGrid();
+        pagingTask.addResponseListener((response) -> {
+            try{
+                //FIXME:
+                //List<Trend> trends = MessageParser.unmarshal(new TypeReference<>() {}, response.getMessage());
+                List<Trend> trends = fetchDummyTrends(0, 10);
+                ui.access(() -> grid.setItems(trends));
+            } catch (Exception e) {}
+        });
+        //
+        return pagingTask;
+    }
+
+    public GetTask createCountTask(UI ui, GridView gridView) {
+        //FIXME:
+        GetTask countTask = new GetTask(RequestURI.APP_BASE, "/api/trends/v1/rowCount");
+        countTask.setBody(new HashMap<>(), AuthRepository.parseToken(ui));
+        GridFooter footer = gridView.getFooter();
+        countTask.addResponseListener((response) -> {
+            try {
+                //FIXME:
+                //ItemCount count = MessageParser.unmarshal(ItemCount.class, response.getMessage());
+                ItemCount count = rowCount();
+                ui.access(() -> footer.updateTitleCount(count));
+            } catch (Exception e) {}
+        });
+        return countTask;
+    }
+
+    public SearchTask createSearchTask(UI ui, GridView gridView) {
+        //FIXME:
+        SearchTask searchTask = new SearchTask(RequestURI.APP_BASE, "/api/trends/v1/search", null);
+        searchTask.setBody(new HashMap<>(), AuthRepository.parseToken(ui));
+        Grid grid = gridView.getGrid();
+        searchTask.addResponseListener((response) -> {
+            try{
+                //FIXME:
+                //List<Trend> trends = MessageParser.unmarshal(new TypeReference<>() {}, response.getMessage());
+                List<Trend> trends = fetchDummyTrends(0, 10);
+                ui.access(() -> grid.setItems(trends));
+            } catch (Exception e) {}
+        });
+        return searchTask;
     }
 }

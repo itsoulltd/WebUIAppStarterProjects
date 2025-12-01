@@ -5,6 +5,7 @@ import com.infoworks.components.component.IndeterminateDialog;
 import com.infoworks.components.presenters.Forms.TrendsForm;
 import com.infoworks.components.presenters.GridView.GridView;
 import com.infoworks.config.AppQueue;
+import com.infoworks.domain.repositories.DummyTrendsRepository;
 import com.infoworks.domain.tasks.DisplayAsyncNotification;
 import com.infoworks.domain.entities.Trend;
 import com.infoworks.applayouts.RootLayout;
@@ -64,9 +65,14 @@ public class TrendsView<Entity extends Trend> extends Composite<Div> {
         //Add GridView + Context-Menu-For-Grid to the View:
         getContent().add(gridView, new TrendContextMenu(gridView.getGrid()));
         //Trigger data-loading from rest-api-call: Async
+        UI ui = UI.getCurrent().getUI().orElse(null);
         //TODO: Set PagingTask, GetTask, SearchTask:
+        DummyTrendsRepository repository = new DummyTrendsRepository();
+        gridView.setFetchTask(ui, repository.createPagingTask(ui, gridView), true, null);
+        gridView.setCountTask(ui, repository.createCountTask(ui, gridView), true);
+        gridView.setSearchTask(ui, repository.createSearchTask(ui, gridView), true, null);
         //...
-        gridView.dispatchAsyncLoad(UI.getCurrent().getUI().orElse(null));
+        gridView.dispatchAsyncLoad(ui);
     }
 
     private GridView createGridView() {
