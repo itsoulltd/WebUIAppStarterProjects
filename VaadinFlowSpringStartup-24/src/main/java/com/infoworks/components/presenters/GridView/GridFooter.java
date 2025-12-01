@@ -3,7 +3,7 @@ package com.infoworks.components.presenters.GridView;
 import com.infoworks.domain.models.ItemCount;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,7 +13,7 @@ public class GridFooter extends VerticalLayout {
 
     private static String TOTAL_COUNT_TITLE = "Total Count: %s";
     private long totalCount = 0;
-    private final Label titleLabel;
+    private final Span titleLabel;
     private final Button previous;
     private final Button next;
     private int page, pageSize, paginationCarry;
@@ -57,7 +57,7 @@ public class GridFooter extends VerticalLayout {
         disableButton(FooterButtonType.Next);
         disableButton(FooterButtonType.Previous);
         //
-        titleLabel = new Label(String.format(TOTAL_COUNT_TITLE, totalCount));
+        titleLabel = new Span(String.format(TOTAL_COUNT_TITLE, totalCount));
         HorizontalLayout content = new HorizontalLayout(titleLabel, arrowButtons);
         content.setFlexGrow(18, titleLabel);
         content.setFlexGrow(2, arrowButtons);

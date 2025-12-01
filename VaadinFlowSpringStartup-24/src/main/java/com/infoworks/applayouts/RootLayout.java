@@ -147,7 +147,7 @@ public class RootLayout extends AppLayout {
         btn.addClickListener(onLogoutClickEvent());
         //
         final Tab tab = new Tab(btn);
-        tab2Workspace.put(tab, new Label(RoutePath.LOGOUT_VIEW));
+        tab2Workspace.put(tab, new Span(RoutePath.LOGOUT_VIEW));
         return tab;
     }
 
