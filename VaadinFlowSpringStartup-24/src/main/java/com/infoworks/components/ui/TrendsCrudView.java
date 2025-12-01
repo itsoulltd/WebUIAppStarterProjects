@@ -8,6 +8,7 @@ import com.infoworks.domain.entities.Trend;
 import com.infoworks.applayouts.RootLayout;
 import com.infoworks.applayouts.RoutePath;
 import com.infoworks.domain.models.EventType;
+import com.infoworks.domain.repositories.DummyTrendsRepository;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -200,9 +201,13 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
     private void reloadGrid(UI ui) {
         AppQueue.dispatch(250, TimeUnit.MILLISECONDS
                 , () -> ui.access(() -> {
-                    //FIXME: Use FetchTask
-                    //List<Entity> fetched = (List<Entity>) getRepository().fetch(0, 20);
-                    //loadGrid(ui, fetched);
+                    //TODO:- Use PagingTask/PostTask For Actual *CrudView
+                    //PostTask postTask = new PostTask("", "");
+                    //Response response = postTask.execute(null);
+                    //For test:
+                    DummyTrendsRepository repository = new DummyTrendsRepository();
+                    List<Entity> fetched = (List<Entity>) repository.fetch(0, 20);
+                    loadGrid(ui, fetched);
                 }));
     }
 
@@ -376,6 +381,7 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
     }
 
     private boolean onEntityDeleteAction(Entity selected) {
+        //TODO: Use DeleteTask
         //return getRepository().delete(selected.getId(), AuthRepository.parseToken(UI.getCurrent()));
         return false;
     }
