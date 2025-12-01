@@ -1,15 +1,18 @@
 package com.infoworks.components.presenters.GridView;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.infoworks.config.AppQueue;
-import com.infoworks.domain.tasks.PagingGetTask;
-import com.infoworks.domain.tasks.SearchTask;
+import com.infoworks.domain.models.ItemCount;
 import com.infoworks.domain.models.SecureSearchQuery;
 import com.infoworks.domain.repositories.AuthRepository;
-import com.infoworks.orm.Property;
-import com.infoworks.sql.query.pagination.SearchQuery;
-import com.infoworks.sql.query.pagination.Pagination;
-import com.infoworks.sql.query.pagination.SortOrder;
+import com.infoworks.domain.tasks.PagingGetTask;
+import com.infoworks.domain.tasks.SearchTask;
 import com.infoworks.entity.Entity;
+import com.infoworks.objects.MessageParser;
+import com.infoworks.orm.Property;
+import com.infoworks.sql.query.pagination.Pagination;
+import com.infoworks.sql.query.pagination.SearchQuery;
+import com.infoworks.sql.query.pagination.SortOrder;
 import com.infoworks.tasks.Task;
 import com.infoworks.utils.rest.client.GetTask;
 import com.vaadin.flow.component.AttachEvent;
@@ -35,8 +38,8 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
     private Class<T> type;
     private final String[] skipProperties;
     //
-    private PagingGetTask fetchTask;
     private GetTask countTask;
+    private PagingGetTask fetchTask;
     private SearchTask searchTask;
 
     public GridView(Class<T> type, int pageSize, String...skipProperties) {
@@ -78,10 +81,9 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         searchView.setHideSearchBar(hideSearch);
     }
 
-    public Task getFetchTask(UI ui, int page, int size, int delay) {
+    public Task getFetchTask(int page, int size, int delay) throws RuntimeException {
         if (fetchTask == null) {
-            //return new FetchItems(ui, this, repository, page, size, delay);
-            return null; //FIXME
+            throw new RuntimeException("fetchTask<PagingGetTask> not been set! Please review the GridView integration flow!");
         } else {
             fetchTask.updatePageQuery(
                     new Property("limit",Integer.toString(size))
@@ -90,46 +92,71 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         return fetchTask;
     }
 
-    public void setFetchTask(PagingGetTask fetchTask) {
+    public void setFetchTask(UI ui, PagingGetTask fetchTask, boolean skipResponseListener, TypeReference<List<T>> typeRef) {
         this.fetchTask = fetchTask;
+        if (!skipResponseListener) {
+            this.fetchTask.addResponseListener((response) -> {
+                try {
+                    List<T> data = MessageParser.unmarshal(typeRef, response.getMessage());
+                    ui.access(() -> grid.setItems(data));
+                } catch (Exception e) {
+                    LOG.log(Level.WARNING, e.getMessage());
+                }
+            });
+        }
     }
 
-    public GetTask getCountTask(UI ui) {
+    public GetTask getCountTask() throws RuntimeException {
         if (countTask == null) {
-            //return new FetchItemsCount(ui, footer, repository);
-            return null; //FIXME
+            throw new RuntimeException("countTask<GetTask> not been set! Please review the GridView integration flow!");
         }
         return countTask;
     }
 
-    public void setCountTask(GetTask countTask) {
+    public void setCountTask(UI ui, GetTask countTask, boolean skipResponseListener) {
         this.countTask = countTask;
+        if (!skipResponseListener) {
+            this.countTask.addResponseListener((response) -> {
+                try {
+                    ItemCount count = MessageParser.unmarshal(ItemCount.class, response.getMessage());
+                    ui.access(() -> footer.updateTitleCount(count));
+                } catch (Exception e) {
+                    LOG.log(Level.WARNING, e.getMessage());
+                }
+            });
+        }
     }
 
-    public Task getSearchTask(UI ui, SearchQuery query, int delay) {
+    public Task getSearchTask(SearchQuery query, int delay) throws RuntimeException {
         if (searchTask == null) {
-            //return new SearchItems(ui, this, repository, query, delay);
-            return null; //FIXME
+            throw new RuntimeException("searchTask<SearchTask> not been set! Please review the GridView integration flow!");
         } else {
             searchTask.updateQuery(query);
         }
         return searchTask;
     }
 
-    public void setSearchTask(SearchTask searchTask) {
+    public void setSearchTask(UI ui, SearchTask searchTask, boolean skipResponseListener, TypeReference<List<T>> typeRef) {
         this.searchTask = searchTask;
+        if (!skipResponseListener) {
+            this.searchTask.addResponseListener((response) -> {
+                try {
+                    List<T> data = MessageParser.unmarshal(typeRef, response.getMessage());
+                    ui.access(() -> grid.setItems(data));
+                } catch (Exception e) {
+                    LOG.log(Level.WARNING, e.getMessage());
+                }
+            });
+        }
     }
 
     public void dispatchAsyncLoad(UI ui) {
         if (ui == null) return;
         //Dispatch async event to fetch user-list:
-        //Task task = new FetchItems(ui, this, repository, 0, grid.getPageSize(), 100);
-        //Task task = getFetchTask(ui, 0, grid.getPageSize(), 100);
-        Task task = getFetchTask(ui, footer.getPage(), footer.getPageSize(), 100);
+        Task task = getFetchTask(footer.getPage(), footer.getPageSize(), 100);
         AppQueue.dispatchTask(task);
         //Dispatch async event to fetch count:
-        //Task countTask = new FetchItemsCount(ui, footer, repository);
-        Task countTask = getCountTask(ui);
+        Task countTask = getCountTask();
         AppQueue.dispatchTask(countTask);
     }
 
@@ -146,7 +173,7 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
     public void onNextArrowClick(ClickEvent<Button> event, int page, int pageSize, long totalCount) {
         UI ui = event.getSource().getUI().orElse(null);
         //Task task = new FetchItems(ui, this, repository, page, pageSize, 0);
-        Task task = getFetchTask(ui, page, pageSize, 0);
+        Task task = getFetchTask(page, pageSize, 0);
         AppQueue.dispatchTask(task); //Async-load and server-side push
     }
 
@@ -154,7 +181,7 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
     public void onPreviousArrowClick(ClickEvent<Button> event, int page, int pageSize, long totalCount) {
         UI ui = event.getSource().getUI().orElse(null);
         //Task task = new FetchItems(ui, this, repository, page, pageSize, 0);
-        Task task = getFetchTask(ui, page, pageSize, 0);
+        Task task = getFetchTask(page, pageSize, 0);
         AppQueue.dispatchTask(task); //Async-load and server-side push
     }
 
@@ -181,7 +208,7 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         //
         UI ui = UI.getCurrent().getUI().orElse(null);
         //Task searchTask = new SearchItems(ui, this, repository, query, 0);
-        Task searchTask = getSearchTask(ui, query, 0);
+        Task searchTask = getSearchTask(query, 0);
         AppQueue.dispatchTask(searchTask);
     }
 
