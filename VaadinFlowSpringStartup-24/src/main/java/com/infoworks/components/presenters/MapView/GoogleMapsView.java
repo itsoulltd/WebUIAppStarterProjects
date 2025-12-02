@@ -35,7 +35,7 @@ public abstract class GoogleMapsView extends BaseComposite<Div> {
         //Load from VM Options: -Dgoogle.maps.api=<api-key>
         //OR from docker-environment: - google.maps.api: <api-key>
         //IF-None-Of-These-Are-There-Then pass = null;
-        String apiKey = ApplicationProperties.GOOGLE_MAP_API_KEY;
+        String apiKey = "AIzaSyDGeLyzQK2i2AZHpLg2LIn0PYb1qat-kbE"; //ApplicationProperties.GOOGLE_MAP_API_KEY;
         if (apiKey == null) {
             getContent().add(new H2("Api key is needed to run the demo, " +
                     "pass it using the following system property: '-Dgoogle.maps.api=<your-api-key>'"));
