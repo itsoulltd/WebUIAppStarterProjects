@@ -10,10 +10,10 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.upload.*;
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
+import com.vaadin.flow.component.upload.FileRejectedEvent;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.server.streams.UploadEvent;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 public class FileUpload extends Div {
@@ -45,17 +45,15 @@ public class FileUpload extends Div {
     protected void onAttach(AttachEvent attachEvent) {
         super.onAttach(attachEvent);
         //
-        MemoryBuffer buffer = new MemoryBuffer();
-        Upload upload = new Upload(buffer);
-        upload.setAutoUpload(false);
-        upload.setDropAllowed(true);
-        //Adding File-Type Restriction:
-        if(acceptedFileTypes.length > 0)
-            upload.setAcceptedFileTypes(acceptedFileTypes);
-        //Adding File-Size Restriction:
-        int maxFileSizeInBytes = 1024 * 1024 * maxFileSizeInMB;
-        upload.setMaxFileSize(maxFileSizeInBytes);
-        //
+        //Accepted from Vaadin (24.8+): create with upload-success handler
+        Upload upload = new Upload((uploadEvent) -> {
+            try (InputStream ios = uploadEvent.getInputStream()) {
+                if (listener != null) {
+                    listener.onSuccess(uploadEvent, ios);
+                }
+            } catch (Exception e) { e.printStackTrace(); }
+        });
+        //Rejection handler:
         upload.addFileRejectedListener(event -> {
             String errorMessage = event.getErrorMessage();
             Notification notification = Notification.show(
@@ -67,30 +65,15 @@ public class FileUpload extends Div {
             if (listener != null)
                 listener.onRejected(event);
         });
-        upload.addSucceededListener(event -> {
-            if (listener != null) {
-                try (InputStream iso = buffer.getInputStream()) {
-                    listener.onSuccess(event, iso);
-                } catch (IOException e) { e.printStackTrace(); }
-            }
-
-        });
-        upload.addFailedListener(event -> {
-            if (listener != null)
-                listener.onFailed(event);
-        });
-        upload.addStartedListener(event -> {
-            if (listener != null)
-                listener.onStarted(event);
-        });
-        upload.addFinishedListener(event -> {
-            if (listener != null)
-                listener.onFinished(event);
-        });
-        upload.addProgressListener(event -> {
-            if (listener != null)
-                listener.onProgress(event);
-        });
+        //Config:
+        upload.setAutoUpload(false);
+        upload.setDropAllowed(true);
+        //Adding File-Type Restriction:
+        if(acceptedFileTypes.length > 0)
+            upload.setAcceptedFileTypes(acceptedFileTypes);
+        //Adding File-Size Restriction:
+        int maxFileSizeInBytes = 1024 * 1024 * maxFileSizeInMB;
+        upload.setMaxFileSize(maxFileSizeInBytes);
         //
         UploadExamplesI18N i18n = new UploadExamplesI18N();
         i18n.getAddFiles().setOne(this.uploadBtnTitle);
@@ -161,11 +144,7 @@ public class FileUpload extends Div {
 
     @FunctionalInterface
     public interface FileUploadViewListener {
-        void onSuccess(SucceededEvent event, InputStream ios);
-        default void onFailed(FailedEvent event) {};
+        void onSuccess(UploadEvent event, InputStream ios);
         default void onRejected(FileRejectedEvent event) {};
-        default void onStarted(StartedEvent event) {};
-        default void onFinished(FinishedEvent event) {};
-        default void onProgress(ProgressUpdateEvent event) {};
     }
 }

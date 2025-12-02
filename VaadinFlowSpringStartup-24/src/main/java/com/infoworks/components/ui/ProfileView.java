@@ -112,8 +112,8 @@ public class ProfileView extends Composite<Div> {
         uploadView.setListener((event, iso) -> {
             //TODO:
             System.out.println("FileName: " + event.getFileName());
-            System.out.println("FileSize: " + event.getContentLength());
-            System.out.println("FileType: " + event.getMIMEType());
+            System.out.println("FileSize: " + event.getFileSize());
+            System.out.println("FileType: " + event.getContentType());
         });
         //Add to view:
         root.add(cardViewRow1, downloadGroup, uploadView);
