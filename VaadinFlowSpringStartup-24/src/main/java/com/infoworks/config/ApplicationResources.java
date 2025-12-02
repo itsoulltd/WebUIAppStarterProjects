@@ -21,6 +21,7 @@ public class ApplicationResources {
             ClassLoader classLoader = getClass().getClassLoader();
             //Simulate: ../resources/fileOrFolder
             URL resource = classLoader.getResource(fileOrFolder);
+            if (resource == null) throw new Exception(fileOrFolder + " not found!");
             Path directory = Paths.get(resource.toURI());
             return directory;
         } catch (Exception e) {
