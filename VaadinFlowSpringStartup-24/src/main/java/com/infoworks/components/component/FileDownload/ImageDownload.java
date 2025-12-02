@@ -11,7 +11,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.progressbar.ProgressBar;
+import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +108,10 @@ public class ImageDownload extends Div {
                 , (format.startsWith("png")) ? iResources.Format.PNG : iResources.Format.JPEG);
         //Create Image using dynamic content:
         StreamResource resource = new StreamResource(filename, () -> new ByteArrayInputStream(bytes));
-        Image image = new Image(resource, getAlt());
+        //Image image = new Image(resource, getAlt());
+        //New Api Vaadin (24.9+):
+        StreamRegistration registry = VaadinSession.getCurrent().getResourceRegistry().registerResource(resource);
+        Image image = new Image(registry.getResourceUri().toString(), getAlt());
         return image;
     }
 

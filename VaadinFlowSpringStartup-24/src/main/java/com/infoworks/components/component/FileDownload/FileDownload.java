@@ -8,7 +8,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
+import com.vaadin.flow.server.VaadinSession;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,9 +71,21 @@ public class FileDownload extends Div {
     private Anchor createDownloadLinkFrom(File resource) {
         Optional<InputStream> ios = getInputStream(resource);
         StreamResource streamResource = new StreamResource(resource.getName(), () -> ios.orElse(null));
+        //New Api Vaadin (24.9+):
+        StreamRegistration registry = VaadinSession.getCurrent().getResourceRegistry().registerResource(streamResource);
+        //System.out.println("New Anchor => " + registry.getResourceUri().toString()); //TEST
+        Anchor link = new Anchor(registry.getResourceUri().toString()
+                , String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024));
+        link.getElement().setAttribute("download", true);
+        return link;
+    }
+
+    @Deprecated
+    private Anchor createDownloadLinkFromOld(File resource) {
+        Optional<InputStream> ios = getInputStream(resource);
+        StreamResource streamResource = new StreamResource(resource.getName(), () -> ios.orElse(null));
         Anchor link = new Anchor(streamResource
-                , String.format("%s (%d KB)", resource.getName(),
-                (int) resource.length() / 1024));
+                , String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024));
         link.getElement().setAttribute("download", true);
         return link;
     }
