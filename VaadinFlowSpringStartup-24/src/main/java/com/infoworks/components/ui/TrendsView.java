@@ -131,7 +131,7 @@ public class TrendsView<Entity extends Trend> extends Composite<Div> {
                                 "    </vaadin-avatar>\n" +
                                 "\n" +
                                 "    <vaadin-vertical-layout style=\"padding: 0;\">\n" +
-                                "        <span style=\"font-weight: bold;\">${item.name}</span>\n" +
+                                "        <span style=\"font-weight: bold;\">${item.title}</span>\n" +
                                 "        <span style=\"font-size: var(--lumo-font-size-s); color: var(--lumo-secondary-text-color);\">\n" +
                                 "              ${item.subtitle}\n" +
                                 "        </span>\n" +
