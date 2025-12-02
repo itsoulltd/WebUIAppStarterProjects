@@ -89,11 +89,11 @@
         <!-- -->
         <!-- Map-GeoLocation Dependencies -->
         <!-- Vaadin-Addons: https://github.com/FlowingCode/GoogleMapsAddon -->
-        <!--<dependency>
+        <dependency>
             <groupId>com.flowingcode.vaadin.addons</groupId>
             <artifactId>google-maps</artifactId>
             <version>2.3.0</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>com.google.maps</groupId>
             <artifactId>google-maps-services</artifactId>
