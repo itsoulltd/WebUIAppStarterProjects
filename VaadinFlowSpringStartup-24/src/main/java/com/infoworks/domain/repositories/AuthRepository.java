@@ -11,6 +11,7 @@ import com.infoworks.utils.jwt.impl.JWebToken;
 import com.infoworks.utils.jwt.models.JWTHeader;
 import com.infoworks.utils.jwt.models.JWTPayload;
 import com.vaadin.flow.component.UI;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -21,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+@Component
 public class AuthRepository {
 
     public static final String X_AUTH_TOKEN = "X-Auth-Token";
