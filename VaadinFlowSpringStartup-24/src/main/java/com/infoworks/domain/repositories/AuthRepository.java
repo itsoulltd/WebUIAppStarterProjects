@@ -6,11 +6,18 @@ import com.infoworks.config.UserRole;
 import com.infoworks.domain.entities.User;
 import com.infoworks.objects.Response;
 import com.infoworks.orm.Property;
+import com.infoworks.utils.jwt.TokenProvider;
+import com.infoworks.utils.jwt.impl.JWebToken;
+import com.infoworks.utils.jwt.models.JWTHeader;
+import com.infoworks.utils.jwt.models.JWTPayload;
 import com.vaadin.flow.component.UI;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
@@ -24,12 +31,12 @@ public class AuthRepository {
         User principle = new User();
         principle.setName("");
         String token = parseToken(ui);
-        //FIXME: In JFoundationKit
-        /*JWTPayload payload = TokenValidator.parsePayload(token, JWTPayload.class);
+        //Using JFoundationKit:
+        JWTPayload payload = TokenProvider.parsePayload(token, JWTPayload.class);
         if (payload != null && payload.getData() != null) {
             String issuer = payload.getIss();
             principle.setName(payload.getData().getOrDefault(usernameKey.getKey(), issuer));
-        }*/
+        }
         principle.setAuthorization(token);
         return principle;
     }
@@ -65,14 +72,13 @@ public class AuthRepository {
 
     public static boolean matchAnyRole(String token, String...anyRoles) {
         if (token != null) {
-            //FIXME: In JFoundationKit
-            /*JWTPayload payload = TokenValidator.parsePayload(token, JWTPayload.class);
+            //Using JFoundationKit:
+            JWTPayload payload = TokenProvider.parsePayload(token, JWTPayload.class);
             String userHasRoles = payload.getData().get("roles");
             if (userHasRoles == null || userHasRoles.isEmpty()) return false;
             final String userHasRolesUP = userHasRoles.toUpperCase();
             return Stream.of(anyRoles)
-                    .anyMatch(role -> userHasRolesUP.contains(role.toUpperCase()));*/
-            return true;
+                    .anyMatch(role -> userHasRolesUP.contains(role.toUpperCase()));
         }
         return false;
     }
@@ -96,17 +102,18 @@ public class AuthRepository {
     }
 
     private String generateJWToken(String username, String...roles) {
-        //FIXME: In JFoundationKit
-        /*JWTHeader header = new JWTHeader().setAlg("HS256").setTyp("JWT");
+        //return "TEST-TOKEN-FOR-" + username + String.join(",", roles);
+        //Using JFoundationKit:
+        JWTHeader header = new JWTHeader().setAlg("HS256").setTyp("JWT");
         JWTPayload payload = new JWTPayload()
                 .setIss(username)
+                .setIat(Instant.now().toEpochMilli())
+                .setExp(TokenProvider.timeToLive(Duration.ofHours(1), TimeUnit.HOURS).getTimeInMillis())
                 .addData("roles", String.join(",", roles))
                 .addData("username", username);
-        TokenProvider provider = new JWTokenProvider(UUID.randomUUID().toString())
-                .setPayload(payload).setHeader(header);
-        String token = provider.generateToken(TokenProvider.defaultTokenTimeToLive());
-        return token;*/
-        return "TEST-TOKEN-FOR-" + username + String.join(",", roles);
+        TokenProvider provider = new JWebToken();
+        String token = provider.generateToken(UUID.randomUUID().toString(), null, payload);
+        return token;
     }
 
     public static void saveUser(UI ui, User user) {
