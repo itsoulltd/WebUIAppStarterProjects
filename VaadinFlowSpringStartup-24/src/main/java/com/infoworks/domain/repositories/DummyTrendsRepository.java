@@ -1,6 +1,5 @@
 package com.infoworks.domain.repositories;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.infoworks.components.presenters.GridView.GridFooter;
 import com.infoworks.components.presenters.GridView.GridView;
 import com.infoworks.config.RequestURI;
@@ -8,17 +7,18 @@ import com.infoworks.domain.entities.Trend;
 import com.infoworks.domain.models.ItemCount;
 import com.infoworks.domain.tasks.PagingGetTask;
 import com.infoworks.domain.tasks.SearchTask;
-import com.infoworks.objects.MessageParser;
 import com.infoworks.orm.Property;
 import com.infoworks.utils.rest.client.GetTask;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Component
 public class DummyTrendsRepository {
 
     protected String api() {
