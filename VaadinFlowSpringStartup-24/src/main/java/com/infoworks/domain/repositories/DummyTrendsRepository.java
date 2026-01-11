@@ -11,14 +11,12 @@ import com.infoworks.orm.Property;
 import com.infoworks.utils.rest.client.GetTask;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@Component
 public class DummyTrendsRepository {
 
     protected String api() {
