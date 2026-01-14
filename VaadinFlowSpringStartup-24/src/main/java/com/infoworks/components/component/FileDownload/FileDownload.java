@@ -25,6 +25,7 @@ public class FileDownload extends Div {
     private final Icon icon;
     private File resource;
     private Path resourcePath;
+    private InputStream resourceStream;
 
     public FileDownload(String title, Icon icon, File resource) {
         this.title = title;
@@ -39,6 +40,11 @@ public class FileDownload extends Div {
 
     public FileDownload(String title, Icon icon, String resourceName) {
         this(title, icon, new ApplicationResources().getPath(resourceName));
+    }
+
+    public FileDownload(String title, Icon icon, String resourceName, InputStream resource) {
+        this(title, icon, resourceName);
+        this.resourceStream = resource;
     }
 
     @Override
@@ -74,8 +80,10 @@ public class FileDownload extends Div {
         //New Api Vaadin (24.9+):
         StreamRegistration registry = VaadinSession.getCurrent().getResourceRegistry().registerResource(streamResource);
         //System.out.println("New Anchor => " + registry.getResourceUri().toString()); //TEST
-        Anchor link = new Anchor(registry.getResourceUri().toString()
-                , String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024));
+        String linkText = resource.length() > 0
+                ? String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024)
+                : String.format("Click to download: %s", resource.getName());
+        Anchor link = new Anchor(registry.getResourceUri().toString(), linkText);
         link.getElement().setAttribute("download", true);
         return link;
     }
@@ -84,13 +92,16 @@ public class FileDownload extends Div {
     private Anchor createDownloadLinkFromOld(File resource) {
         Optional<InputStream> ios = getInputStream(resource);
         StreamResource streamResource = new StreamResource(resource.getName(), () -> ios.orElse(null));
-        Anchor link = new Anchor(streamResource
-                , String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024));
+        String linkText = resource.length() > 0
+                ? String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024)
+                : String.format("Click to download: %s", resource.getName());
+        Anchor link = new Anchor(streamResource, linkText);
         link.getElement().setAttribute("download", true);
         return link;
     }
 
     private Optional<InputStream> getInputStream(File resource) {
+        if (resourceStream != null) return Optional.ofNullable(this.resourceStream);
         if (resource == null) return Optional.ofNullable(null);
         try {
             return Optional.ofNullable(new FileInputStream(resource));
