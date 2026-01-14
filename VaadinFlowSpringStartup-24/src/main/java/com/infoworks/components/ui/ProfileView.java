@@ -4,15 +4,15 @@ import com.infoworks.components.component.CardView;
 import com.infoworks.components.component.FileDownload.FileDownload;
 import com.infoworks.components.component.FileDownload.ImageDownload;
 import com.infoworks.components.component.FileUpload.FileUpload;
+import com.infoworks.components.component.FormActionBar;
 import com.infoworks.config.AppQueue;
 import com.infoworks.config.ApplicationProperties;
 import com.infoworks.applayouts.RootLayout;
 import com.infoworks.applayouts.RoutePath;
 import com.infoworks.domain.tasks.DisplayAsyncNotification;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.UI;
+import com.infoworks.orm.Row;
+import com.infoworks.services.excel.AsyncWriter;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
@@ -24,6 +24,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Instant;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @PageTitle("Profile")
@@ -123,6 +129,9 @@ public class ProfileView extends Composite<Div> {
         //Add ImageView with Download and Display:
         Component imageLoaderView = createImageLoaderViewComponent();
         root.add(imageLoaderView);
+        //Add dynamic-report download view:
+        Component dynamicDownloadView = createReportDownloadView();
+        root.add(dynamicDownloadView);
         //Finally add the root layout to composite:
         getContent().add(root);
         //Now dispatch Rest-Api Calls:
@@ -181,5 +190,69 @@ public class ProfileView extends Composite<Div> {
             dialog.open();
         }));
         return layout;
+    }
+
+    private Component createReportDownloadView() {
+        HorizontalLayout layout = new HorizontalLayout();
+        //layout.setPadding(true);
+        layout.setSpacing(true);
+        layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        layout.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+
+        //Acknowledge Text:
+        Text urlLabel = new Text("Example of dynamically generate excel report and download.");
+        layout.add(urlLabel);
+
+        //Prepare Data:
+        String[] headers = {"AccountName","Currency","Amount","Balance","Type","Date","Ref"};
+        String[] colKeys = {"account_ref","currency","amount","balance","transaction_type","transaction_date","transaction_ref"};
+        Map<Integer, List<String>> data = new HashMap<>();
+        List<Map> transactions = dummyTransactions();
+        Map<Integer, List<String>> converted = AsyncWriter.convert(transactions, 1, colKeys);
+        data.put(0, Arrays.asList(headers));
+        data.putAll(converted);
+
+        //AsyncWriter:
+        try (AsyncWriter writer = new AsyncWriter(true, new ByteArrayOutputStream())) {
+            writer.write("data", data, false);
+            writer.flush();
+            InputStream ios = new ByteArrayInputStream(((ByteArrayOutputStream) writer.getOutfile()).toByteArray());
+
+            //Download action:
+            Button download = new Button("Generate Report!", (event) -> {
+                Dialog dialog = new Dialog();
+                dialog.addDetachListener(e -> {
+                    try { ios.close(); }
+                    catch (IOException ex) { System.out.println(ex.getMessage()); }
+                });
+                //Prepare FileDownload:
+                String reportName = String.format("Balance_Sheet_%s.xlsx", Instant.now().toEpochMilli());
+                FileDownload downloadView =
+                        new FileDownload("Click here! -> ", VaadinIcon.CLOUD_DOWNLOAD_O.create(), reportName, ios);
+                dialog.add(downloadView);
+                //ActionBar
+                FormActionBar actionBar = new FormActionBar(dialog);
+                actionBar.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.STRETCH);
+                actionBar.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+                dialog.add(actionBar);
+                //
+                dialog.open();
+            });
+            layout.add(download);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        //
+        return layout;
+    }
+
+    private List<Map> dummyTransactions() {
+        List<Map> data = new ArrayList<>();
+        data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "-230.0").add("balance", "1219.9").add("transaction_type", "withdrawal").add("transaction_date", "2026-01-14T19:38:20.318").add("transaction_ref", "cc25a914-4a84-4849").keyObjectMap());
+        data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "1290.0").add("balance", "1449.9").add("transaction_type", "deposit").add("transaction_date", "2026-01-14T19:37:20.313").add("transaction_ref", "dd54cecd-80a5-4386").keyObjectMap());
+        data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "-340.8").add("balance", "879.1").add("transaction_type", "transfer").add("transaction_date", "2026-01-14T19:36:20.312").add("transaction_ref", "ab4c7d73-dc84-433e").keyObjectMap());
+        data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "-120.0").add("balance", "759.1").add("transaction_type", "transfer").add("transaction_date", "2026-01-14T19:35:20.317").add("transaction_ref", "daac741d-0ea9-49bc").keyObjectMap());
+        data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "-30.1").add("balance", "159.9").add("transaction_type", "transfer").add("transaction_date", "2026-01-14T19:34:20.319").add("transaction_ref", "1248051c-5126-4f80").keyObjectMap());
+        return data;
     }
 }

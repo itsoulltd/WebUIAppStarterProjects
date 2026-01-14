@@ -82,7 +82,7 @@ public class FileDownload extends Div {
         //System.out.println("New Anchor => " + registry.getResourceUri().toString()); //TEST
         String linkText = resource.length() > 0
                 ? String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024)
-                : String.format("Click to download: %s", resource.getName());
+                : String.format("%s", resource.getName());
         Anchor link = new Anchor(registry.getResourceUri().toString(), linkText);
         link.getElement().setAttribute("download", true);
         return link;
@@ -94,7 +94,7 @@ public class FileDownload extends Div {
         StreamResource streamResource = new StreamResource(resource.getName(), () -> ios.orElse(null));
         String linkText = resource.length() > 0
                 ? String.format("%s (%d KB)", resource.getName(), (int) resource.length() / 1024)
-                : String.format("Click to download: %s", resource.getName());
+                : String.format("%s", resource.getName());
         Anchor link = new Anchor(streamResource, linkText);
         link.getElement().setAttribute("download", true);
         return link;
