@@ -207,9 +207,9 @@ public class ProfileView extends Composite<Div> {
         String[] headers = {"AccountName","Currency","Amount","Balance","Type","Date","Ref"};
         String[] colKeys = {"account_ref","currency","amount","balance","transaction_type","transaction_date","transaction_ref"};
         Map<Integer, List<String>> data = new HashMap<>();
+        data.put(0, Arrays.asList(headers));
         List<Map> transactions = dummyTransactions();
         Map<Integer, List<String>> converted = AsyncWriter.convert(transactions, 1, colKeys);
-        data.put(0, Arrays.asList(headers));
         data.putAll(converted);
 
         //AsyncWriter:
