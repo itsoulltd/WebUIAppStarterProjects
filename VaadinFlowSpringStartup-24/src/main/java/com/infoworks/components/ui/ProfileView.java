@@ -1,5 +1,7 @@
 package com.infoworks.components.ui;
 
+import com.infoworks.applayouts.RootLayout;
+import com.infoworks.applayouts.RoutePath;
 import com.infoworks.components.component.CardView;
 import com.infoworks.components.component.FileDownload.FileDownload;
 import com.infoworks.components.component.FileDownload.ImageDownload;
@@ -7,16 +9,17 @@ import com.infoworks.components.component.FileUpload.FileUpload;
 import com.infoworks.components.component.FormActionBar;
 import com.infoworks.config.AppQueue;
 import com.infoworks.config.ApplicationProperties;
-import com.infoworks.applayouts.RootLayout;
-import com.infoworks.applayouts.RoutePath;
 import com.infoworks.domain.tasks.DisplayAsyncNotification;
 import com.infoworks.orm.Row;
+import com.infoworks.services.excel.ExcelReadingService;
 import com.infoworks.services.excel.writer.AsyncWriter;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.messages.MessageList;
+import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -129,10 +132,13 @@ public class ProfileView extends Composite<Div> {
         uploadView.setMaxFileSizeInMB(maxFileSizeInMB);
         uploadView.setFileMaxSizeError("The file exceeds the maximum allowed size " + maxFileSizeInMB + "MB.");
         uploadView.setListener((event, iso) -> {
-            //TODO:
+            //Log upload metadata:-
             System.out.println("FileName: " + event.getFileName());
             System.out.println("FileSize: " + event.getFileSize());
             System.out.println("FileType: " + event.getContentType());
+            //Read and Display:-
+            UI ui = event.getUI();
+            readAndDisplayExcelContent(ui, iso);
         });
 
         //Add Cards, Download & Upload Views:-
@@ -273,5 +279,36 @@ public class ProfileView extends Composite<Div> {
         data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "-120.0").add("balance", "759.1").add("transaction_type", "transfer").add("transaction_date", "2026-01-14T19:35:20.317").add("transaction_ref", "daac741d-0ea9-49bc").keyObjectMap());
         data.add(new Row().add("account_ref", "CASH@admin").add("currency", "BDT").add("amount", "-30.1").add("balance", "159.9").add("transaction_type", "transfer").add("transaction_date", "2026-01-14T19:34:20.319").add("transaction_ref", "1248051c-5126-4f80").keyObjectMap());
         return data;
+    }
+
+    private void readAndDisplayExcelContent(UI ui, InputStream iso) {
+        try {
+            Map<Integer, List<String>> rows = new ExcelReadingService().read(iso, 0, 0, 0);
+            iso.close();
+            //
+            ui.access(() -> {
+                Dialog dialog = new Dialog();
+                //ActionBar
+                FormActionBar actionBar = new FormActionBar(dialog);
+                actionBar.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.STRETCH);
+                actionBar.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+                dialog.add(actionBar);
+                //Add rows as ListItem:
+                MessageList list = new MessageList();
+                //list.addClassName("no-avatar");
+                rows.forEach((key, cols) -> {
+                    MessageListItem item = new MessageListItem(String.join(" | ", cols));
+                    //FIXME: Replace avatar with transparent image (not recommended) Hacky, not future-proof.
+                    item.setUserImage("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==");
+                    //
+                    list.addItem(item);
+                });
+                dialog.add(list);
+                //
+                dialog.open();
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
