@@ -1,4 +1,4 @@
-package com.infoworks.services.excel;
+package com.infoworks.services.excel.writer;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;

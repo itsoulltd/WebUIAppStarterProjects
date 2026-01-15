@@ -1,5 +1,8 @@
 package com.infoworks.services.excel;
 
+import com.infoworks.services.excel.writer.AsyncWriter;
+import com.infoworks.services.excel.writer.StreamWriter;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;

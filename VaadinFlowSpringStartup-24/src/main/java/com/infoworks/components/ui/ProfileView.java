@@ -11,7 +11,7 @@ import com.infoworks.applayouts.RootLayout;
 import com.infoworks.applayouts.RoutePath;
 import com.infoworks.domain.tasks.DisplayAsyncNotification;
 import com.infoworks.orm.Row;
-import com.infoworks.services.excel.AsyncWriter;
+import com.infoworks.services.excel.writer.AsyncWriter;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
