@@ -48,32 +48,44 @@ public class ProfileView extends Composite<Div> {
             getContent().removeAll();
         }
         super.onAttach(attachEvent);
-        //ProfileView Layout:
+
+        /**
+         * Examples of creating Vaadin Layouts and UI components:
+         */
+
+        //ProfileView Layout:-
         VerticalLayout root = new VerticalLayout();
-        //Cards:
+
+        //Cards:-
         HorizontalLayout cardViewRow1 = new HorizontalLayout();
         cardViewRow1.setSpacing(false);
-        //Revenue Card:
+
+        //Revenue Card:-
         CardView cardRevenue = new CardView("  Revenue  ", 732.09, 320.27);
         cardRevenue.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(cardRevenue);
-        //TotalOrder Card:
+
+        //TotalOrder Card:-
         CardView totalOrders = new CardView("  Total Orders  ", 531.0, 0.0);
         totalOrders.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(totalOrders);
-        //AssignedOrder Card:
+
+        //AssignedOrder Card:-
         CardView assignedOrders = new CardView("  Assigned Orders  ", 231.0, 0.0);
         assignedOrders.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(assignedOrders);
-        //CompleteOrder Card:
+
+        //CompleteOrder Card:-
         CardView completeOrders = new CardView("  Completed Orders  ", 101.0, 200.0);
         completeOrders.setBorderAlignments(FlexComponent.Alignment.END, FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(completeOrders);
-        //TransferredOrder Card:
+
+        //TransferredOrder Card:-
         CardView transferOrders = new CardView("  Transferred Orders  ", 68.0, 75.0);
         transferOrders.setBorderAlignments(FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(transferOrders);
-        //Download View:
+
+        //Download View:-
         FileDownload downloadView_1 = new FileDownload("Download Sample (*.xlsx): "
                 , VaadinIcon.CLOUD_DOWNLOAD_O.create()
                 , ApplicationProperties.SAMPLE_CREATE_ORDER_XLSX);
@@ -85,7 +97,8 @@ public class ProfileView extends Composite<Div> {
         downloadGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
         downloadGroup.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         downloadGroup.add(downloadView_1, downloadView_2);
-        //Upload View:
+
+        //Upload View:-
         int maxFileSizeInMB = ApplicationProperties.APP_MAX_SIZE_IN_MB;
         FileUpload uploadView = new FileUpload();
         uploadView.setWidthFull();
@@ -121,20 +134,26 @@ public class ProfileView extends Composite<Div> {
             System.out.println("FileSize: " + event.getFileSize());
             System.out.println("FileType: " + event.getContentType());
         });
-        //Add to view:
+
+        //Add Cards, Download & Upload Views:-
         root.add(cardViewRow1, downloadGroup, uploadView);
-        //Add Messaging Round-Trip view:
+
+        //Add Messaging Round-Trip view:-
         Component messaging = createMessagingComponent();
         root.add(messaging);
-        //Add ImageView with Download and Display:
+
+        //Add ImageView with Download and Display:-
         Component imageLoaderView = createImageLoaderViewComponent();
         root.add(imageLoaderView);
-        //Add dynamic-report download view:
+
+        //Add dynamic-report download view:-
         Component dynamicDownloadView = createReportDownloadView();
         root.add(dynamicDownloadView);
-        //Finally add the root layout to composite:
+
+        //Finally add the root layout to composite:-
         getContent().add(root);
-        //Now dispatch Rest-Api Calls:
+
+        //Now dispatch Rest-Api Calls:-
         UI ui = UI.getCurrent();
         AppQueue.dispatch(700, TimeUnit.MILLISECONDS
                 , () -> ui.access(() -> {
