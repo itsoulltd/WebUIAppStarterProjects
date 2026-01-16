@@ -19,6 +19,7 @@
         <java.version>17</java.version>
         <vaadin.version>24.9.6</vaadin.version>
         <poi-version>4.1.2</poi-version>
+        <jfkit.version>[v1.0.0, )</jfkit.version>
     </properties>
 
     <repositories>
@@ -73,12 +74,12 @@
         <dependency>
             <groupId>com.github.itsoulltd</groupId>
             <artifactId>JFoundationKit</artifactId>
-            <version>v1.0.2</version>
+            <version>${jfkit.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.itsoulltd</groupId>
             <artifactId>JSqlKit</artifactId>
-            <version>v1.0.1</version>
+            <version>${jfkit.version}</version>
         </dependency>
         <!-- -->
         <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
