@@ -7,6 +7,7 @@ import com.infoworks.components.component.FileDownload.FileDownload;
 import com.infoworks.components.component.FileDownload.ImageDownload;
 import com.infoworks.components.component.FileUpload.FileUpload;
 import com.infoworks.components.component.FormActionBar;
+import com.infoworks.components.component.TabView;
 import com.infoworks.config.AppQueue;
 import com.infoworks.config.ApplicationProperties;
 import com.infoworks.domain.tasks.DisplayAsyncNotification;
@@ -23,6 +24,7 @@ import com.vaadin.flow.component.messages.MessageListItem;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -91,6 +93,10 @@ public class ProfileView extends Composite<Div> {
         //Add Cards:-
         root.add(cardViewRow1);
 
+        //Add TabView:-
+        TabView tabView = new TabView(createSampleTabs());
+        root.add(tabView);
+
         //Download View:-
         Component downloadGroup = createDownloadViewGroup();
         root.add(downloadGroup);
@@ -122,6 +128,35 @@ public class ProfileView extends Composite<Div> {
                     cardRevenue.update("$ %.2f", 980.87, 732.09);
                 }));
         //
+    }
+
+    private Map<Tab, Component> createSampleTabs() {
+        //Tabs:-
+        Map<Tab, Component> tab2Workspace = new HashMap<>();
+
+        Tab story = new Tab(VaadinIcon.USER.create(), new Span("Story Of Today"));
+        tab2Workspace.put(story, new Span("At dawn, the city forgot its name. Windows blinked awake, buses sighed, " +
+                "and a boy painted shadows on the sidewalk with chalk stolen from time. " +
+                "He wrote apologies to pigeons, promises to cracks, and one secret for the river. When the sun rose higher, " +
+                "the words melted, but something stayed: a softer way to walk. Strangers held doors longer. Sirens paused. Even the river listened. " +
+                "By noon, the city remembered itself, louder than ever, yet kinder, as if dawn had left a note folded inside every pocket. " +
+                "Small miracles lingered, humming quietly, daring everyone to notice them before night returned.\n"));
+
+        Tab poem = new Tab(VaadinIcon.ENVELOPE.create(), new Span("Raven by Edgar Allan Poe"));
+        tab2Workspace.put(poem, new Span("A raven stitches night to morning sky,\n" +
+                "Ink-feathered thought with a silver eye.\n" +
+                "It laughs like a lock that learned every key,\n" +
+                "Carries old winters inside its “maybe.”\n" +
+                "\n" +
+                "Perched on the hush between truth and trick,\n" +
+                "It weighs the world with a beak too quick.\n" +
+                "If you ask it tomorrow, it answers in scars—\n" +
+                "Maps made of bones and unfaithful stars.\n" +
+                "\n" +
+                "Follow its shadow, not where it flies:\n" +
+                "Wisdom walks sideways, dressed in disguise.\n"));
+        //
+        return tab2Workspace;
     }
 
     private FileUpload createUploadView() {
