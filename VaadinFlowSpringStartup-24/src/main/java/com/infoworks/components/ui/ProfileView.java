@@ -94,8 +94,9 @@ public class ProfileView extends Composite<Div> {
         root.add(cardViewRow1);
 
         //Add TabView:-
-        TabView tabView = new TabView(createSampleTabs());
-        root.add(tabView);
+        //TabView tabView = new TabView(createSampleTabs()); //Causes un-order tabs
+        //TabView tabView = new TabView(createTabs(), createTabComponents());
+        //root.add(tabView);
 
         //Download View:-
         Component downloadGroup = createDownloadViewGroup();
@@ -132,31 +133,44 @@ public class ProfileView extends Composite<Div> {
 
     private Map<Tab, Component> createSampleTabs() {
         //Tabs:-
+        Tab[] tabs = createTabs();
+        Component[] components = createTabComponents();
         Map<Tab, Component> tab2Workspace = new HashMap<>();
-
-        Tab story = new Tab(VaadinIcon.USER.create(), new Span("Story Of Today"));
-        tab2Workspace.put(story, new Span("At dawn, the city forgot its name. Windows blinked awake, buses sighed, " +
-                "and a boy painted shadows on the sidewalk with chalk stolen from time. " +
-                "He wrote apologies to pigeons, promises to cracks, and one secret for the river. When the sun rose higher, " +
-                "the words melted, but something stayed: a softer way to walk. Strangers held doors longer. Sirens paused. Even the river listened. " +
-                "By noon, the city remembered itself, louder than ever, yet kinder, as if dawn had left a note folded inside every pocket. " +
-                "Small miracles lingered, humming quietly, daring everyone to notice them before night returned.\n"));
-
-        Tab poem = new Tab(VaadinIcon.ENVELOPE.create(), new Span("Raven by Edgar Allan Poe"));
-        tab2Workspace.put(poem, new Span("A raven stitches night to morning sky,\n" +
-                "Ink-feathered thought with a silver eye.\n" +
-                "It laughs like a lock that learned every key,\n" +
-                "Carries old winters inside its “maybe.”\n" +
-                "\n" +
-                "Perched on the hush between truth and trick,\n" +
-                "It weighs the world with a beak too quick.\n" +
-                "If you ask it tomorrow, it answers in scars—\n" +
-                "Maps made of bones and unfaithful stars.\n" +
-                "\n" +
-                "Follow its shadow, not where it flies:\n" +
-                "Wisdom walks sideways, dressed in disguise.\n"));
-        //
+        int index = 0;
+        for (Tab tab : tabs) {
+            tab2Workspace.put(tab, components[index++]);
+        }
         return tab2Workspace;
+    }
+
+    private Tab[] createTabs() {
+        return new Tab[] {
+                new Tab(VaadinIcon.USER.create(), new Span("Story Of Today"))
+                , new Tab(VaadinIcon.ENVELOPE.create(), new Span("Raven by Edgar Allan Poe"))
+        };
+    }
+
+    private Component[] createTabComponents() {
+        return new Component[] {
+                new Span("At dawn, the city forgot its name. Windows blinked awake, buses sighed, " +
+                        "and a boy painted shadows on the sidewalk with chalk stolen from time. " +
+                        "He wrote apologies to pigeons, promises to cracks, and one secret for the river. When the sun rose higher, " +
+                        "the words melted, but something stayed: a softer way to walk. Strangers held doors longer. Sirens paused. Even the river listened. " +
+                        "By noon, the city remembered itself, louder than ever, yet kinder, as if dawn had left a note folded inside every pocket. " +
+                        "Small miracles lingered, humming quietly, daring everyone to notice them before night returned.\n")
+                , new Span("A raven stitches night to morning sky,\n" +
+                        "Ink-feathered thought with a silver eye.\n" +
+                        "It laughs like a lock that learned every key,\n" +
+                        "Carries old winters inside its “maybe.”\n" +
+                        "\n" +
+                        "Perched on the hush between truth and trick,\n" +
+                        "It weighs the world with a beak too quick.\n" +
+                        "If you ask it tomorrow, it answers in scars—\n" +
+                        "Maps made of bones and unfaithful stars.\n" +
+                        "\n" +
+                        "Follow its shadow, not where it flies:\n" +
+                        "Wisdom walks sideways, dressed in disguise.\n")
+        };
     }
 
     private FileUpload createUploadView() {
