@@ -88,20 +88,43 @@ public class ProfileView extends Composite<Div> {
         transferOrders.setBorderAlignments(FlexComponent.Alignment.BASELINE);
         cardViewRow1.add(transferOrders);
 
+        //Add Cards:-
+        root.add(cardViewRow1);
+
         //Download View:-
-        FileDownload downloadView_1 = new FileDownload("Download Sample (*.xlsx): "
-                , VaadinIcon.CLOUD_DOWNLOAD_O.create()
-                , ApplicationProperties.SAMPLE_CREATE_ORDER_XLSX);
-        FileDownload downloadView_2 = new FileDownload("Download Sample (*.xls): "
-                , VaadinIcon.CLOUD_DOWNLOAD_O.create()
-                , ApplicationProperties.SAMPLE_CREATE_ORDER_XLS);
-        HorizontalLayout downloadGroup = new HorizontalLayout();
-        downloadGroup.setWidthFull();
-        downloadGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
-        downloadGroup.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
-        downloadGroup.add(downloadView_1, downloadView_2);
+        Component downloadGroup = createDownloadViewGroup();
+        root.add(downloadGroup);
 
         //Upload View:-
+        FileUpload uploadView = createUploadView();
+        root.add(uploadView);
+
+        //Add Messaging Round-Trip view:-
+        Component messaging = createMessagingComponent();
+        root.add(messaging);
+
+        //Add ImageView with Download and Display:-
+        Component imageLoaderView = createImageLoaderViewComponent();
+        root.add(imageLoaderView);
+
+        //Add dynamic-report download view:-
+        Component dynamicDownloadView = createReportDownloadView();
+        root.add(dynamicDownloadView);
+
+        //Finally add the root layout to composite:-
+        getContent().add(root);
+
+        //Now dispatch Rest-Api Calls:-
+        UI ui = UI.getCurrent();
+        AppQueue.dispatch(700, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> {
+                    //Update Revenue Card View: UI
+                    cardRevenue.update("$ %.2f", 980.87, 732.09);
+                }));
+        //
+    }
+
+    private FileUpload createUploadView() {
         int maxFileSizeInMB = ApplicationProperties.APP_MAX_SIZE_IN_MB;
         FileUpload uploadView = new FileUpload();
         uploadView.setWidthFull();
@@ -140,33 +163,23 @@ public class ProfileView extends Composite<Div> {
             UI ui = event.getUI();
             readAndDisplayExcelContent(ui, iso);
         });
+        return uploadView;
+    }
 
-        //Add Cards, Download & Upload Views:-
-        root.add(cardViewRow1, downloadGroup, uploadView);
-
-        //Add Messaging Round-Trip view:-
-        Component messaging = createMessagingComponent();
-        root.add(messaging);
-
-        //Add ImageView with Download and Display:-
-        Component imageLoaderView = createImageLoaderViewComponent();
-        root.add(imageLoaderView);
-
-        //Add dynamic-report download view:-
-        Component dynamicDownloadView = createReportDownloadView();
-        root.add(dynamicDownloadView);
-
-        //Finally add the root layout to composite:-
-        getContent().add(root);
-
-        //Now dispatch Rest-Api Calls:-
-        UI ui = UI.getCurrent();
-        AppQueue.dispatch(700, TimeUnit.MILLISECONDS
-                , () -> ui.access(() -> {
-                    //Update Revenue Card View: UI
-                    cardRevenue.update("$ %.2f", 980.87, 732.09);
-                }));
-        //
+    private Component createDownloadViewGroup() {
+        //Download View:-
+        FileDownload downloadView_1 = new FileDownload("Download Sample (*.xlsx): "
+                , VaadinIcon.CLOUD_DOWNLOAD_O.create()
+                , ApplicationProperties.SAMPLE_CREATE_ORDER_XLSX);
+        FileDownload downloadView_2 = new FileDownload("Download Sample (*.xls): "
+                , VaadinIcon.CLOUD_DOWNLOAD_O.create()
+                , ApplicationProperties.SAMPLE_CREATE_ORDER_XLS);
+        HorizontalLayout downloadGroup = new HorizontalLayout();
+        downloadGroup.setWidthFull();
+        downloadGroup.setJustifyContentMode(FlexComponent.JustifyContentMode.START);
+        downloadGroup.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+        downloadGroup.add(downloadView_1, downloadView_2);
+        return downloadGroup;
     }
 
     private Component createMessagingComponent() {
