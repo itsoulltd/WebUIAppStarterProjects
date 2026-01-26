@@ -96,6 +96,7 @@ public class ProfileView extends Composite<Div> {
         //Add TabView:-
         //TabView tabView = new TabView(createSampleTabs()); //Causes un-order tabs
         //TabView tabView = new TabView(createTabs(), createTabComponents());
+        //TabView tabView = new TabView(createTabsWithIconOnStart(), createTabComponents());
         //root.add(tabView);
 
         //Download View:-
@@ -147,6 +148,13 @@ public class ProfileView extends Composite<Div> {
         return new Tab[] {
                 new Tab(VaadinIcon.USER.create(), new Span("Story Of Today"))
                 , new Tab(VaadinIcon.ENVELOPE.create(), new Span("Raven by Edgar Allan Poe"))
+        };
+    }
+
+    private Tab[] createTabsWithIconOnStart() {
+        return new Tab[] {
+                new Tab(new Span(VaadinIcon.USER.create(), new Span("  Story Of Today")))
+                , new Tab(new Span(VaadinIcon.ENVELOPE.create(), new Span("   Raven by Edgar Allan Poe")))
         };
     }
 
