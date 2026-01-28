@@ -3,6 +3,7 @@ package com.infoworks.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +16,17 @@ import java.util.stream.Collectors;
 public class ApplicationResources {
 
     private static Logger LOG = LoggerFactory.getLogger(ApplicationResources.class.getSimpleName());
+
+    public InputStream getResourceAsStream(String resourceName) throws RuntimeException {
+        ClassLoader classLoader =  getClass().getClassLoader();
+        //Simulate: ../resources/fileOrFolder
+        InputStream ios = classLoader.getResourceAsStream(resourceName);
+        if (ios == null) {
+            LOG.error(resourceName + " not found!");
+            throw new RuntimeException(resourceName + " not found!");
+        }
+        return ios;
+    }
 
     public Path getPath(String fileOrFolder) {
         try {

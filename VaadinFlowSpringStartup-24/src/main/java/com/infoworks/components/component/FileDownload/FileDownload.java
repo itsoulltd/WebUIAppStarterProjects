@@ -38,13 +38,13 @@ public class FileDownload extends Div {
         this.resourcePath = resourcePath;
     }
 
-    public FileDownload(String title, Icon icon, String resourceName) {
-        this(title, icon, new ApplicationResources().getPath(resourceName));
+    public FileDownload(String title, Icon icon, String resourceName, InputStream resource) {
+        this(title, icon, new File(resourceName));
+        this.resourceStream = resource;
     }
 
-    public FileDownload(String title, Icon icon, String resourceName, InputStream resource) {
-        this(title, icon, resourceName);
-        this.resourceStream = resource;
+    public FileDownload(String title, Icon icon, String resourceName) {
+        this(title, icon, resourceName, new ApplicationResources().getResourceAsStream(resourceName));
     }
 
     @Override
