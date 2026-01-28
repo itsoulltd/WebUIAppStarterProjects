@@ -8,7 +8,8 @@ DockerHubRepository="${DockerHubUser}/${DockerHubRepoName}"
 docker login --password <password> --username ${DockerHubUser}
 ###
 Application="MyApp"
-ApplicationDir="./VaadinFlowSpringStartup-24"  #Realtive to the current multi-module project structure.
+ApplicationDir="."
+#ApplicationDir="./VaadinFlowSpringStartup-24"  #Realtive to the current multi-module project structure.
 echo "Creating ${Application} Image"
 #mvn clean package -DskipTests -Pproduction
 mvn -pl ${ApplicationDir} -am clean package -DskipTests -Pproduction
