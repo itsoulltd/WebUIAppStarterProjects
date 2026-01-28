@@ -1,7 +1,6 @@
 # =========================
 # Build stage
 # =========================
-#FROM eclipse-temurin:17-jdk AS build
 FROM maven:3.9-eclipse-temurin-17 AS build
 LABEL authors="towhid.islam"
 MAINTAINER ${authors}
@@ -9,21 +8,12 @@ MAINTAINER ${authors}
 ENV HOME=/app
 RUN mkdir -p $HOME
 WORKDIR $HOME
-# Copy Maven wrapper & pom first (better layer caching)
-#COPY mvnw .
-#COPY .mvn .mvn
-#COPY mvnw.cmd .
+# Copy pom first (better layer caching)
 COPY pom.xml .
-
-#RUN chmod +x mvnw
-#RUN chmod +x mvnw.cmd
-
-# Download dependencies
-#RUN ./mvnw -B dependency:go-offline
-
 # Copy source and build
 COPY src src
-#RUN ./mvnw -B -Pproduction clean package -DskipTests
+
+# Run mvn cmd
 RUN mvn clean package -DskipTests -Pproduction
 
 # =========================
