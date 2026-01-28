@@ -19,7 +19,7 @@ public class AppQueue {
     public static void register() {
         Object old = UI.getCurrent().getSession().getAttribute(X_EVENT_QUEUE);
         if (old == null) {
-            EventQueue queue = new EventQueue(Executors.newFixedThreadPool(MAX_POOL_COUNT));
+            EventQueue queue = new EventQueue(Executors.newFixedThreadPool(MAX_POOL_COUNT), true);
             queue.onTaskComplete((message, state) -> {
                 if (message != null) {
                     LOG.log(Level.WARNING, message.toString());

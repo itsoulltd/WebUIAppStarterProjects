@@ -254,7 +254,7 @@ public class ProfileView extends Composite<Div> {
             //Example How to do async ui update in Vaadin:
             UI ui = event.getSource().getUI().orElse(null);
             AppQueue.dispatchTask(new DisplayAsyncNotification(ui, message));
-            //EventQueue.dispatchTaskInQueue(new DisplayAsyncNotification(ui, message));
+            //AppQueue.dispatchTaskInQueue(new DisplayAsyncNotification(ui, message));
         }));
         return layout;
     }
