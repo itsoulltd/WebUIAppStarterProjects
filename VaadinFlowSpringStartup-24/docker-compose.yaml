@@ -1,0 +1,50 @@
+version: '3.5'
+
+networks:
+   web-app-net:
+       name: my-web-app-net
+       driver: bridge
+
+#volumes:
+#   mysql-db-storage:
+
+services:
+#   mysql-db:
+#      image: mysql:8.0.13
+#      environment:
+#          MYSQL_DATABASE: testDB
+#          MYSQL_ROOT_PASSWORD: root@123
+#      ports:
+#          - 3306:3306
+#      networks:
+#          - web-app-net
+#      volumes:
+#          - mysql-db-storage:/var/lib/mysql
+
+   webapp-admin:
+       image: vaadin-starter-app-24:1.0
+       build:
+          context: .
+          dockerfile: Dockerfile-Dev
+       environment:
+          app.display.name: MyApp
+          app.display.version: v1.0
+          app.display.mode: PROD
+          vaadin.launch-browser: false
+          app.db.name: testDB
+          app.db.host: mysql-db
+          app.db.port: 3306
+          app.db.password: root@123
+          app.db.mysql.url.query: ?autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+          google.maps.api: <google-map-api-key>
+          app.auth.disable: false
+          app.user.host: localhost
+          app.user.port: 8080
+          app.user.api: user
+       ports:
+          - 80:8080
+       restart: on-failure
+       networks:
+          - web-app-net
+
+#End of file

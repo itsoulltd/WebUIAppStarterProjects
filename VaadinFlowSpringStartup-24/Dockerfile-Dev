@@ -1,0 +1,45 @@
+# =========================
+# Build stage
+# =========================
+FROM eclipse-temurin:17-jdk AS build
+LABEL authors="towhid.islam"
+MAINTAINER ${authors}
+
+ENV HOME=/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+# Copy Maven wrapper & pom first (better layer caching)
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+# Download dependencies
+RUN ./mvnw -B dependency:go-offline
+
+# Copy source and build
+COPY src src
+RUN ./mvnw -B -Pproduction clean package -DskipTests
+
+# =========================
+# Runtime stage
+# =========================
+#FROM eclipse-temurin:21-jre-alpine
+#FROM eclipse-temurin:17-alpine
+FROM eclipse-temurin:17-jre
+LABEL authors="towhid.islam"
+MAINTAINER ${authors}
+
+ENV HOME=/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+# Copy the built JAR from build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose Spring Boot default port
+EXPOSE 8080
+
+# Optional: reduce memory footprint
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+#ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar --spring.profiles.active=dev"]
