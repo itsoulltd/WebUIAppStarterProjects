@@ -1,3 +1,6 @@
+# =========================
+# Runtime stage
+# =========================
 #FROM eclipse-temurin:21-jre-alpine
 #FROM eclipse-temurin:17-alpine
 FROM eclipse-temurin:17-jre
@@ -7,6 +10,7 @@ MAINTAINER ${authors}
 ENV HOME=/app
 RUN mkdir -p $HOME
 WORKDIR $HOME
+# Copy the built JAR from target dir
 COPY target/*.jar app.jar
 
 # Expose Spring Boot default port
