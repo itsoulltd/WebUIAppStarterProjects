@@ -2,7 +2,7 @@
 # Runtime stage
 # =========================
 #FROM eclipse-temurin:21-jre-alpine
-#FROM eclipse-temurin:17-alpine
+#FROM eclipse-temurin:17-jre-alpine
 FROM eclipse-temurin:17-jre
 LABEL authors="towhid.islam"
 MAINTAINER ${authors}
