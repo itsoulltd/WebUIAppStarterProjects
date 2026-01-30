@@ -25,9 +25,9 @@ public class ApplicationProperties {
 
     public static int APP_MAX_SIZE_IN_MB = Integer.parseInt(
             Optional.ofNullable(
-                    System.getProperty("app.max.file.size.in.mb") != null
-                            ? System.getProperty("app.max.file.size.in.mb")
-                            : properties.read("app.max.file.size.in.mb")
+                    System.getProperty("app.max-file-size.in.mb") != null
+                            ? System.getProperty("app.max-file-size.in.mb")
+                            : properties.read("app.max-file-size.in.mb")
             ).orElse("2")
     );
 

@@ -1,9 +1,15 @@
 package com.infoworks.domain.jwtoken;
 
+import com.infoworks.utils.jwt.TokenProvider;
+import com.infoworks.utils.jwt.impl.JWebToken;
+import com.infoworks.utils.jwt.models.JWTHeader;
+import com.infoworks.utils.jwt.models.JWTPayload;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 public class JWTokenProviderTest {
 
@@ -20,17 +26,15 @@ public class JWTokenProviderTest {
     @Test
     public void tokenProviderTest() {
         //FIXME: In JFoundationKit
-        /*String[] roles = {"ADMIN", "ADMIN_TEST"};
+        String[] roles = {"ADMIN", "ADMIN_TEST"};
         JWTHeader header = new JWTHeader().setAlg("HS256").setTyp("JWT");
         JWTPayload payload = new JWTPayload()
                 .setIss("towhid@gmail.com")
                 .addData("roles", String.join(",", roles))
                 .addData("username", "towhid@gmail.com");
-        TokenProvider provider = new JWTokenProvider(UUID.randomUUID().toString())
-                .setPayload(payload).setHeader(header);
-        String token = provider.generateToken(TokenProvider.defaultTokenTimeToLive());
-        LOG.info("Token: " + token);*/
-        String token = null;
-        Assertions.assertTrue(token == null || token.isEmpty());
+        TokenProvider provider = new JWebToken();
+        String token = provider.generateToken(UUID.randomUUID().toString(), header, payload);
+        LOG.info("Token: " + token);
+        Assertions.assertTrue(token != null || !token.isEmpty());
     }
 }
