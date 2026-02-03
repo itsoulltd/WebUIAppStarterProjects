@@ -19,7 +19,6 @@
         <java.version>17</java.version>
         <vaadin.version>24.9.6</vaadin.version>
         <poi-version>4.1.2</poi-version>
-        <jfkit.version>[v1.0.0, )</jfkit.version>
     </properties>
 
     <repositories>
@@ -82,12 +81,12 @@
         <dependency>
             <groupId>com.github.itsoulltd</groupId>
             <artifactId>JFoundationKit</artifactId>
-            <version>${jfkit.version}</version>
+            <version>v1.0.4</version>
         </dependency>
         <dependency>
             <groupId>com.github.itsoulltd</groupId>
             <artifactId>JSqlKit</artifactId>
-            <version>${jfkit.version}</version>
+            <version>v1.0.1</version>
         </dependency>
         <!-- -->
         <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
@@ -136,6 +135,12 @@
             <groupId>com.monitorjbl</groupId>
             <artifactId>xlsx-streamer</artifactId>
             <version>2.1.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>[5.5.1, )</version>
         </dependency>
         <!-- -->
     </dependencies>
