@@ -1,11 +1,9 @@
 package com.infoworks.domain.tasks;
 
-import com.infoworks.config.HttpClientConfig;
 import com.infoworks.orm.Property;
 import com.infoworks.sql.query.pagination.SearchQuery;
 import com.infoworks.utils.rest.client.PostTask;
 
-import java.net.http.HttpClient;
 import java.util.Map;
 
 public class SearchTask extends PostTask {
@@ -34,10 +32,5 @@ public class SearchTask extends PostTask {
     public Map<String, Object> getBody() {
         SearchQuery cQuery = this.updated != null ? this.updated : new SearchQuery();
         return cQuery.marshalling(true);
-    }
-
-    @Override
-    protected HttpClient getClient() {
-        return HttpClientConfig.defaultHttpClient();
     }
 }

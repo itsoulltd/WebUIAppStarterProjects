@@ -1,6 +1,5 @@
 package com.infoworks.domain.tasks;
 
-import com.infoworks.config.RestTemplateConfig;
 import com.infoworks.objects.Message;
 import com.infoworks.objects.Response;
 import com.infoworks.orm.Property;
@@ -57,7 +56,7 @@ public class PagingGetTask extends GetTask {
     private RestTemplate restTemplate;
 
     public RestTemplate getTemplate() {
-        if (restTemplate == null) restTemplate = RestTemplateConfig.getCachedTemplate();
+        if (restTemplate == null) restTemplate = new RestTemplate();
         return restTemplate;
     }
 
