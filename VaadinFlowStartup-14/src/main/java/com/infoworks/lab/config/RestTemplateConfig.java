@@ -20,9 +20,7 @@ public class RestTemplateConfig {
     public static RestTemplate getCachedTemplate() {
         Object old = UI.getCurrent().getSession().getAttribute(X_REST_TEMPLATE_BEAN);
         if (old == null) {
-            HttpClient client = HttpClientConfig.defaultHttpClient();
-            ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(client);
-            RestTemplate template = new RestTemplate(requestFactory);
+            RestTemplate template = getTemplate();
             UI.getCurrent().getSession().setAttribute(X_REST_TEMPLATE_BEAN, template);
             old = template;
         }
