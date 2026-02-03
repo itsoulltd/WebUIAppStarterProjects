@@ -64,8 +64,7 @@ public class GeoTrackerView extends GoogleMapsView {
         gmaps.setZoom(15);
 
         //Location search  using OpenStreetMap-Api:
-        OStreetAddressSearch searchTask = new OStreetAddressSearch(
-                UI.getCurrent()
+        OStreetAddressSearch searchTask = new OStreetAddressSearch(UI.getCurrent()
                 , (gCodes) -> {
                     if (gCodes == null || gCodes.isEmpty()) return;
                     System.out.println("Search found: " + gCodes.size());
@@ -83,7 +82,10 @@ public class GeoTrackerView extends GoogleMapsView {
         Button searchBtn = new Button("Search", (e) -> {
             String searchTx = search.getValue();
             searchTask.setQuery(searchTx);
-            AppQueue.dispatchTask(searchTask);
+            //AppQueue.dispatchTask(searchTask);
+            UI ui = e.getSource().getUI().orElse(null);
+            AppQueue.dispatch(120, TimeUnit.MILLISECONDS
+                    , () -> ui.access(() -> searchTask.execute(null)));
         });
         searchbar.add(search, searchBtn);
 

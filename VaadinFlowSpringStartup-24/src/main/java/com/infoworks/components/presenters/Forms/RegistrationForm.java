@@ -1,6 +1,7 @@
 package com.infoworks.components.presenters.Forms;
 
 import com.infoworks.applayouts.RoutePath;
+import com.infoworks.config.HttpClientConfig;
 import com.infoworks.config.RequestURI;
 import com.infoworks.domain.entities.Registration;
 import com.infoworks.domain.entities.User;
@@ -78,6 +79,7 @@ public class RegistrationForm extends FormLayout {
                 PostTask task = new PostTask(RequestURI.USER_BASE, RequestURI.USER_REGISTRATION_API);
                 task.setBody(user, AuthRepository.parseToken(ui));
                 // IF-Success:: UI.getCurrent().navigate(RoutePath.LOGIN_VIEW);
+                task.setClient(HttpClientConfig.defaultHttpClient());
                 Response response = task.execute(null);
                 if (response.getStatus() == 200) {
                     Notification notification = Notification.show("User has been created! Please login!"

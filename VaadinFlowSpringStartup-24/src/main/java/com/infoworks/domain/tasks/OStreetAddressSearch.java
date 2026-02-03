@@ -1,6 +1,7 @@
 package com.infoworks.domain.tasks;
 
 import com.infoworks.config.RequestURI;
+import com.infoworks.config.RestTemplateConfig;
 import com.infoworks.domain.models.OStreetGeocode;
 import com.infoworks.objects.Message;
 import com.infoworks.objects.Response;
@@ -70,7 +71,7 @@ public class OStreetAddressSearch extends ExecutableTask<Message, Response> {
     private RestTemplate restTemplate;
 
     public RestTemplate getTemplate() {
-        if (restTemplate == null) restTemplate = new RestTemplate();
+        if (restTemplate == null) restTemplate = RestTemplateConfig.getCachedTemplate();
         return restTemplate;
     }
 
