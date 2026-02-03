@@ -2,6 +2,7 @@ package com.infoworks.domain.repositories;
 
 import com.infoworks.components.presenters.GridView.GridFooter;
 import com.infoworks.components.presenters.GridView.GridView;
+import com.infoworks.config.HttpClientConfig;
 import com.infoworks.config.RequestURI;
 import com.infoworks.domain.entities.Trend;
 import com.infoworks.domain.models.ItemCount;
@@ -80,6 +81,7 @@ public class DummyTrendsRepository {
         //FIXME:
         GetTask countTask = new GetTask(RequestURI.APP_BASE, "/api/trends/v1/rowCount");
         countTask.setBody(new HashMap<>(), AuthRepository.parseToken(ui));
+        countTask.setClient(HttpClientConfig.defaultHttpClient());
         GridFooter footer = gridView.getFooter();
         countTask.addResponseListener((response) -> {
             try {
