@@ -82,7 +82,6 @@ public class GeoTrackerView extends GoogleMapsView {
         Button searchBtn = new Button("Search", (e) -> {
             String searchTx = search.getValue();
             searchTask.setQuery(searchTx);
-            //AppQueue.dispatchTask(searchTask);
             UI ui = e.getSource().getUI().orElse(null);
             AppQueue.dispatch(120, TimeUnit.MILLISECONDS
                     , () -> ui.access(() -> searchTask.execute(null)));

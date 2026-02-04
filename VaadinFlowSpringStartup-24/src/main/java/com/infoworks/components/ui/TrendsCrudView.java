@@ -206,7 +206,7 @@ public class TrendsCrudView<Entity extends Trend> extends Composite<Div> {
                     //Response response = postTask.execute(null);
                     //For test:
                     DummyTrendsRepository repository = new DummyTrendsRepository();
-                    List<Entity> fetched = (List<Entity>) repository.fetchDummyTrends(0, 20);
+                    List<Entity> fetched = (List<Entity>) repository.fetchDummyTrends(0, 5);
                     loadGrid(ui, fetched);
                 }));
     }

@@ -7,8 +7,8 @@ import com.infoworks.domain.models.SecureSearchQuery;
 import com.infoworks.domain.repositories.AuthRepository;
 import com.infoworks.domain.tasks.PagingGetTask;
 import com.infoworks.domain.tasks.SearchTask;
-import com.infoworks.entity.Entity;
 import com.infoworks.objects.MessageParser;
+import com.infoworks.objects.iMessage;
 import com.infoworks.orm.Property;
 import com.infoworks.sql.query.pagination.Pagination;
 import com.infoworks.sql.query.pagination.SearchQuery;
@@ -26,6 +26,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -152,12 +153,14 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
 
     public void dispatchAsyncLoad(UI ui) {
         if (ui == null) return;
-        //Dispatch async event to fetch user-list:
-        Task task = getFetchTask(footer.getPage(), footer.getPageSize(), 100);
-        AppQueue.dispatchTask(task);
         //Dispatch async event to fetch count:
         Task countTask = getCountTask();
-        AppQueue.dispatchTask(countTask);
+        AppQueue.dispatch(100, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> countTask.execute(null)));
+        //Dispatch async event to fetch user-list:
+        Task task = getFetchTask(footer.getPage(), footer.getPageSize(), 100);
+        AppQueue.dispatch(150, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> task.execute(null)));
     }
 
     public void setItems(List<T> items) {
@@ -174,7 +177,9 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         UI ui = event.getSource().getUI().orElse(null);
         //Task task = new FetchItems(ui, this, repository, page, pageSize, 0);
         Task task = getFetchTask(page, pageSize, 0);
-        AppQueue.dispatchTask(task); //Async-load and server-side push
+        //Async-load and server-side push:
+        AppQueue.dispatch(150, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> task.execute(null)));
     }
 
     @Override
@@ -182,7 +187,9 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         UI ui = event.getSource().getUI().orElse(null);
         //Task task = new FetchItems(ui, this, repository, page, pageSize, 0);
         Task task = getFetchTask(page, pageSize, 0);
-        AppQueue.dispatchTask(task); //Async-load and server-side push
+        //Async-load and server-side push:
+        AppQueue.dispatch(150, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> task.execute(null)));
     }
 
     @Override
@@ -192,11 +199,11 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
             return;
         }
         LOG.log(Level.INFO,"SearchClicked: " + search.getValue());
-        if (!Entity.class.isAssignableFrom(type)) {
+        if (!iMessage.class.isAssignableFrom(type)) {
             LOG.log(Level.WARNING, "Bean-Class Type dose not confirm to <com.infoworks.entity.Entity>.");
             return;
         }
-        List<Property> searchProps = getProperties((Class<Entity>)type, skipProperties);
+        List<Property> searchProps = getProperties((Class<iMessage>)type, skipProperties);
         SecureSearchQuery query = Pagination.of(SecureSearchQuery.class, 0, grid.getPageSize(), SortOrder.DESC);
         //query.setPage(0);
         query.setAuthorization(AuthRepository.parseToken(event.getSource().getUI().orElse(null)));
@@ -209,10 +216,11 @@ public class GridView<T> extends VerticalLayout implements GridFooter.ActionEven
         UI ui = UI.getCurrent().getUI().orElse(null);
         //Task searchTask = new SearchItems(ui, this, repository, query, 0);
         Task searchTask = getSearchTask(query, 0);
-        AppQueue.dispatchTask(searchTask);
+        AppQueue.dispatch(150, TimeUnit.MILLISECONDS
+                , () -> ui.access(() -> searchTask.execute(null)));
     }
 
-    public <E extends Entity> List<Property> getProperties(Class<E> type, String...skipKeys) {
+    public <E extends iMessage> List<Property> getProperties(Class<E> type, String...skipKeys) {
         E item = null;
         try {
             item = type.getDeclaredConstructor().newInstance();
