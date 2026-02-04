@@ -74,15 +74,17 @@ public class PagingGetTask extends GetTask {
         headers.forEach((key, value) -> httpHeaders.set(key, value));
         //
         try {
-            ResponseEntity<String> response = template.exchange(getUri()
+            String requestUri = getUri();
+            ResponseEntity<String> response = template.exchange(requestUri
                     , HttpMethod.GET
                     , new HttpEntity<>(getBody(), httpHeaders)
                     , String.class);
             if (getResponseListener() != null)
-                getResponseListener().accept(new Response().setStatus(200).setMessage(response.getBody()));
-            return new Response()
+                getResponseListener()
+                        .accept((Response) new Response().setStatus(200).setMessage(response.getBody()).setPayload(requestUri));
+            return (Response) new Response()
                     .setStatus(200)
-                    .setMessage(response.getBody());
+                    .setMessage(response.getBody()).setPayload(requestUri);
         } catch (Exception e) {
             return new Response()
                     .setStatus(500)
