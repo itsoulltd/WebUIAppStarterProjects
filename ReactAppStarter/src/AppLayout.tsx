@@ -10,7 +10,7 @@ import {
     Button
 } from "@mui/material";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { LogoutResponse } from "../Models/Response";
+import { LogoutResponse } from "./Componenets/Models/Response";
 
 interface Props {
     doLogout?: () => Promise<LogoutResponse>;
@@ -18,7 +18,7 @@ interface Props {
 
 const drawerWidth = 240;
 
-function Layout({doLogout} : Props) {
+function AppLayout({doLogout} : Props) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -98,4 +98,4 @@ function Layout({doLogout} : Props) {
     )
 }
 
-export default Layout;
+export default AppLayout;

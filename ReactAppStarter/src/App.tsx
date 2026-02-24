@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./Componenets/Layout/Layout";
+import AppLayout from "./AppLayout";
 import Login, { AuthorizedRoute } from "./Componenets/Pages/Login"
 import Dashboard from "./Componenets/Pages/Dashboard";
 import Users from "./Componenets/Pages/Users";
@@ -22,7 +22,7 @@ function App() {
             <Routes>
                 <Route path="/login" element={<Login doLogin={doLogin}/>} />
                 <Route element={<AuthorizedRoute />} >
-                    <Route path="/" element={<Layout doLogout={doLogout}/>} >
+                    <Route path="/" element={<AppLayout doLogout={doLogout}/>} >
                         <Route index element={<Dashboard />} />
                         <Route path="users" element={<Users />} />
                         <Route path="settings" element={<Settings />} />
