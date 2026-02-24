@@ -24,8 +24,8 @@ function App() {
                 <Route element={<AuthorizedRoute />} >
                     <Route path="/" element={<AppLayout doLogout={doLogout}/>} >
                         <Route index element={<Dashboard />} />
-                        <Route path="users" element={<Users />} />
-                        <Route path="settings" element={<Settings />} />
+                        <Route path="/users" element={<Users />} />
+                        <Route path="/settings" element={<Settings />} />
                     </Route>
                 </Route>
             </Routes>
