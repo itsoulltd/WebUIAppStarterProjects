@@ -30,6 +30,8 @@ function Layout({doLogout} : Props) {
                     localStorage.removeItem("jwt");
                     localStorage.removeItem("username");
                     navigate("/login", { replace: true });
+                } else {
+                    alert("Logout failed! Please check internet connections.");
                 }
             }).catch(error => {
                 console.log("Error", error);

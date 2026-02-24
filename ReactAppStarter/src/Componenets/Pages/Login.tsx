@@ -19,6 +19,8 @@ function Login({doLogin} : Props) {
                     localStorage.setItem("jwt", (response.jwt !== null ? response.jwt!.toString() : ''));
                     localStorage.setItem("username", (response.username !== null ? response.username!.toString() : ''));
                     navigate("/", { replace: true });
+                } else {
+                    alert("Login failed! Please check username/password.");
                 }
             }).catch(error => {
                 console.log("Error", error);
