@@ -67,7 +67,10 @@ function AppLayout({doLogout} : Props) {
                 <AppBar position="fixed" sx={{ zIndex: 1201 }}>
                     <Toolbar>
                         <Typography sx={{ flexGrow: 1 }}>
-                            Admin Panel
+                            { process.env.NODE_ENV === "production"
+                                ? `${process.env.REACT_APP_NAME} (${process.env.REACT_APP_VERSION}) [PROD]`
+                                : `${process.env.REACT_APP_NAME} (${process.env.REACT_APP_VERSION}) [DEV]`
+                            }
                         </Typography>
                         <Button color="inherit" onClick={handleLogout}>
                             Logout
