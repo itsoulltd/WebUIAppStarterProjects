@@ -7,10 +7,12 @@ import {
     Toolbar,
     AppBar,
     Typography,
-    Button
+    Button,
+    Snackbar
 } from "@mui/material";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { LogoutResponse } from "./Componenets/Models/Response";
+import React, { useState } from "react";
 
 interface Props {
     doLogout?: () => Promise<LogoutResponse>;
@@ -20,6 +22,8 @@ const drawerWidth = 240;
 
 function AppLayout({doLogout} : Props) {
     const navigate = useNavigate();
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [message, setMessage] = useState("");
 
     const handleLogout = () => {
         if (doLogout) {
@@ -31,70 +35,86 @@ function AppLayout({doLogout} : Props) {
                     localStorage.removeItem("username");
                     navigate("/login", { replace: true });
                 } else {
-                    alert("Logout failed! Please check internet connections.");
+                    setOpenSnackbar(true);
+                    setMessage("Logout failed! Please check internet connections.");
+                    //alert("Logout failed! Please check internet connections.");
                 }
             }).catch(error => {
                 console.log("Error", error);
+                setOpenSnackbar(true)
+                setMessage(error)
             })
         } else {
-            console.log("Error", "Login(doLogin) did not set!");
-            alert("Error: Login(doLogin) did not set!");
+            console.log("Error", "Logout(doLogout) did not set!");
+            setOpenSnackbar(true);
+            setMessage("Error: Logout(doLogout) did not set!");
+            //alert("Error: Logout(doLogout) did not set!");
         }
     };
 
     return (
-        <Box sx={{ display: "flex" }}>
-            {/* TOP BAR */}
-            <AppBar position="fixed" sx={{ zIndex: 1201 }}>
-                <Toolbar>
-                    <Typography sx={{ flexGrow: 1 }}>
-                        Admin Panel
-                    </Typography>
-                    <Button color="inherit" onClick={handleLogout}>
-                        Logout
-                    </Button>
-                </Toolbar>
-            </AppBar>
-            {/*END*/}
+        <>
+            { openSnackbar && <Snackbar
+                open={openSnackbar}
+                onClose={() => setOpenSnackbar(false)}
+                autoHideDuration={3000}
+                anchorOrigin={{vertical: "bottom", horizontal: "left"}}
+                message={message}
+                sx={{"& .MuiSnackbarContent-root":{backgroundColor: "#b71c1c"}}} />
+            }
+            <Box sx={{ display: "flex" }}>
+                {/* TOP BAR */}
+                <AppBar position="fixed" sx={{ zIndex: 1201 }}>
+                    <Toolbar>
+                        <Typography sx={{ flexGrow: 1 }}>
+                            Admin Panel
+                        </Typography>
+                        <Button color="inherit" onClick={handleLogout}>
+                            Logout
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+                {/*END*/}
 
-            {/* LEFT SIDEBAR */}
-            <Drawer
-                variant="permanent"
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    "& .MuiDrawer-paper": {
+                {/* LEFT SIDEBAR */}
+                <Drawer
+                    variant="permanent"
+                    sx={{
                         width: drawerWidth,
-                        boxSizing: "border-box"
-                    }
-                }}
-            >
-                <Toolbar />
-                <List>
-                    <ListItemButton component={Link} to="/">
-                        <ListItemText primary="Dashboard" />
-                    </ListItemButton>
+                        flexShrink: 0,
+                        "& .MuiDrawer-paper": {
+                            width: drawerWidth,
+                            boxSizing: "border-box"
+                        }
+                    }}
+                >
+                    <Toolbar />
+                    <List>
+                        <ListItemButton component={Link} to="/">
+                            <ListItemText primary="Dashboard" />
+                        </ListItemButton>
 
-                    <ListItemButton component={Link} to="/users">
-                        <ListItemText primary="Users" />
-                    </ListItemButton>
+                        <ListItemButton component={Link} to="/users">
+                            <ListItemText primary="Users" />
+                        </ListItemButton>
 
-                    <ListItemButton component={Link} to="/settings">
-                        <ListItemText primary="Settings" />
-                    </ListItemButton>
-                </List>
-            </Drawer>
-            {/*END*/}
+                        <ListItemButton component={Link} to="/settings">
+                            <ListItemText primary="Settings" />
+                        </ListItemButton>
+                    </List>
+                </Drawer>
+                {/*END*/}
 
-            {/* RIGHT CONTENT AREA */}
-            <Box
-                component="main"
-                sx={{ flexGrow: 1, p: 3, mt: 8 }}
-            >
-                <Outlet />
+                {/* RIGHT CONTENT AREA */}
+                <Box
+                    component="main"
+                    sx={{ flexGrow: 1, p: 3, mt: 8 }}
+                >
+                    <Outlet />
+                </Box>
+                {/*END*/}
             </Box>
-            {/*END*/}
-        </Box>
+        </>
     )
 }
 
