@@ -28,6 +28,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     └── ...
     ---
     
+    #In case of clone:
+    ~>$ cd my-app
+    ~>$ npm install
+    ~>$ npm start
+    
     #How to run:
     ~>$ cd my-app
     ~>$ npm start
