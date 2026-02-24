@@ -10,7 +10,7 @@ import {
     Button,
     Snackbar
 } from "@mui/material";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { LogoutResponse } from "./Componenets/Models/Response";
 import React, { useState } from "react";
 
@@ -93,15 +93,15 @@ function AppLayout({doLogout} : Props) {
                 >
                     <Toolbar />
                     <List>
-                        <ListItemButton component={Link} to="/">
+                        <ListItemButton component={NavLink} to="/" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
                             <ListItemText primary="Dashboard" />
                         </ListItemButton>
 
-                        <ListItemButton component={Link} to="/users">
+                        <ListItemButton component={NavLink} to="/users" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
                             <ListItemText primary="Users" />
                         </ListItemButton>
 
-                        <ListItemButton component={Link} to="/settings">
+                        <ListItemButton component={NavLink} to="/settings" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
                             <ListItemText primary="Settings" />
                         </ListItemButton>
                     </List>
