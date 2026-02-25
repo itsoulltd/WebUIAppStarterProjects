@@ -28,8 +28,8 @@ function Login({doLogin} : Props) {
                 }
             }).catch(error => {
                 console.log("Error", error);
-                setOpenSnackbar(true)
-                setMessage(error)
+                setOpenSnackbar(true);
+                setMessage(error);
             })
         } else {
             console.log("Error", "Login(doLogin) did not set!");

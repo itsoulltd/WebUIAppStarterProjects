@@ -41,8 +41,8 @@ function AppLayout({doLogout} : Props) {
                 }
             }).catch(error => {
                 console.log("Error", error);
-                setOpenSnackbar(true)
-                setMessage(error)
+                setOpenSnackbar(true);
+                setMessage(error);
             })
         } else {
             console.log("Error", "Logout(doLogout) did not set!");
@@ -50,7 +50,7 @@ function AppLayout({doLogout} : Props) {
             setMessage("Error: Logout(doLogout) did not set!");
             //alert("Error: Logout(doLogout) did not set!");
         }
-    };
+    }
 
     return (
         <>
