@@ -1,7 +1,9 @@
 
 export interface BaseResponse {
-    status: 200 | 201 | 400 | 404 | 500;
+    status: number;
     error?: string;
+    reason?: string;
+    message?: string;
 }
 
 export interface LogoutResponse extends BaseResponse{
