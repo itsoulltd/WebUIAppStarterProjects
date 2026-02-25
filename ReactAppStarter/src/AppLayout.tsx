@@ -11,7 +11,7 @@ import {
     Snackbar
 } from "@mui/material";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { LogoutResponse } from "./Componenets/Models/Response";
+import { LogoutResponse } from "./Componenets/HttpRequest/Response";
 import React, { useState } from "react";
 
 interface Props {

@@ -6,7 +6,7 @@ import Login, { AuthorizedRoute } from "./Componenets/Pages/Login"
 import Dashboard from "./Componenets/Pages/Dashboard";
 import Users from "./Componenets/Pages/Users";
 import Settings from "./Componenets/Pages/Settings";
-import { LoginResponse, LogoutResponse } from "./Componenets/Models/Response";
+import { LoginResponse, LogoutResponse } from "./Componenets/HttpRequest/Response";
 
 
 function App() {

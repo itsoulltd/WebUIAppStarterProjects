@@ -2,8 +2,6 @@
 export interface BaseResponse {
     status: number;
     error?: string;
-    reason?: string;
-    message?: string;
 }
 
 export interface LogoutResponse extends BaseResponse{

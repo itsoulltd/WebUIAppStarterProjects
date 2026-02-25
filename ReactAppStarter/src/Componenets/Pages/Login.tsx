@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Paper, Snackbar } from "@mui/material";
-import { LoginResponse } from "../Models/Response";
+import { LoginResponse } from "../HttpRequest/Response";
 import React, { useState } from "react";
 
 interface Props {
