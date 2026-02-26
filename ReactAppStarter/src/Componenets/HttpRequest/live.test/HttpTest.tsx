@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {BaseResponse} from "../Response";
+import { useEffect } from "react";
+import { BaseResponse } from "../Response";
 import { http } from "../Http"
 
 interface PostsResponse extends BaseResponse {
