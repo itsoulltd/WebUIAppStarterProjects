@@ -33,7 +33,7 @@ async function httpTest() {
 function HttpApiTest() {
 
     useEffect(() => {
-        console.log("TEST", "Http.api.* testing")
+        console.log("TEST", "Http.http.* testing")
         httpTest();
     }, [])
 
