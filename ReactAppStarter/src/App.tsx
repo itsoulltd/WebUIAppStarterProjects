@@ -21,6 +21,7 @@ function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<Login doLogin={doLogin}/>} />
+                <Route path="*" element={<PageNotFound />} />
                 <Route element={<AuthorizedRoute />} >
                     <Route path="/" element={<AppLayout doLogout={doLogout}/>} >
                         <Route index element={<Dashboard />} />
