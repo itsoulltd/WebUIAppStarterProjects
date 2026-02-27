@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Paper, Snackbar } from "@mui/material";
 import { LoginResponse } from "../HttpRequest/Response";
 import React, { useState } from "react";
@@ -75,8 +75,3 @@ function Login({doLogin} : Props) {
 }
 
 export default Login;
-
-export function AuthorizedRoute() {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
-}

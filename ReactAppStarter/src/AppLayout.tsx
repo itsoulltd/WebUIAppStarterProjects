@@ -10,7 +10,7 @@ import {
     Button,
     Snackbar
 } from "@mui/material";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { LogoutResponse } from "./Componenets/HttpRequest/Response";
 import React, { useState } from "react";
 
@@ -124,3 +124,8 @@ function AppLayout({doLogout} : Props) {
 }
 
 export default AppLayout;
+
+export function AuthorizedRoute() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    return isLoggedIn ? <Outlet /> : <Navigate to="/login" replace />;
+}

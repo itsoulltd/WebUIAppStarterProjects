@@ -1,8 +1,8 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppLayout from "./AppLayout";
-import Login, { AuthorizedRoute } from "./Componenets/Pages/Login"
+import AppLayout, { AuthorizedRoute } from "./AppLayout";
+import Login from "./Componenets/Pages/Login"
 import Dashboard from "./Componenets/Pages/Dashboard";
 import Users from "./Componenets/Pages/Users";
 import Settings from "./Componenets/Pages/Settings";
