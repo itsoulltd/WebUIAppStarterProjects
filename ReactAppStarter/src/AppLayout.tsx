@@ -15,7 +15,7 @@ import { LogoutResponse } from "./Componenets/HttpRequest/Response";
 import React, { useState } from "react";
 
 interface Props {
-    doLogout?: () => Promise<LogoutResponse>;
+    doLogout?: (username: string | null, jwt: string | null) => Promise<LogoutResponse>;
 }
 
 const drawerWidth = 240;
@@ -27,7 +27,9 @@ function AppLayout({doLogout} : Props) {
 
     const handleLogout = () => {
         if (doLogout) {
-            doLogout().then(response => {
+            const username = localStorage.getItem("username");
+            const jwt = localStorage.getItem("jwt");
+            doLogout(username, jwt).then(response => {
                 if (response.status === 200) {
                     localStorage.removeItem("isLoggedIn");
                     localStorage.removeItem("loginStatus");

@@ -36,14 +36,16 @@ function App() {
 
 export default App;
 
-async function doLogin() : Promise<LoginResponse> {
+async function doLogin(username: string, password: string) : Promise<LoginResponse> {
     //TODO:
+    console.log("Login Action =>", `Login... username:${username}`)
     const response: LoginResponse = {status:200, username:"admin", jwt:"jwt-token"}
     return response
 }
 
-async function doLogout() : Promise<LogoutResponse> {
+async function doLogout(username: string | null, jwt: string | null) : Promise<LogoutResponse> {
     //TODO:
+    console.log("Logout Action =>", `Logout... username:${username}`)
     const response: LogoutResponse = {status:200, username:"admin"}
     return response
 }

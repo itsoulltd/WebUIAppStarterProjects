@@ -4,17 +4,19 @@ import { LoginResponse } from "../HttpRequest/Response";
 import React, { useState } from "react";
 
 interface Props {
-    doLogin?: () => Promise<LoginResponse>;
+    doLogin?: (username: string, password: string) => Promise<LoginResponse>;
 }
 
 function Login({doLogin} : Props) {
     const navigate = useNavigate();
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState("");
+    const [usernameVal, setUsernameVal] = useState("");
+    const [passwordVal, setPasswordVal] = useState("");
 
-    function handleLogin() {
+    function handleLogin(username: string, password: string) {
         if (doLogin) {
-            doLogin().then(response => {
+            doLogin(username, password).then(response => {
                 if (response.status === 200) {
                     localStorage.setItem("isLoggedIn", "true");
                     localStorage.setItem("loginStatus", response.status.toString());
@@ -56,13 +58,13 @@ function Login({doLogin} : Props) {
                 height="100vh"
             >
                 <Paper sx={{ p: 4, width: 300 }}>
-                    <TextField fullWidth label="Username" margin="normal" />
-                    <TextField fullWidth label="Password" type="password" margin="normal" />
+                    <TextField fullWidth label="Username" margin="normal" onChange={(event) => setUsernameVal(event.target.value)} />
+                    <TextField fullWidth label="Password" type="password" margin="normal" onChange={(event) => setPasswordVal(event.target.value)} />
                     <Button
                         fullWidth
                         variant="contained"
                         sx={{ mt: 2 }}
-                        onClick={handleLogin}
+                        onClick={() => handleLogin(usernameVal, passwordVal)}
                     >
                         Login
                     </Button>
