@@ -209,6 +209,45 @@ To learn React, check out the [React documentation](https://reactjs.org/).
     export default App;    
     ---
 
+## Add example of custom-hook:
+    ##Create a Custom Hook
+    // useCounter.js
+    import { useState } from "react";
+    
+    export function useCounter(initialValue = 0) {
+        const [count, setCount] = useState(initialValue);
+        
+        const increment = () => setCount(prev => prev + 1);
+        const decrement = () => setCount(prev => prev - 1);
+        const reset = () => setCount(initialValue);
+        
+        return { count, increment, decrement, reset };
+    }
+    
+    ##Use the Custom Hook in a Component
+    // App.js
+    import React from "react";
+    import { useCounter } from "./useCounter";
+    
+    function App() {
+        const { count, increment, decrement, reset } = useCounter(10);
+        
+        return (
+            <div>
+                <h1>Count: {count}</h1>
+                <button onClick={increment}>+</button>
+                <button onClick={decrement}>-</button>
+                <button onClick={reset}>Reset</button>
+            </div>
+        );
+    }
+    
+    export default App;
+    ---
+
+## Add ....
+    ~>$ ...
+
 ## Add ....
     ~>$ ...
 
