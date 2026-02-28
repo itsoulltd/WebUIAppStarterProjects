@@ -98,11 +98,13 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Add UI Library: [MUI](https://mui.com/material-ui/getting-started/installation/)
+#### [included]
     ~>$ npm install @mui/material @emotion/react @emotion/styled
     # Optional:
     ~>$ npm install @mui/icons-material
 
 ## Add react-router-dom to project:
+#### [included]
     ~>$ npm install react-router-dom
 
 ## Add react-query to the project:
