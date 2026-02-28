@@ -44,6 +44,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     - Creates a production-optimized build in the build/ folder.
     - Minifies code and optimizes assets.
 
+## What is react-app-env.d.ts
+    react-app-env.d.ts is a TypeScript declaration file that comes with projects created using Create React App (CRA) with TypeScript.
+    It tells TypeScript: “Include the type definitions provided by react-scripts in this project.”
+    This gives your project access to:
+        - Type definitions for environment variables (process.env)
+        - Module declarations for importing images (.png, .svg, etc.)
+        - Jest testing types
+        - Webpack-specific types used internally by CRA
+    Without this file, TypeScript would not recognize those global types.
+
 ## Available Scripts
 
 In the project directory, you can run:
