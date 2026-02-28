@@ -94,3 +94,122 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Add react-router-dom to project:
     ~>$ npm install react-router-dom
+
+## Add react-query to the project:
+    ##Install:
+    ~>$ npm install @tanstack/react-query
+    
+    ##Setup Query Client:
+    // main.jsx or index.js or index.tsx
+    import React from "react";
+    import ReactDOM from "react-dom/client";
+    import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+    import App from "./App";
+    
+    const queryClient = new QueryClient();
+    
+    ReactDOM.createRoot(document.getElementById("root")).render(
+        <QueryClientProvider client={queryClient}>
+            <App />
+        </QueryClientProvider>
+    );
+
+    ##Fetch Data with useQuery:
+    // App.jsx or App.tsx
+    import { useQuery } from "@tanstack/react-query";
+    import { Button } from "@mui/material"
+    
+    function App() {
+        const { data, isLoading, error, refetch } = useQuery({
+            queryKey: ["users"],
+            queryFn: () =>
+            fetch("https://jsonplaceholder.typicode.com/users")
+                .then(res => res.json()),
+        });
+    
+        if (isLoading) return <p>Loading...</p>;
+        if (error) return <p>Error fetching data</p>;
+    
+        return (
+            <div>
+                <h1>Users</h1>
+                {data.map(user => (
+                    <div key={user.id}>
+                        {user.name}
+                    </div>
+                ))}
+                <Button onClick={() => refetch()}>Refetch Users</Button>
+            </div>
+        );
+    }
+    
+    export default App;
+    ---
+
+## Add react-hook-form and zod for form-validation:
+    ##Install:
+    ~>$ npm install react-hook-form zod @hookform/resolvers
+
+    ##Simple Form Example:
+    import React from "react";
+    import { useForm } from "react-hook-form";
+    import { z } from "zod";
+    import { zodResolver } from "@hookform/resolvers/zod";
+
+    // 1. Define Zod schema
+    const schema = z.object({
+        name: z.string().min(2, "Name must be at least 2 characters"),
+        email: z.string().email("Invalid email address"),
+        age: z
+            .number({ invalid_type_error: "Age is required" })
+            .min(18, "Must be at least 18"),
+    });
+
+    // 2. Infer TypeScript type from schema
+    type FormData = z.infer<typeof schema>;
+    
+    function App() {
+        // 3. Pass inferred type to useForm
+        const {
+            register,
+            handleSubmit,
+            formState: { errors, isSubmitting },
+        } = useForm<FormData>({
+            resolver: zodResolver(schema),
+        });
+        
+        const onSubmit = (data) => {
+            console.log("Form Data:", data);
+        };
+        
+        return (
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                  <input placeholder="Name" {...register("name")} />
+                  {errors.name && <p>{errors.name?.message}</p>}
+                </div>
+            
+                <div>
+                  <input placeholder="Email" {...register("email")} />
+                  {errors.email && <p>{errors.email?.message}</p>}
+                </div>
+            
+                <div>
+                  <input placeholder="Age" type="number" {...register("age", { valueAsNumber: true })} />
+                  {errors.age && <p>{errors.age?.message}</p>}
+                </div>
+            
+                <button type="submit">
+                      {isSubmitting ? 'Please wait...' : 'Submit'}
+                </button>
+            </form>
+        );
+    }
+    
+    export default App;    
+    ---
+
+## Add ....
+    ~>$ ...
+
+## End README.md
