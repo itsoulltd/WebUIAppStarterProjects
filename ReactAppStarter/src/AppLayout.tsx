@@ -1,20 +1,8 @@
-import {
-    Drawer,
-    List,
-    ListItemButton,
-    ListItemText,
-    Box,
-    Toolbar,
-    AppBar,
-    Typography,
-    Button,
-    Snackbar
-} from "@mui/material";
-import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Snackbar } from "@mui/material";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import useAuth from "./Componenets/Hooks/useAuth";
-
-const drawerWidth = 240;
+import BasicLayout from "./Componenets/Layouts/BasicLayout";
 
 function AppLayout() {
     const navigate = useNavigate();
@@ -61,61 +49,7 @@ function AppLayout() {
                 message={message}
                 sx={{"& .MuiSnackbarContent-root":{backgroundColor: "#b71c1c"}}} />
             }
-            <Box sx={{ display: "flex" }}>
-                {/* TOP BAR */}
-                <AppBar position="fixed" sx={{ zIndex: 1201 }}>
-                    <Toolbar>
-                        <Typography sx={{ flexGrow: 1 }}>
-                            { process.env.NODE_ENV === "production"
-                                ? `${process.env.REACT_APP_NAME} (${process.env.REACT_APP_VERSION}) [PROD]`
-                                : `${process.env.REACT_APP_NAME} (${process.env.REACT_APP_VERSION}) [DEV]`
-                            }
-                        </Typography>
-                        <Button color="inherit" onClick={handleLogout}>
-                            Logout
-                        </Button>
-                    </Toolbar>
-                </AppBar>
-                {/*END*/}
-
-                {/* LEFT SIDEBAR */}
-                <Drawer
-                    variant="permanent"
-                    sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
-                        "& .MuiDrawer-paper": {
-                            width: drawerWidth,
-                            boxSizing: "border-box"
-                        }
-                    }}
-                >
-                    <Toolbar />
-                    <List>
-                        <ListItemButton component={NavLink} to="/" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
-                            <ListItemText primary="Dashboard" />
-                        </ListItemButton>
-
-                        <ListItemButton component={NavLink} to="/users" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
-                            <ListItemText primary="Users" />
-                        </ListItemButton>
-
-                        <ListItemButton component={NavLink} to="/settings" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
-                            <ListItemText primary="Settings" />
-                        </ListItemButton>
-                    </List>
-                </Drawer>
-                {/*END*/}
-
-                {/* RIGHT CONTENT AREA */}
-                <Box
-                    component="main"
-                    sx={{ flexGrow: 1, p: 3, mt: 8 }}
-                >
-                    <Outlet />
-                </Box>
-                {/*END*/}
-            </Box>
+            <BasicLayout handleLogout={handleLogout} />
         </>
     )
 }
