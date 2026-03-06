@@ -1,18 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Button, TextField, Paper, Snackbar } from "@mui/material";
-import { LoginResponse } from "../HttpRequest/Response";
 import React, { useState } from "react";
+import useAuth from "../Hooks/useAuth";
 
-interface Props {
-    doLogin?: (username: string, password: string) => Promise<LoginResponse>;
-}
-
-function Login({doLogin} : Props) {
+function Login() {
     const navigate = useNavigate();
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState("");
     const [usernameVal, setUsernameVal] = useState("");
     const [passwordVal, setPasswordVal] = useState("");
+    const {doLogin} = useAuth();
 
     function handleLogin(username: string, password: string) {
         if (doLogin) {

@@ -11,19 +11,16 @@ import {
     Snackbar
 } from "@mui/material";
 import { NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
-import { LogoutResponse } from "./Componenets/HttpRequest/Response";
 import React, { useState } from "react";
-
-interface Props {
-    doLogout?: (username: string | null, jwt: string | null) => Promise<LogoutResponse>;
-}
+import useAuth from "./Componenets/Hooks/useAuth";
 
 const drawerWidth = 240;
 
-function AppLayout({doLogout} : Props) {
+function AppLayout() {
     const navigate = useNavigate();
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState("");
+    const {doLogout} = useAuth();
 
     const handleLogout = () => {
         if (doLogout) {
