@@ -23,7 +23,7 @@ export function createDefaultParams(page: number = 1, limit: number = 10): URLSe
     return createPagingParams("page", page, "limit", limit);
 }
 
-function useFetch<T extends BaseResponse>(url: string, queryKey: string, queryParam: URLSearchParams | null = null) {
+function useFetch<T extends BaseResponse>(url: string, queryParam: URLSearchParams | null = null) {
     const [searchParam, setSearchParam] = useState<URLSearchParams | null>(queryParam);
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<Error | null>(null);
