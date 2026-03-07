@@ -23,14 +23,23 @@ export function createDefaultParams(page: number = 1, limit: number = 10): URLSe
     return createPagingParams("page", page, "limit", limit);
 }
 
+/**
+ * setSearchParam(URLSearchParam) or refetch() either of them will perform the reload data.
+ * @param url
+ * @param queryParam
+ */
 function useFetch<T extends BaseResponse>(url: string, queryParam: URLSearchParams | null = null) {
     const [searchParam, setSearchParam] = useState<URLSearchParams | null>(queryParam);
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<Error | null>(null);
     const [isError, setIsError] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    /**/
-    useEffect(() => {
+
+    /*Define refetch() */
+    function refetch() {
+        setError(null);
+        setIsError(false);
+        setIsLoading(true);
         const finalUrl = (searchParam !== null || searchParam !== undefined) ? url + "?" + searchParam?.toString() : url;
         if(process.env.NODE_ENV !== "production") console.log("log:useFetch:", finalUrl);
         api.get<T>(finalUrl)
@@ -44,9 +53,12 @@ function useFetch<T extends BaseResponse>(url: string, queryParam: URLSearchPara
                 setError(error);
                 setIsError(true);
         });
-    }, [searchParam]);
+    }
 
-    return {data, setSearchParam, isLoading, isError, error};
+    /*Call refetch() within useEffect(..., [...])*/
+    useEffect(() => refetch(), [searchParam]);
+
+    return {data, setSearchParam, isLoading, isError, error, refetch};
 }
 
 export default useFetch;
