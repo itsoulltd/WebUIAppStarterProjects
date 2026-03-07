@@ -24,7 +24,7 @@ export const Cookies = {
 
 function read(key: string) :  string | null {
     const cookies = document.cookie.split("; ");
-    //console.log(cookies); //TEST
+    if(process.env.NODE_ENV !== "production") console.log(cookies);
     for (let cookie of cookies) {
         const [inKey, inValue] = cookie.split("=");
         if (inKey === key) return decodeURIComponent(inValue);
@@ -38,7 +38,7 @@ function write(key: string, value: string, options: CookieOption) :  void {
         ? `expires=${options.expires}; path=${options.path}; SameSite=${options.sameSite}; Secure`
         : `expires=${options.expires}; domain=${options.domain}; path=${options.path}; SameSite=${options.sameSite}; Secure`;
 
-    //console.log(`${key}=${encodeURIComponent(value)}; ${optionStr}`); //TEST
+    if(process.env.NODE_ENV !== "production") console.log(`${key}=${encodeURIComponent(value)}; ${optionStr}`);
     document.cookie = `${key}=${encodeURIComponent(value)}; ${optionStr}`;
 }
 
@@ -48,6 +48,6 @@ function remove(key: string, domain: string | null = null) :  void {
         ? `expires=${options.expires}; path=${options.path}; SameSite=${options.sameSite}; Secure`
         : `expires=${options.expires}; domain=${options.domain}; path=${options.path}; SameSite=${options.sameSite}; Secure`;
 
-    //console.log(`${key}=; ${optionStr}`); //TEST
+    if(process.env.NODE_ENV !== "production") console.log(`${key}=; ${optionStr}`);
     document.cookie = `${key}=; ${optionStr}`;
 }
