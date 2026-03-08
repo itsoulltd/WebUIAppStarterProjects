@@ -54,7 +54,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
         - Webpack-specific types used internally by CRA
     Without this file, TypeScript would not recognize those global types.
     
-## Sometime IntelliJ-IDEA not recognize the js/ts/react code:
+## Sometime IntelliJ-IDEA do not recognize the js/ts/react syntax:
     #Goto |- Settings... -> Languages & Frameworks -> Node.js & NPM -> Choose Node Interpreter |- v18.16.0 -|  
 
 ## Available Scripts
