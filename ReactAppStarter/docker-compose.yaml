@@ -1,0 +1,21 @@
+version: "3.9"
+
+networks:
+  web-app-net:
+    name: my-web-app-net
+    driver: bridge
+
+services:
+  nginx-react-app:
+    container_name: nginx-react-app
+    image: nginx-react-app-starter:1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    networks:
+      - web-app-net
+
+#end-of-file
