@@ -14,6 +14,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
+      - "3443:443"
     restart: unless-stopped
     networks:
       - web-app-net

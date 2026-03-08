@@ -33,7 +33,10 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/build /usr/share/nginx/html
 # Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy ssl certificates
+COPY ssl /etc/ssl
 
 EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

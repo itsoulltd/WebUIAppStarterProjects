@@ -56,6 +56,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     
 ## Sometime IntelliJ-IDEA do not recognize the js/ts/react syntax:
     #Goto |- Settings... -> Languages & Frameworks -> Node.js & NPM -> Choose Node Interpreter |- v18.16.0 -|  
+    
+## Make any *.sh scripts executable:
+    # e.g.
+    ~>$ chmod 755 gen-self-signed-ssl-cert.sh
 
 ## Available Scripts
 
