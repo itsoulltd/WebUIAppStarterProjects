@@ -282,6 +282,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
     export default App;
     ---
 
+## Add xlsx:
+#### [included]
+    ~>$ npm install xlsx
+
 ## Add ....
     ~>$ ...
 
