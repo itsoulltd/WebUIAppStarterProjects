@@ -2,11 +2,11 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AppLayout, { AuthorizedRoute } from "./AppLayout";
-import Login from "./Componenets/Pages/Login"
-import Dashboard from "./Componenets/Pages/Dashboard";
-import Users from "./Componenets/Pages/Users";
-import Settings from "./Componenets/Pages/Settings";
-import PageNotFound from "./Componenets/Pages/PageNotFound";
+import Login from "./Components/Pages/Login"
+import Dashboard from "./Components/Pages/Dashboard";
+import Users from "./Components/Pages/Users";
+import Settings from "./Components/Pages/Settings";
+import PageNotFound from "./Components/Pages/PageNotFound";
 
 function App() {
 

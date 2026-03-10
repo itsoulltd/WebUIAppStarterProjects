@@ -1,8 +1,8 @@
 import { Snackbar } from "@mui/material";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import useAuth from "./Componenets/Hooks/useAuth";
-import BasicLayout from "./Componenets/Layouts/BasicLayout";
+import useAuth from "./Components/Hooks/useAuth";
+import BasicLayout from "./Components/Layouts/BasicLayout";
 
 function AppLayout() {
     const navigate = useNavigate();
