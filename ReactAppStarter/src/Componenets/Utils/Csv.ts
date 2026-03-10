@@ -24,14 +24,16 @@ export const Csv = {
         return blob;
     },
     download: (blob: Blob, filename: string) => {
-        // create download link
+        // create temporary download link:
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", filename);
-        // augmented the link-clicked:
+        // augment the link-clicked & initiate browser download:
         document.body.appendChild(link);
         link.click();
+        // cleanup:
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     },
 }
