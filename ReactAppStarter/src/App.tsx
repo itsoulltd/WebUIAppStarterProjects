@@ -7,6 +7,13 @@ import Dashboard from "./Components/Pages/Dashboard";
 import Users from "./Components/Pages/Users";
 import Settings from "./Components/Pages/Settings";
 import PageNotFound from "./Components/Pages/PageNotFound";
+import { MenuItem } from "./Components/Models/MenuObjects";
+
+const menuItems: MenuItem[] = [
+    {title: "Dashboard", path: "/"}
+    , {title: "Users", path: "/users"}
+    , {title: "Settings", path: "/settings"}
+]
 
 function App() {
 
@@ -22,7 +29,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route element={<AuthorizedRoute />} >
-                    <Route path="/" element={<AppLayout />} >
+                    <Route path="/" element={<AppLayout menuItems={menuItems} />} >
                         <Route index element={<Dashboard />} />
                         <Route path="/users" element={<Users />} />
                         <Route path="/settings" element={<Settings />} />

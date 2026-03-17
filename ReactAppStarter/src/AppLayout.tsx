@@ -3,8 +3,13 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import useAuth from "./Components/Hooks/useAuth";
 import BasicLayout from "./Components/Layouts/BasicLayout";
+import { MenuItem } from "./Components/Models/MenuObjects";
 
-function AppLayout() {
+interface Props {
+    menuItems?: MenuItem[];
+}
+
+function AppLayout({menuItems}: Props) {
     const navigate = useNavigate();
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState("");
@@ -49,7 +54,7 @@ function AppLayout() {
                 message={message}
                 sx={{"& .MuiSnackbarContent-root":{backgroundColor: "#b71c1c"}}} />
             }
-            <BasicLayout handleLogout={handleLogout} />
+            <BasicLayout handleLogout={handleLogout} menuItems={menuItems} />
         </>
     )
 }

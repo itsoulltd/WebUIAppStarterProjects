@@ -1,14 +1,16 @@
 import React from "react";
 import {AppBar, Box, Button, Drawer, List, ListItemButton, ListItemText, Toolbar, Typography} from "@mui/material";
 import {NavLink, Outlet} from "react-router-dom";
+import { MenuItem } from "../Models/MenuObjects";
 
 const drawerWidth = 240;
 
 interface Props {
     handleLogout: () => void;
+    menuItems?: MenuItem[];
 }
 
-function BasicLayout({handleLogout}: Props) {
+function BasicLayout({handleLogout, menuItems}: Props) {
     return (
         <>
             <Box sx={{ display: "flex" }}>
@@ -42,17 +44,13 @@ function BasicLayout({handleLogout}: Props) {
                 >
                     <Toolbar />
                     <List>
-                        <ListItemButton component={NavLink} to="/" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
-                            <ListItemText primary="Dashboard" />
-                        </ListItemButton>
-
-                        <ListItemButton component={NavLink} to="/users" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
-                            <ListItemText primary="Users" />
-                        </ListItemButton>
-
-                        <ListItemButton component={NavLink} to="/settings" sx={{"&.active": {backgroundColor: "#e0e0e0"}}}>
-                            <ListItemText primary="Settings" />
-                        </ListItemButton>
+                        { menuItems?.map((item, index) =>
+                            (
+                                <ListItemButton component={NavLink} to={item.path} sx={{"&.active": {backgroundColor: "#e0e0e0"}}} >
+                                    <ListItemText primary={item.title} />
+                                </ListItemButton>
+                            )
+                        ) }
                     </List>
                 </Drawer>
                 {/*END*/}
