@@ -8,11 +8,12 @@ import Users from "./Components/Pages/Users";
 import Settings from "./Components/Pages/Settings";
 import PageNotFound from "./Components/Pages/PageNotFound";
 import { MenuItem } from "./Components/Models/MenuObjects";
+import * as MUIcon from "@mui/icons-material"
 
 const menuItems: MenuItem[] = [
-    {title: "Dashboard", path: "/"}
-    , {title: "Users", path: "/users"}
-    , {title: "Settings", path: "/settings"}
+    { title: "Dashboard", path: "/", icon: <MUIcon.Dashboard /> }
+    , { title: "Users", path: "/users", icon: <MUIcon.AccountCircle /> }
+    , { title: "Settings", path: "/settings", icon: <MUIcon.Settings /> }
 ]
 
 function App() {

@@ -1,5 +1,17 @@
 import React from "react";
-import {AppBar, Box, Button, Drawer, List, ListItemButton, ListItemText, Toolbar, Typography} from "@mui/material";
+import {
+    AppBar,
+    Box,
+    Button,
+    Drawer,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Toolbar,
+    Typography
+} from "@mui/material";
+import LogoutIcon from '@mui/icons-material/Logout';
 import {NavLink, Outlet} from "react-router-dom";
 import { MenuItem } from "../Models/MenuObjects";
 
@@ -23,7 +35,7 @@ function BasicLayout({handleLogout, menuItems}: Props) {
                                 : `${process.env.REACT_APP_NAME} (${process.env.REACT_APP_VERSION}) [DEV]`
                             }
                         </Typography>
-                        <Button color="inherit" onClick={handleLogout}>
+                        <Button color="inherit" onClick={handleLogout} endIcon={<LogoutIcon />} >
                             Logout
                         </Button>
                     </Toolbar>
@@ -46,7 +58,8 @@ function BasicLayout({handleLogout, menuItems}: Props) {
                     <List>
                         { menuItems?.map((item, index) =>
                             (
-                                <ListItemButton component={NavLink} to={item.path} sx={{"&.active": {backgroundColor: "#e0e0e0"}}} >
+                                <ListItemButton key={index} component={NavLink} to={item.path} sx={{"&.active": {backgroundColor: "#e0e0e0"}}} >
+                                    <ListItemIcon>{item.icon}</ListItemIcon>
                                     <ListItemText primary={item.title} />
                                 </ListItemButton>
                             )
