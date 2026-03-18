@@ -125,8 +125,11 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Add UI Library: [MUI](https://mui.com/material-ui/getting-started/installation/)
 #### [included]
     ~>$ npm install @mui/material @emotion/react @emotion/styled
-    # Optional:
+    # Optional (If mui-icons not needed in the project): 
     ~>$ npm install @mui/icons-material
+    # If legacy makeStyles() is needed:
+    ~>$ npm install @mui/styles
+    # import { makeStyles } from '@mui/styles';
 
 ## Add react-router-dom to project:
 #### [included]
