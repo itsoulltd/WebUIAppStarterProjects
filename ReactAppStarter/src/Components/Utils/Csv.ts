@@ -3,7 +3,41 @@ export interface CsvRow {
     [key: string] : string | number | boolean;
 }
 
+/**
+ * read: if header is empty then parse first-line as header-row, else whatever passed.
+ */
 export const Csv = {
+    read: (csv: string | undefined, separator: string = ",", indexed: boolean = true, header: string[] = []): CsvRow[] => {
+        if (csv === undefined || csv === "") return [];
+
+        // Remove BOM if present
+        if (csv.charCodeAt(0) === 0xfeff) csv = csv.slice(1);
+
+        // normalize ALL line endings to \n
+        const normalized = csv.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+        // split + remove empty lines [split(/\r?\n/) means match \n, optionally preceded by \r]
+        const lines = normalized
+            .split(/\r?\n/)
+            .map(line => line.trim())
+            .filter(line => line !== "");
+
+        if (lines.length === 0) return [];
+
+        // extract headers
+        const headers = (header.length > 0) ? header : lines[0].split(separator).map(h => h.trim());
+
+        // parse rows
+        const data = lines.slice(1).map((line, rowIndex) => {
+            const values = line.split(separator);
+            const row: CsvRow = indexed ? {index: rowIndex} : {};
+            headers.forEach((header, i) => {
+                row[header] = values[i]?.trim() || "";
+            });
+            return row;
+        });
+        return data;
+    },
     convert: (rows: CsvRow[]): string => {
         if (!rows.length) return "";
         // create headers from keys:
