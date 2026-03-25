@@ -4,13 +4,13 @@ export interface CsvRow {
 }
 
 /**
- * read: if header is empty then parse first-line as header-row, else whatever passed.
+ * read(..., header: string[]): if header is empty then parse first-row as headers.
  */
 export const Csv = {
     read: (csv: string | undefined, separator: string = ",", indexed: boolean = true, header: string[] = []): CsvRow[] => {
         if (csv === undefined || csv === "") return [];
 
-        // Remove BOM if present
+        // remove BOM if present
         if (csv.charCodeAt(0) === 0xfeff) csv = csv.slice(1);
 
         // normalize ALL line endings to \n
