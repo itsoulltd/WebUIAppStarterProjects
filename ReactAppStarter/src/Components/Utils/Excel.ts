@@ -5,9 +5,9 @@ export interface ExcelRow {
 }
 
 export const Excel = {
-    read: (sheet: WorkSheet, option: Sheet2JSONOpts = { defval: "" }): ExcelRow[] => {
+    read: <T extends ExcelRow>(sheet: WorkSheet, option: Sheet2JSONOpts = { defval: "" }): T[] => {
         // convert to JSON
-        const rows = utils.sheet_to_json<ExcelRow>(sheet, option);
+        const rows = utils.sheet_to_json<T>(sheet, option);
         return rows;
     },
     iterate: (workbook: WorkBook): WorkSheet[] => {
@@ -15,7 +15,7 @@ export const Excel = {
         workbook.SheetNames.map((name) => sheets.push(workbook.Sheets[name]))
         return sheets;
     },
-    worksheet: (rows: ExcelRow[]): WorkSheet | null => {
+    worksheet: <T extends ExcelRow>(rows: T[]): WorkSheet | null => {
         if (!rows.length) return null;
         // headers from keys:
         const headers = Object.keys(rows[0]);

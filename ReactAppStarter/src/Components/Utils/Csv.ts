@@ -7,7 +7,7 @@ export interface CsvRow {
  * read(..., header: string[]): if header is empty then parse first-row as headers.
  */
 export const Csv = {
-    read: (csv: string | undefined, separator: string = ",", indexed: boolean = true, header: string[] = []): CsvRow[] => {
+    read: <T extends CsvRow>(csv: string | undefined, separator: string = ",", indexed: boolean = true, header: string[] = []): T[] => {
         if (csv === undefined || csv === "") return [];
 
         // remove BOM if present
@@ -28,17 +28,17 @@ export const Csv = {
         const headers = (header.length > 0) ? header : lines[0].split(separator).map(h => h.trim());
 
         // parse rows
-        const data = lines.slice(1).map((line, rowIndex) => {
+        const data: T[] = lines.slice(1).map((line, rowIndex) => {
             const values = line.split(separator);
             const row: CsvRow = indexed ? {index: rowIndex} : {};
             headers.forEach((header, i) => {
                 row[header] = values[i]?.trim() || "";
             });
-            return row;
+            return row as T; //not a type-safe casting!
         });
         return data;
     },
-    convert: (rows: CsvRow[]): string => {
+    convert: <T extends CsvRow>(rows: T[]): string => {
         if (!rows.length) return "";
         // create headers from keys:
         const headers = Object.keys(rows[0]);
