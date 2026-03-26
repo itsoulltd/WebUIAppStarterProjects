@@ -9,6 +9,7 @@ import Settings from "./Components/Pages/Settings";
 import PageNotFound from "./Components/Pages/PageNotFound";
 import { MenuItem } from "./Components/Models/MenuObjects";
 import * as MUIcon from "@mui/icons-material"
+import { UUID } from "./Components/Utils/UUID";
 
 const menuItems: MenuItem[] = [
     { title: "Dashboard", path: "/", icon: <MUIcon.Dashboard /> }
@@ -23,6 +24,11 @@ function App() {
     console.log(process.env.REACT_APP_NAME)
     console.log(process.env.REACT_APP_VERSION)
     console.log(process.env.REACT_APP_API_URL)
+
+    //example of UUID
+    console.log("criptoUUID:", UUID.cryptoUUID()); //suitable for prod-use.
+    console.log("randomUUID:", UUID.randomUUID());
+    console.log("timestampUUID:", UUID.timestampUUID());
 
     return (
         <BrowserRouter>
