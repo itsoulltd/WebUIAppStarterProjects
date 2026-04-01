@@ -24,4 +24,5 @@ yarn-error.log*
 
 .idea
 
-/ssl
+### SSL self-signed certificates ###
+**/ssl/

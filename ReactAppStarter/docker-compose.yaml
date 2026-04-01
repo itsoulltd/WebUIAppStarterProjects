@@ -11,7 +11,7 @@ services:
     image: nginx-react-app-starter:1.0
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: devops/Dockerfile
     ports:
       - "3000:80"
       - "3443:443"
