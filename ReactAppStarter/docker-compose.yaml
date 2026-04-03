@@ -4,6 +4,7 @@ networks:
   web-app-net:
     name: my-web-app-net
     driver: bridge
+    external: true
 
 services:
   nginx-react-app:
