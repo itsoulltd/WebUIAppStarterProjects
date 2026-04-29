@@ -37,6 +37,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
     ~>$ cd my-app
     ~>$ npm start
     #This launches the development server at http://localhost:3000.
+
+    #If wish to start on different port other than default:3000
+    ~>$ PORT=8080 npm start          [Bash: Mac/Linux/GitBash(On Windows)]
+    #OR
+    ~>$ set PORT=4000 && npm start   [cmd: Windows]
+    #OR Permanent option is make an entry of PORT=8080 in the .env file and then run ~>$ npm start
     
     #Build for Production:
     ~>$ npm run build
