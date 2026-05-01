@@ -58,7 +58,7 @@ function BasicLayout({handleLogout, menuItems}: Props) {
                     <List>
                         { menuItems?.map((item, index) =>
                             (
-                                <ListItemButton key={index} component={NavLink} to={item.path} sx={{"&.active": {backgroundColor: "#e0e0e0"}}} >
+                                <ListItemButton key={index} component={NavLink} to={item.path ?? ""} sx={{"&.active": {backgroundColor: "#e0e0e0"}}} >
                                     <ListItemIcon>{item.icon}</ListItemIcon>
                                     <ListItemText primary={item.title} />
                                 </ListItemButton>
