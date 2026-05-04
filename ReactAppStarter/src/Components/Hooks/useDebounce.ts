@@ -18,8 +18,8 @@ import { useEffect, useState } from "react";
  * @param value
  * @param delay
  */
-function useDebounce(value: any, delay: number = 500) : any {
-    const [debounceValue, setDebounceValue] = useState<any>(value);
+function useDebounce<T>(value: T, delay: number = 500) : T {
+    const [debounceValue, setDebounceValue] = useState<T>(value);
 
     useEffect(() => {
         const timer = setTimeout(() => {
