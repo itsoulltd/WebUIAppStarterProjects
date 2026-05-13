@@ -1,7 +1,10 @@
+export const baseHeaders = {
+    "Accept": "application/json"
+}
 
 export const defaultHeaders = {
-    "Content-Type": "application/json"
-    , "Accept": "application/json"
+    ...baseHeaders
+    , "Content-Type": "application/json"
 }
 
 export interface Request {
@@ -17,7 +20,8 @@ export function createRequest(url: string
                               , token: string = "") : Request {
     //Create request:
     const payload = (body !== null) ? JSON.stringify(body) : null;
-    const authHeaders = (token === null || token.length === 0) ? defaultHeaders
-        : {...defaultHeaders, "Authorization":`Bearer ${token}`};
+    const headers = (method === "GET" || method === "DELETE") ? baseHeaders : defaultHeaders;
+    const authHeaders = (token === null || token.length === 0) ? headers
+        : {...headers, "Authorization":`Bearer ${token}`};
     return {url:url, method: method, headers: authHeaders, body: payload} as Request;
 }
