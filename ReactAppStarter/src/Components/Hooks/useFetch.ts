@@ -1,27 +1,6 @@
 import {BaseResponse} from "../HttpRequest/Response";
 import {useEffect, useState} from "react";
-import { api } from "../HttpRequest/Http";
-
-export interface QueryParam {
-    [key: string]: string;
-}
-
-export function createQueryParams(query: QueryParam, pageKey: string = "page", page: number = 1
-    , limitKey: string = "limit", limit: number = 10): URLSearchParams {
-    const params = new URLSearchParams();
-    params.append(pageKey, page.toString());
-    params.append(limitKey, limit.toString());
-    Object.entries(query).map(([key, value]) => params.append(key, encodeURIComponent(value)));
-    return params;
-}
-
-export function createPagingParams(pageKey: string = "page", page: number = 1, limitKey: string = "limit", limit: number = 10): URLSearchParams {
-    return createQueryParams({}, pageKey, page, limitKey, limit);
-}
-
-export function createDefaultParams(page: number = 1, limit: number = 10): URLSearchParams {
-    return createPagingParams("page", page, "limit", limit);
-}
+import {api} from "../HttpRequest/Http";
 
 /**
  * setSearchParam(URLSearchParam) or refetch() either of them will perform the reload data.
