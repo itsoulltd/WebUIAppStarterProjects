@@ -5,8 +5,7 @@ import useAuth from "../Hooks/useAuth";
 
 function Login() {
     const navigate = useNavigate();
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [message, setMessage] = useState("");
+    const [openSnackbar, setOpenSnackbar] = useState({open: false, title: 'Something went wrong!'} as any);
     const [usernameVal, setUsernameVal] = useState("");
     const [passwordVal, setPasswordVal] = useState("");
     const {doLogin} = useAuth();
@@ -21,33 +20,29 @@ function Login() {
                     localStorage.setItem("username", (response.username !== null ? response.username!.toString() : ''));
                     navigate("/", { replace: true });
                 } else {
-                    setOpenSnackbar(true);
-                    setMessage("Login failed! Please check username/password.");
+                    setOpenSnackbar({...openSnackbar, open: true, title: "Login failed! Please check username/password."});
                     //alert("Login failed! Please check username/password.");
                 }
             }).catch(error => {
                 console.log("Error", error);
-                setOpenSnackbar(true);
-                setMessage(error);
+                setOpenSnackbar({...openSnackbar, open: true, title: error});
             })
         } else {
             console.log("Error", "Login(doLogin) did not set!");
-            setOpenSnackbar(true);
-            setMessage("Error: Login(doLogin) did not set!");
+            setOpenSnackbar({...openSnackbar, open: true, title: "Error: Login(doLogin) did not set!"});
             //alert("Error: Login(doLogin) did not set!");
         }
     }
 
     return (
         <>
-            { openSnackbar && <Snackbar
-                open={openSnackbar}
-                onClose={() => setOpenSnackbar(false)}
+            <Snackbar
+                open={openSnackbar.open}
+                onClose={() => setOpenSnackbar({...openSnackbar, open: false})}
                 autoHideDuration={3000}
                 anchorOrigin={{vertical: "bottom", horizontal: "left"}}
-                message={message}
+                message={openSnackbar.title}
                 sx={{"& .MuiSnackbarContent-root":{backgroundColor: "#b71c1c"}}} />
-            }
             <Box
                 display="flex"
                 justifyContent="center"
@@ -55,8 +50,10 @@ function Login() {
                 height="100vh"
             >
                 <Paper sx={{ p: 4, width: 300 }}>
-                    <TextField fullWidth label="Username" margin="normal" onChange={(event) => setUsernameVal(event.target.value)} />
-                    <TextField fullWidth label="Password" type="password" margin="normal" onChange={(event) => setPasswordVal(event.target.value)} />
+                    <TextField fullWidth label="Username" margin="normal"
+                               onChange={(event:  React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setUsernameVal(event.target.value)} />
+                    <TextField fullWidth label="Password" type="password" margin="normal"
+                               onChange={(event:  React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setPasswordVal(event.target.value)} />
                     <Button
                         fullWidth
                         variant="contained"

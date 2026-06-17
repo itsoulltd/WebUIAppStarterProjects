@@ -11,8 +11,7 @@ interface Props {
 
 function AppLayout({menuItems}: Props) {
     const navigate = useNavigate();
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [message, setMessage] = useState("");
+    const [openSnackbar, setOpenSnackbar] = useState({open: false, title: 'Something went wrong!'} as any);
     const {doLogout} = useAuth();
 
     const handleLogout = () => {
@@ -27,33 +26,29 @@ function AppLayout({menuItems}: Props) {
                     localStorage.removeItem("username");
                     navigate("/login", { replace: true });
                 } else {
-                    setOpenSnackbar(true);
-                    setMessage("Logout failed! Please check internet connections.");
+                    setOpenSnackbar({...openSnackbar, open: true, title: "Logout failed! Please check internet connections."});
                     //alert("Logout failed! Please check internet connections.");
                 }
             }).catch(error => {
                 console.log("Error", error);
-                setOpenSnackbar(true);
-                setMessage(error);
+                setOpenSnackbar({...openSnackbar, open: true, title: error});
             })
         } else {
             console.log("Error", "Logout(doLogout) did not set!");
-            setOpenSnackbar(true);
-            setMessage("Error: Logout(doLogout) did not set!");
+            setOpenSnackbar({...openSnackbar, open: true, title: "Error: Logout(doLogout) did not set!"});
             //alert("Error: Logout(doLogout) did not set!");
         }
     }
 
     return (
         <>
-            { openSnackbar && <Snackbar
-                open={openSnackbar}
-                onClose={() => setOpenSnackbar(false)}
+            <Snackbar
+                open={openSnackbar.open}
+                onClose={() => setOpenSnackbar({...openSnackbar, open: false})}
                 autoHideDuration={3000}
                 anchorOrigin={{vertical: "bottom", horizontal: "left"}}
-                message={message}
+                message={openSnackbar.title}
                 sx={{"& .MuiSnackbarContent-root":{backgroundColor: "#b71c1c"}}} />
-            }
             <BasicLayout handleLogout={handleLogout} menuItems={menuItems} />
         </>
     )
