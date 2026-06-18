@@ -43,7 +43,7 @@ services:
           app.user.api: user
        ports:
           - 80:8080
-       restart: on-failure
+       restart: unless-stopped
        networks:
           - web-app-net
 

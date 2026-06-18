@@ -35,6 +35,6 @@ services:
           app.db.mysql.url.query: ?autoReconnect=true&failOverReadOnly=false&maxReconnects=10
        ports:
           - 80:8080
-       restart: on-failure
+       restart: unless-stopped
        networks:
           - web-app-net
