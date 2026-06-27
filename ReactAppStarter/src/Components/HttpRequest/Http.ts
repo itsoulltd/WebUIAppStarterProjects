@@ -1,5 +1,16 @@
 import { Request, createRequest, defaultHeaders } from "./Request";
 
+/* eslint-disable @typescript-eslint/ban-types */
+
+async function parseResponse<T>(response: Response): Promise<T> {
+    if (response.status === 204) return undefined as unknown as T;
+    const contentType = response.headers.get("content-type") ?? "";
+    if (!contentType.includes("application/json")) {
+        return (await response.text()) as unknown as T;
+    }
+    return await response.json() as T;
+}
+
 async function httpRequest<T>(request: Request): Promise<T> {
     const options: {} = (request.method === "GET" || request.method === "DELETE")
         ? {method: request.method, headers: request.headers}
@@ -13,8 +24,7 @@ async function httpRequest<T>(request: Request): Promise<T> {
         );
     }
     // Compile result:
-    const xResponse: T = await response.json();
-    return xResponse;
+    return parseResponse<T>(response);
 }
 
 export const http = {
@@ -38,8 +48,7 @@ async function apiRequest<T>(url: string, options : {} = {}) : Promise<T>  {
         );
     }
     // Compile result:
-    const xResponse: T = await response.json();
-    return xResponse;
+    return parseResponse<T>(response);
 }
 
 export const api = {

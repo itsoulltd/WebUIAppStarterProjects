@@ -32,7 +32,7 @@ export interface QueryParam {
 
 export function createQueryParams(query: QueryParam): URLSearchParams {
     const params = new URLSearchParams();
-    Object.entries(query).map(([key, value]) => params.append(key, encodeURIComponent(value)));
+    Object.entries(query).forEach(([key, value]) => params.append(key, value));
     return params;
 }
 
