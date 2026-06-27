@@ -65,7 +65,7 @@ function Login() {
                 </Paper>
             </Box>
         </>
-    )
+    );
 }
 
 export default Login;

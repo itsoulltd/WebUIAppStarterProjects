@@ -78,7 +78,7 @@ function BasicLayout({handleLogout, menuItems}: Props) {
                 {/*END*/}
             </Box>
         </>
-    )
+    );
 }
 
 export default BasicLayout;

@@ -32,13 +32,13 @@ function AppLayout({menuItems}: Props) {
             }).catch(error => {
                 console.log("Error", error);
                 setOpenSnackbar({...openSnackbar, open: true, title: error});
-            })
+            });
         } else {
             console.log("Error", "Logout(doLogout) did not set!");
             setOpenSnackbar({...openSnackbar, open: true, title: "Error: Logout(doLogout) did not set!"});
             //alert("Error: Logout(doLogout) did not set!");
         }
-    }
+    };
 
     return (
         <>
@@ -51,7 +51,7 @@ function AppLayout({menuItems}: Props) {
                 sx={{"& .MuiSnackbarContent-root":{backgroundColor: "#b71c1c"}}} />
             <BasicLayout handleLogout={handleLogout} menuItems={menuItems} />
         </>
-    )
+    );
 }
 
 export default AppLayout;

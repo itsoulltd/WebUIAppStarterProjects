@@ -3,7 +3,7 @@ export const UUID = {
     randomUUID: (): string  => uniqueID(),
     timestampUUID: (prefix : string = "uuid", seperator: string = "-"): string => timestampID(prefix, seperator),
     cryptoUUID: (): string => crypto.randomUUID(),
-}
+};
 
 function uniqueID(): string {
     // ChatGPT gen-code:
