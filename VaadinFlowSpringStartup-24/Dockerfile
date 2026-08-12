@@ -16,8 +16,13 @@ COPY target/*.jar app.jar
 # Expose Spring Boot default port
 EXPOSE 8080
 
-# Optional: reduce memory footprint
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75"
+# Optional:
+ENV JAVA_TOOL_OPTIONS="\
+-XX:MaxRAMPercentage=75 \
+-Xms256m \
+-XX:+UseG1GC \
+-Dfile.encoding=UTF-8 \
+-Duser.timezone=UTC"
 
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
-#ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar --spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
+#ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=prod"]
